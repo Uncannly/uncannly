@@ -1,6 +1,12 @@
+phoneme_chain = {}
 
 def store_phoneme_transition_instance(first_phoneme, second_phoneme):
-    print(first_phoneme + ' ' + second_phoneme)
+    if first_phoneme not in phoneme_chain:
+        phoneme_chain[first_phoneme] = {}
+    if second_phoneme not in phoneme_chain[first_phoneme]:
+        phoneme_chain[first_phoneme][second_phoneme] = 1
+    else:
+        phoneme_chain[first_phoneme][second_phoneme] += 1
 
 def store_phonemes_for_word(phonetic_word):
     phonemes = phonetic_word.split()
@@ -15,3 +21,5 @@ for line in f:
     phonetic_word = split_by_tabs[1]
     store_phonemes_for_word(phonetic_word)
 f.close()
+
+print(phoneme_chain)
