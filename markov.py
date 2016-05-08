@@ -1,4 +1,4 @@
-import json
+import json, random, sys
 
 phoneme_chain_absolute = {}
 phoneme_chain_prob = {}
@@ -57,4 +57,12 @@ def get_next_phoneme(current_phoneme, random_number):
             current_next_phoneme = transition_phoneme
     return current_next_phoneme
 
-#while true:
+current_phoneme = 'START_WORD'
+while True:
+    next_phoneme = get_next_phoneme(current_phoneme, random.random())
+    if next_phoneme == 'END_WORD':
+        sys.stdout.write('\n')
+        current_phoneme = 'START_WORD'
+    else:
+        sys.stdout.write(next_phoneme + ' ')
+        current_phoneme = next_phoneme
