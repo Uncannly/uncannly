@@ -1,3 +1,5 @@
+import json
+
 phoneme_chain_absolute = {}
 phoneme_chain_prob = {}
 
@@ -31,6 +33,13 @@ for phoneme, phoneme_transition_list in phoneme_chain_absolute.iteritems():
     for transition_phoneme, num in phoneme_transition_list.iteritems():
         phoneme_chance_list[transition_phoneme] = num / num_occurrences
     phoneme_chain_prob[phoneme] = phoneme_chance_list
+    '''
+    total_prob = 0.0
+    for transition_phoneme, chance in phoneme_chance_list.iteritems():
+        total_prob += chance
+    phoneme_chain_prob[phoneme]['TOTAL_PROB'] = total_prob
+    '''
 
-print(phoneme_chain_absolute)
-print(phoneme_chain_prob)
+#print(phoneme_chain_absolute)
+#print(phoneme_chain_prob)
+print json.dumps(phoneme_chain_prob, indent=2)
