@@ -32,8 +32,10 @@ for phoneme, phoneme_transition_list in phoneme_chain_absolute.iteritems():
     for transition_phoneme, num in phoneme_transition_list.iteritems():
         num_occurrences += num
     phoneme_chance_list = {}
+    previous_chance = 0.0
     for transition_phoneme, num in phoneme_transition_list.iteritems():
-        phoneme_chance_list[transition_phoneme] = num / num_occurrences
+        previous_chance += num / num_occurrences
+        phoneme_chance_list[transition_phoneme] = previous_chance
     phoneme_chain_prob[phoneme] = phoneme_chance_list
     '''
     total_prob = 0.0
@@ -45,3 +47,14 @@ for phoneme, phoneme_transition_list in phoneme_chain_absolute.iteritems():
 #print(phoneme_chain_absolute)
 #print(phoneme_chain_prob)
 print json.dumps(phoneme_chain_prob, indent=2)
+
+def get_next_phoneme(current_phoneme, random_number):
+    current_next_phoneme_chance = 2.0
+    current_next_phoneme = ''
+    for transition_phoneme, chance in phoneme_chain_prob[current_phoneme].iteritems():
+        if chance >= random_number and chance < current_next_phoneme_chance:
+            current_next_phoneme_chance = chance
+            current_next_phoneme = transition_phoneme
+    return current_next_phoneme
+
+#while true:
