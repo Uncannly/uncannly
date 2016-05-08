@@ -1,12 +1,13 @@
-phoneme_chain = {}
+phoneme_chain_absolute = {}
+phoneme_chain_prob = {}
 
 def store_phoneme_transition_instance(first_phoneme, second_phoneme):
-    if first_phoneme not in phoneme_chain:
-        phoneme_chain[first_phoneme] = {}
-    if second_phoneme not in phoneme_chain[first_phoneme]:
-        phoneme_chain[first_phoneme][second_phoneme] = 1
+    if first_phoneme not in phoneme_chain_absolute:
+        phoneme_chain_absolute[first_phoneme] = {}
+    if second_phoneme not in phoneme_chain_absolute[first_phoneme]:
+        phoneme_chain_absolute[first_phoneme][second_phoneme] = 1.0
     else:
-        phoneme_chain[first_phoneme][second_phoneme] += 1
+        phoneme_chain_absolute[first_phoneme][second_phoneme] += 1.0
 
 def store_phonemes_for_word(phonetic_word):
     phonemes = phonetic_word.split()
@@ -22,4 +23,14 @@ for line in f:
     store_phonemes_for_word(phonetic_word)
 f.close()
 
-print(phoneme_chain)
+for phoneme, phoneme_transition_list in phoneme_chain_absolute.iteritems():
+    num_occurrences = 0.0
+    for transition_phoneme, num in phoneme_transition_list.iteritems():
+        num_occurrences += num
+    phoneme_chance_list = {}
+    for transition_phoneme, num in phoneme_transition_list.iteritems():
+        phoneme_chance_list[transition_phoneme] = num / num_occurrences
+    phoneme_chain_prob[phoneme] = phoneme_chance_list
+
+print(phoneme_chain_absolute)
+print(phoneme_chain_prob)
