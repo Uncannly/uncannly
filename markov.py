@@ -13,6 +13,8 @@ def store_phoneme_transition_instance(first_phoneme, second_phoneme):
 
 def store_phonemes_for_word(phonetic_word):
     phonemes = phonetic_word.split()
+    for i in range(0, len(phonemes)):
+        phonemes[i] = phonemes[i].strip('012')
     phonemes.insert(0, 'START_WORD')
     phonemes.append('END_WORD')
     for i in range(0, len(phonemes) - 1):
