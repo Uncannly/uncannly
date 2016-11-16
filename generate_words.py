@@ -3,6 +3,12 @@ import random, sys, time, cPickle
 with open('phoneme_probabilities.pkl', 'rb') as input:
     phoneme_chain_prob = cPickle.load(input)
 
+with open('phonetic_words.pkl', 'rb') as input:
+    phonetic_words = cPickle.load(input)
+
+with open('words.pkl', 'rb') as input:
+    words = cPickle.load(input)
+
 def get_next_phoneme(current_phoneme, random_number):
     current_next_phoneme_chance = 2.0
     current_next_phoneme = ''
@@ -12,13 +18,24 @@ def get_next_phoneme(current_phoneme, random_number):
             current_next_phoneme = transition_phoneme
     return current_next_phoneme
 
+def not_in_dict(word):
+    if word in phonetic_words:
+        index = phonetic_words.index(word)
+        print '{} (word exists already: {})'.format(word, words[index])
+        return False
+    else:
+        return True
+
+word_to_output = ''
 current_phoneme = 'START_WORD'
 while True:
     next_phoneme = get_next_phoneme(current_phoneme, random.random())
     if next_phoneme == 'END_WORD':
-        sys.stdout.write('\n')
+        if not_in_dict(word_to_output):
+            print word_to_output
+        word_to_output = ''
         current_phoneme = 'START_WORD'
         time.sleep(.5)
     else:
-        sys.stdout.write(next_phoneme + ' ')
+        word_to_output = next_phoneme if len(word_to_output) == 0 else word_to_output + ' ' + next_phoneme
         current_phoneme = next_phoneme

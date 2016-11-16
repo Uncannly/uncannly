@@ -1,5 +1,8 @@
 import json, sys, time, cPickle
 
+words = []
+phonetic_words = []
+
 phoneme_chain_absolute = {}
 phoneme_chain_prob = {}
 
@@ -15,6 +18,7 @@ def store_phonemes_for_word(phonetic_word):
     phonemes = phonetic_word.split()
     for i in range(0, len(phonemes)):
         phonemes[i] = phonemes[i].strip('012')
+    phonetic_words.append(" ".join(phonemes))
     phonemes.insert(0, 'START_WORD')
     phonemes.append('END_WORD')
     for i in range(0, len(phonemes) - 1):
@@ -23,6 +27,7 @@ def store_phonemes_for_word(phonetic_word):
 f = open('cmu_pronouncing_dictionary.txt', 'r')
 for line in f:
     split_by_tabs = line.strip().split('\t')
+    words.append(split_by_tabs[0])
     phonetic_word = split_by_tabs[1]
     store_phonemes_for_word(phonetic_word)
 f.close()
@@ -40,3 +45,9 @@ for phoneme, phoneme_transition_list in phoneme_chain_absolute.iteritems():
 
 with open('phoneme_probabilities.pkl', 'wb') as output:
     cPickle.dump(phoneme_chain_prob, output, -1)
+
+with open('phonetic_words.pkl', 'wb') as output:
+    cPickle.dump(phonetic_words, output, -1)
+
+with open('words.pkl', 'wb') as output:
+    cPickle.dump(words, output, -1)
