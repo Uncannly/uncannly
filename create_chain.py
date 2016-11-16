@@ -6,15 +6,17 @@ phonetic_words = []
 phoneme_chain_absolute = {}
 phoneme_chain_prob = {}
 
-def store_phoneme_transition_instance(first_phoneme, second_phoneme):
+word_freqs = {}
+
+def store_phoneme_transition_instance(freq, first_phoneme, second_phoneme):
     if first_phoneme not in phoneme_chain_absolute:
         phoneme_chain_absolute[first_phoneme] = {}
     if second_phoneme not in phoneme_chain_absolute[first_phoneme]:
-        phoneme_chain_absolute[first_phoneme][second_phoneme] = 1.0
+        phoneme_chain_absolute[first_phoneme][second_phoneme] = freq
     else:
-        phoneme_chain_absolute[first_phoneme][second_phoneme] += 1.0
+        phoneme_chain_absolute[first_phoneme][second_phoneme] += freq
 
-def store_phonemes_for_word(phonetic_word):
+def store_phonemes_for_word(freq, phonetic_word):
     phonemes = phonetic_word.split()
     for i in range(0, len(phonemes)):
         phonemes[i] = phonemes[i].strip('012')
@@ -22,14 +24,29 @@ def store_phonemes_for_word(phonetic_word):
     phonemes.insert(0, 'START_WORD')
     phonemes.append('END_WORD')
     for i in range(0, len(phonemes) - 1):
-        store_phoneme_transition_instance(phonemes[i], phonemes[i + 1])
+        store_phoneme_transition_instance(freq, phonemes[i], phonemes[i + 1])
+
+f = open('unlemmatized_frequency_list.txt', 'r')
+for line in f:
+		split_by_tabs = line.strip().split(' ')
+		freq = split_by_tabs[0]
+		word = split_by_tabs[1].upper()
+		word_freqs[word] = freq
+f.close()
 
 f = open('cmu_pronouncing_dictionary.txt', 'r')
 for line in f:
     split_by_tabs = line.strip().split('\t')
-    words.append(split_by_tabs[0])
+    word = split_by_tabs[0]
+
+    if (word in word_freqs):
+    	freq = float(word_freqs[word]) 
+    else:
+    	freq = 1.0
+
+    words.append(word)
     phonetic_word = split_by_tabs[1]
-    store_phonemes_for_word(phonetic_word)
+    store_phonemes_for_word(freq, phonetic_word)
 f.close()
 
 for phoneme, phoneme_transition_list in phoneme_chain_absolute.iteritems():
