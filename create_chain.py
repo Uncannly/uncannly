@@ -5,6 +5,7 @@ phonetic_words = []
 
 phoneme_chain_absolute = {}
 phoneme_chain_prob = {}
+ranked_most_likely_next_phonemes_per_phoneme = {}
 
 word_freqs = {}
 
@@ -49,16 +50,38 @@ for line in f:
     store_phonemes_for_word(freq, phonetic_word)
 f.close()
 
-for phoneme, phoneme_transition_list in phoneme_chain_absolute.iteritems():
-    num_occurrences = 0.0
-    for transition_phoneme, num in phoneme_transition_list.iteritems():
-        num_occurrences += num
-    phoneme_chance_list = {}
-    previous_chance = 0.0
-    for transition_phoneme, num in phoneme_transition_list.iteritems():
-        previous_chance += num / num_occurrences
-        phoneme_chance_list[transition_phoneme] = previous_chance
-    phoneme_chain_prob[phoneme] = phoneme_chance_list
+for phoneme, potential_next_phonemes in phoneme_chain_absolute.iteritems():
+
+    total_occurrences_of_next_phonemes = 0.0
+    for _, num in potential_next_phonemes.iteritems():
+        total_occurrences_of_next_phonemes += num
+
+    stacked_phoneme_probabability_thresholds = {}
+
+    phoneme_probabibilies = {}
+
+    upper_threshold_for_this_phoneme_in_range = 0.0
+    for potential_next_phoneme, num in potential_next_phonemes.iteritems():
+    		chance_of_this_phoneme = num / total_occurrences_of_next_phonemes
+
+    		phoneme_probabibilies[chance_of_this_phoneme] = potential_next_phoneme
+
+    		upper_threshold_for_this_phoneme_in_range += chance_of_this_phoneme
+
+    		stacked_phoneme_probabability_thresholds[potential_next_phoneme] = upper_threshold_for_this_phoneme_in_range
+
+    phoneme_chain_prob[phoneme] = stacked_phoneme_probabability_thresholds
+
+    chances = []
+    for chance, potential_next_phoneme in phoneme_probabibilies.iteritems():
+    		chances.append(chance)
+    chances.sort(reverse=True)
+
+    ranked_most_likely_next_phonemes = []
+    for chance in chances:
+    		ranked_most_likely_next_phonemes.append(phoneme_probabibilies[chance])
+
+    ranked_most_likely_next_phonemes_per_phoneme[phoneme] = ranked_most_likely_next_phonemes
 
 with open('phoneme_probabilities.pkl', 'wb') as output:
     cPickle.dump(phoneme_chain_prob, output, -1)
@@ -68,3 +91,6 @@ with open('phonetic_words.pkl', 'wb') as output:
 
 with open('words.pkl', 'wb') as output:
     cPickle.dump(words, output, -1)
+
+with open('ranked_most_likely_next_phonemes_per_phoneme.pkl', 'wb') as output:
+    cPickle.dump(ranked_most_likely_next_phonemes_per_phoneme, output, -1)
