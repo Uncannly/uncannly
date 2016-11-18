@@ -1,6 +1,6 @@
 import cPickle, time
 
-with open('ranked_most_likely_next_phonemes_per_phoneme.pkl', 'rb') as input:
+with open('secondary_data/ranked_most_likely_next_phonemes_per_phoneme.pkl', 'rb') as input:
     phoneme_chain_prob = cPickle.load(input)
 
 def present(word):

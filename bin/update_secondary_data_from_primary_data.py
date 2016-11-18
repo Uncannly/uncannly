@@ -27,7 +27,7 @@ def store_phonemes_for_word(freq, phonetic_word):
     for i in range(0, len(phonemes) - 1):
         store_phoneme_transition_instance(freq, phonemes[i], phonemes[i + 1])
 
-f = open('unlemmatized_frequency_list.txt', 'r')
+f = open('primary_data/unlemmatized_frequency_list.txt', 'r')
 for line in f:
 		split_by_tabs = line.strip().split(' ')
 		freq = split_by_tabs[0]
@@ -35,7 +35,7 @@ for line in f:
 		word_freqs[word] = freq
 f.close()
 
-f = open('cmu_pronouncing_dictionary.txt', 'r')
+f = open('primary_data/cmu_pronouncing_dictionary.txt', 'r')
 for line in f:
     split_by_tabs = line.strip().split('\t')
     word = split_by_tabs[0]
@@ -83,14 +83,14 @@ for phoneme, potential_next_phonemes in phoneme_chain_absolute.iteritems():
 
     ranked_most_likely_next_phonemes_per_phoneme[phoneme] = ranked_most_likely_next_phonemes
 
-with open('phoneme_probabilities.pkl', 'wb') as output:
+with open('secondary_data/phoneme_probabilities.pkl', 'wb') as output:
     cPickle.dump(phoneme_chain_prob, output, -1)
 
-with open('phonetic_words.pkl', 'wb') as output:
+with open('secondary_data/phonetic_words.pkl', 'wb') as output:
     cPickle.dump(phonetic_words, output, -1)
 
-with open('words.pkl', 'wb') as output:
+with open('secondary_data/words.pkl', 'wb') as output:
     cPickle.dump(words, output, -1)
 
-with open('ranked_most_likely_next_phonemes_per_phoneme.pkl', 'wb') as output:
+with open('secondary_data/ranked_most_likely_next_phonemes_per_phoneme.pkl', 'wb') as output:
     cPickle.dump(ranked_most_likely_next_phonemes_per_phoneme, output, -1)
