@@ -1,13 +1,11 @@
-import random, sys, time, cPickle
+import random, time, os, sys
+sys.path.insert(1, os.path.join(sys.path[0], '..'))
 
-with open('secondary_data/phoneme_probabilities.pkl', 'rb') as input:
-    phoneme_chain_prob = cPickle.load(input)
+from lib import file
 
-with open('secondary_data/phonetic_words.pkl', 'rb') as input:
-    phonetic_words = cPickle.load(input)
-
-with open('secondary_data/words.pkl', 'rb') as input:
-    words = cPickle.load(input)
+phoneme_chain_prob = file.load('phoneme_probabilities')
+phonetic_words = file.load('phonetic_words')
+words = file.load('words')
 
 def get_next_phoneme(current_phoneme, random_number):
     current_next_phoneme_chance = 2.0

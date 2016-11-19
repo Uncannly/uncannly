@@ -1,7 +1,9 @@
-import cPickle, time
+import time, os, sys
+sys.path.insert(1, os.path.join(sys.path[0], '..'))
 
-with open('secondary_data/ranked_most_likely_next_phonemes_per_phoneme.pkl', 'rb') as input:
-    phoneme_chain_prob = cPickle.load(input)
+from lib import file
+
+phoneme_chain_prob = file.load('ranked_most_likely_next_phonemes_per_phoneme')
 
 def present(word):
 	return ' '.join(word[1:(len(word)-1)])
