@@ -3,7 +3,7 @@ sys.path.insert(1, os.path.join(sys.path[0], '..'))
 
 from lib import file, format
 
-phoneme_probabilities = file.load('phoneme_probabilities')
+cumulative_distributions = file.load('cumulative_distributions')
 phonetic_words = file.load('phonetic_words')
 words = file.load('words')
 
@@ -12,14 +12,14 @@ words = file.load('words')
 # def next_phoneme(current_phoneme, random_number):
 # 	return next(phoneme
 # 		for phoneme, probability 
-# 		in phoneme_probabilities[current_phoneme].iteritems() 
+# 		in cumulative_distributions[current_phoneme].iteritems() 
 # 		if probability >= random_number
 # 	)
 
 def next_phoneme(phoneme, random_number):
 	current_next_phoneme_chance = 2.0
 	current_next_phoneme = ''
-	for transition_phoneme, chance in phoneme_probabilities[phoneme].iteritems():
+	for transition_phoneme, chance in cumulative_distributions[phoneme].iteritems():
 		if chance >= random_number and chance < current_next_phoneme_chance:
 			current_next_phoneme_chance = chance
 			current_next_phoneme = transition_phoneme
@@ -28,7 +28,7 @@ def next_phoneme(phoneme, random_number):
 def test_for_orderedness(phoneme):
 	previous_phoneme = ''
 	previous_chance = 0
-	for next_phoneme, next_chance in phoneme_probabilities[phoneme].iteritems():
+	for next_phoneme, next_chance in cumulative_distributions[phoneme].iteritems():
 		print next_phoneme, next_chance
 		if next_chance < previous_chance:
 			print 'what'
