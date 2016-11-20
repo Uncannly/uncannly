@@ -4,7 +4,7 @@ def cumulative_distribution(next_phoneme_occurrences):
 	accumulated_probability = 0.0
 
 	for next_phoneme, occurrences in next_phoneme_occurrences.iteritems():
-		probability = occurrences / total_occurrences_of_next_phonemes
+		probability = float(occurrences) / float(total_occurrences_of_next_phonemes)
 		accumulated_probability += probability
 		cumulative_distribution.append({
 			'next_phoneme': next_phoneme, 

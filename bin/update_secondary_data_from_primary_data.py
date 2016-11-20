@@ -4,6 +4,7 @@ sys.path.insert(1, os.path.join(sys.path[0], '..'))
 from lib import file, frequency_list, pronouncing_dictionary, absolute_chain
 
 word_frequencies = frequency_list.parse()
+
 parsed_pronouncing_dictionary = pronouncing_dictionary.parse(word_frequencies)
 
 phoneme_chain_absolute = parsed_pronouncing_dictionary['phoneme_chain_absolute']
