@@ -1,7 +1,7 @@
 import file, format, present
 
-def share(filter):
-	most_probable_words = file.load('most_probable_words_by_{}'.format(filter))
+def share(filter, frequency_weighting):
+	most_probable_words = file.load('most_probable_words_by_{}_{}'.format(filter, frequency_weighting))
 
 	print 'total generated most probable words:', len(most_probable_words)
 
