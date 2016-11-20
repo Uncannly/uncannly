@@ -5,7 +5,7 @@ def parse(word_frequencies):
 	word_pronunciations = []
 	phoneme_chain_absolute = {}
 
-	f = open('primary_data/cmu_pronouncing_dictionary.txt', 'r')
+	f = open('data/primary_data/cmu_pronouncing_dictionary.txt', 'r')
 	for line in f:
 		line_split_by_tabs = line.strip().split('\t')
 
@@ -25,10 +25,10 @@ def parse(word_frequencies):
 		phonemes.append('END_WORD')
 		frequency = word_frequencies[word] if word in word_frequencies else 1
 		for i in range(0, len(phonemes) - 1):
-			first_phoneme = phonemes[i]
-			second_phoneme = phonemes[i + 1]
-			phoneme_chain_absolute.setdefault(first_phoneme, {}).setdefault(second_phoneme, 0)
-			phoneme_chain_absolute[first_phoneme][second_phoneme] += frequency
+			phoneme = phonemes[i]
+			next_phoneme = phonemes[i + 1]
+			phoneme_chain_absolute.setdefault(phoneme, {}).setdefault(next_phoneme, 0)
+			phoneme_chain_absolute[phoneme][next_phoneme] += frequency
 
 	f.close()
 

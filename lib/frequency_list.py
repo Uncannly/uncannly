@@ -1,7 +1,7 @@
 def parse():
 	word_frequencies = {}
 
-	file = open('primary_data/unlemmatized_frequency_list.txt', 'r')
+	file = open('data/primary_data/unlemmatized_frequency_list.txt', 'r')
 	for line in file:
 		line_split_by_tabs = line.strip().split(' ')
 		frequency = line_split_by_tabs[0]
