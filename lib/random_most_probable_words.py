@@ -2,8 +2,8 @@ import random
 
 import file, format, present
 
-def share(style):
-	most_probable_words = file.load('most_probable_words_by_{}'.format(style))
+def share(filter):
+	most_probable_words = file.load('most_probable_words_by_{}'.format(filter))
 
 	words = most_probable_words.keys()
 

@@ -1,8 +1,12 @@
 import format
 
-def parse(most_probable_next_phonemes, style):
+def parse(most_probable_next_phonemes, filter):
 	most_probable_words = {}
-	limit = 0.0000000000000000000001 if style == 'continued_product' else 0.2415
+
+	if (filter == 'continued_product'):
+		limit = 0.0000000000000000000001
+	elif (filter == 'averaging'):
+		limit = 0.2415
 
 	def next_phoneme(word, word_probability):
 		word_length = len(word)
@@ -15,9 +19,9 @@ def parse(most_probable_next_phonemes, style):
 				phoneme = pp_tuple[0]
 				probability = pp_tuple[1]
 
-				if (style == 'continued_product'):
+				if (filter == 'continued_product'):
 					word_probability *= probability
-				elif (style == 'averaging'):
+				elif (filter == 'averaging'):
 					word_probability = (word_length * word_probability + probability) \
 						/ (word_length + 1)
 
