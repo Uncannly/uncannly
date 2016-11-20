@@ -1,9 +1,9 @@
 import file
 
-phonetic_words = file.load('phonetic_words')
 words = file.load('words')
+word_pronunciations = file.load('word_pronunciations')
 
 def already_in_dictionary(word):
-	if word in phonetic_words:
-		index = phonetic_words.index(word)
+	if word in word_pronunciations:
+		index = word_pronunciations.index(word)
 		return words[index]

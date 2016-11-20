@@ -5,9 +5,9 @@ from lib import file, format, exists
 
 cumulative_distributions = file.load('cumulative_distributions')
 
-def next_phoneme(current_phoneme, random_number):
+def next_phoneme(phoneme, random_number):
 	return next(step['next_phoneme']
-		for step in cumulative_distributions[current_phoneme]
+		for step in cumulative_distributions[phoneme]
 		if step['accumulated_probability'] >= random_number
 	)
 

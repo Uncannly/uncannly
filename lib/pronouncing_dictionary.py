@@ -2,7 +2,7 @@ import file
 
 def parse(word_frequencies):
 	words = []
-	phonetic_words = []
+	word_pronunciations = []
 	phoneme_chain_absolute = {}
 
 	f = open('primary_data/cmu_pronouncing_dictionary.txt', 'r')
@@ -13,12 +13,12 @@ def parse(word_frequencies):
 		word = line_split_by_tabs[0]
 		words.append(word)
 
-		# phonetic_words
-		phonetic_word = line_split_by_tabs[1]
-		phonemes = phonetic_word.split()
+		# word_pronunciations
+		word_pronunciation = line_split_by_tabs[1]
+		phonemes = word_pronunciation.split()
 		for i in range(0, len(phonemes)):
 			phonemes[i] = phonemes[i].strip('012')
-		phonetic_words.append(" ".join(phonemes))
+		word_pronunciations.append(" ".join(phonemes))
 
 		# phoneme_chain_absolute
 		phonemes.insert(0, 'START_WORD')
@@ -34,6 +34,6 @@ def parse(word_frequencies):
 
 	return {
 		'words': words,
-		'phonetic_words': phonetic_words,
+		'word_pronunciations': word_pronunciations,
 		'phoneme_chain_absolute': phoneme_chain_absolute
 	}
