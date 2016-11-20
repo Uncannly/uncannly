@@ -44,9 +44,10 @@ file.save(
 )
 
 # strategy two uses averaging
-most_probable_words['by_averaging'] = most_probable_words_by_averaging.parse(
-	parsed_absolute_chain['most_probable_next_phonemes']
-)
+most_probable_words['by_averaging'] = \
+	most_probable_words_by_averaging.parse(
+		parsed_absolute_chain['most_probable_next_phonemes']
+	)
 file.save(
 	most_probable_words['by_averaging'], 
 	'most_probable_words_by_averaging_weighted'
