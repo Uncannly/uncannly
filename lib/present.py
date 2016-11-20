@@ -17,3 +17,10 @@ def present(word):
 	else:
 		print word
 	time.sleep(0.2)
+
+def present_for_web(word):
+	existing_word = already_in_dictionary(word)
+	if existing_word:
+		return '{} (word exists already: {})'.format(word, existing_word)
+	else:
+		return word
