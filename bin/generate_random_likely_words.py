@@ -1,11 +1,9 @@
 import random, time, os, sys
 sys.path.insert(1, os.path.join(sys.path[0], '..'))
 
-from lib import file, format
+from lib import file, format, exists
 
 cumulative_distributions = file.load('cumulative_distributions')
-phonetic_words = file.load('phonetic_words')
-words = file.load('words')
 
 # THIS VERSION ONLY WORKS IF THE PROBABILITIES ARE ORDERED, 
 # WHICH THEY MOSTLY ARE BUT NOT PERFECTLY...
@@ -37,9 +35,9 @@ def test_for_orderedness(phoneme):
 
 def present(word):
 	word = format.format(word)
-	if word in phonetic_words:
-		index = phonetic_words.index(word)
-		print '{} (word exists already: {})'.format(word, words[index])
+	existing_word = exists.already_in_dictionary(word)
+	if existing_word:
+		print '{} (word exists already: {})'.format(word, existing_word)
 	else:
 		print word
 

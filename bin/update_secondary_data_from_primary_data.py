@@ -1,10 +1,10 @@
 import time, os, sys
 sys.path.insert(1, os.path.join(sys.path[0], '..'))
 
-from lib import file, parse, for_ranked, for_random
+from lib import file, parse, for_ranked, for_random, frequency_list
 
-word_freqs = parse.frequency_list()
-phoneme_chain_absolute = parse.pronouncing_dictionary(word_freqs)
+word_frequencies = frequency_list.parse()
+phoneme_chain_absolute = parse.pronouncing_dictionary(word_frequencies)
 
 cumulative_distributions = {}
 most_probable_next_phonemes = {}

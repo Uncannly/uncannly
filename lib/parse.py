@@ -2,20 +2,10 @@ import file
 
 phoneme_chain_absolute = {}
 
-def frequency_list():
-	word_freqs = {}
-	f = open('primary_data/unlemmatized_frequency_list.txt', 'r')
-	for line in f:
-			split_by_tabs = line.strip().split(' ')
-			freq = split_by_tabs[0]
-			word = split_by_tabs[1].upper()
-			word_freqs[word] = freq
-	f.close()
-	return word_freqs
-
 def pronouncing_dictionary(word_freqs):
 	words = []
 	phonetic_words = []
+
 	f = open('primary_data/cmu_pronouncing_dictionary.txt', 'r')
 	for line in f:
 		split_by_tabs = line.strip().split('\t')
@@ -27,8 +17,10 @@ def pronouncing_dictionary(word_freqs):
 		phonetic_word = split_by_tabs[1]
 		store_phonemes_for_word(freq, phonetic_word, phonetic_words)
 	f.close()
+
 	file.save(phonetic_words, 'phonetic_words')
 	file.save(words, 'words')
+
 	return phoneme_chain_absolute
 
 # private
