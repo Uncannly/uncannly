@@ -1,8 +1,8 @@
 import time, os, sys
 sys.path.insert(1, os.path.join(sys.path[0], '..'))
 
-from lib import file, frequency_list, pronouncing_dictionary, \
-	absolute_chain, most_probable_next_phonemes
+from lib import file, frequency_list, pronouncing_dictionary, absolute_chain, \
+	most_probable_words_by_continued_product, most_probable_words_by_averaging
 
 # parse frequency list
 word_frequencies = frequency_list.parse()
@@ -31,7 +31,19 @@ file.save(
 
 # also receive most probable next phonemes per phoneme, 
 #   in order to create a set of one million or so most probable words
-most_probable_words = most_probable_next_phonemes.parse(
+
+# strategy one uses a continued product
+most_probable_words_by_continued_product = \
+most_probable_words_by_continued_product.parse(
 	parsed_absolute_chain['most_probable_next_phonemes']
 )
-file.save(most_probable_words, 'most_probable_words')
+file.save(
+	most_probable_words_by_continued_product, 
+	'most_probable_words_by_continued_product'
+)
+
+# strategy two uses averaging
+most_probable_words_by_averaging = most_probable_words_by_averaging.parse(
+	parsed_absolute_chain['most_probable_next_phonemes']
+)
+file.save(most_probable_words_by_averaging, 'most_probable_words_by_averaging')
