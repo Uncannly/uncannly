@@ -1,12 +1,12 @@
 def parse():
-	word_freqs = {}
+	word_frequencies = {}
 
-	f = open('primary_data/unlemmatized_frequency_list.txt', 'r')
-	for line in f:
-			split_by_tabs = line.strip().split(' ')
-			freq = split_by_tabs[0]
-			word = split_by_tabs[1].upper()
-			word_freqs[word] = freq
-	f.close()
+	file = open('primary_data/unlemmatized_frequency_list.txt', 'r')
+	for line in file:
+			line_split_by_tabs = line.strip().split(' ')
+			frequency = line_split_by_tabs[0]
+			word = line_split_by_tabs[1].upper()
+			word_frequencies[word] = frequency
+	file.close()
 	
-	return word_freqs
+	return word_frequencies

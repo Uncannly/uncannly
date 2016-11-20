@@ -1,17 +1,21 @@
 import time, os, sys
 sys.path.insert(1, os.path.join(sys.path[0], '..'))
 
-from lib import file, parse, for_ranked, for_random, frequency_list
+from lib import file, frequency_list, pronouncing_dictionary, absolute_chain
 
 word_frequencies = frequency_list.parse()
-phoneme_chain_absolute = parse.pronouncing_dictionary(word_frequencies)
+parsed_pronouncing_dictionary = pronouncing_dictionary.parse(word_frequencies)
 
-cumulative_distributions = {}
-most_probable_next_phonemes = {}
+phoneme_chain_absolute = parsed_pronouncing_dictionary['phoneme_chain_absolute']
+phonetic_words = parsed_pronouncing_dictionary['phonetic_words']
+words = parsed_pronouncing_dictionary['words']
 
-for phoneme, next_phoneme_occurrences in phoneme_chain_absolute.iteritems():
-	cumulative_distributions[phoneme] = for_random.cumulative_distribution(next_phoneme_occurrences)
-	most_probable_next_phonemes[phoneme] = for_ranked.most_probable_next_phonemes(next_phoneme_occurrences)
+parsed_absolute_chain = absolute_chain.parse(phoneme_chain_absolute)
+
+cumulative_distributions = parsed_absolute_chain['cumulative_distributions']
+most_probable_next_phonemes = parsed_absolute_chain['most_probable_next_phonemes']
 
 file.save(cumulative_distributions, 'cumulative_distributions')
 file.save(most_probable_next_phonemes, 'most_probable_next_phonemes')
+file.save(phonetic_words, 'phonetic_words')
+file.save(words, 'words')
