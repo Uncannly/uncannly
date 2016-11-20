@@ -1,7 +1,7 @@
 import time, os, sys
 sys.path.insert(1, os.path.join(sys.path[0], '..'))
 
-from lib import file, frequency_list, pronouncing_dictionary, absolute_chain
+from lib import file, frequency_list, pronouncing_dictionary, absolute_chain, most_probable_next_phonemes
 
 # parse frequency list
 word_frequencies = frequency_list.parse()
@@ -26,7 +26,12 @@ file.save(
 	parsed_absolute_chain['cumulative_distributions'],
 	'cumulative_distributions'
 )
-file.save(
-	parsed_absolute_chain['most_probable_next_phonemes'],
-	'most_probable_next_phonemes'
+# file.save(
+# 	parsed_absolute_chain['most_probable_next_phonemes'],
+# 	'most_probable_next_phonemes'
+# )
+
+most_probable_words = most_probable_next_phonemes.parse(
+	parsed_absolute_chain['most_probable_next_phonemes']
 )
+file.save(most_probable_words, 'most_probable_words')
