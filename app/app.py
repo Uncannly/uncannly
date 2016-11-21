@@ -28,7 +28,7 @@ def words():
     ) 
     return json.dumps(words)
 
-@app.route('/random_word')
+@app.route('/random-word')
 def random_word():
     word = random_probable_word.get()
     return json.dumps(word, ensure_ascii=False)
