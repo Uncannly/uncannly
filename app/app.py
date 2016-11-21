@@ -15,7 +15,7 @@ def words():
     style = request.args.get('style') # sorted or random
     filter = request.args.get('filter') # by averaging, by continued product, or none
     weighted_by_frequency = request.args.get('weighted_by_frequency') # true or false
-    # include_real_words = request.args.get('include_real_words') # true or false
+    include_real_words = request.args.get('include_real_words') # true or false
     return_count = request.args.get('return_count') # how many words to return
     # pool_count = request.args.get('pool_count') # how many words to generate to draw from
 
@@ -23,6 +23,7 @@ def words():
     	style=style, 
     	filter=filter, 
     	weighted_by_frequency=weighted_by_frequency, 
+        include_real_words=include_real_words,
     	return_count=return_count
     ) 
     return json.dumps(words)

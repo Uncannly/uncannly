@@ -14,6 +14,6 @@ def get(multiple=False):
 				phoneme = 'START_WORD'
 				word = [phoneme]
 			else:
-				return present.present_for_web(word)
+				return present.present_for_web(word, True)
 		else:
 			word.append(phoneme)
