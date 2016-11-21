@@ -1,7 +1,7 @@
 import random, time, os, sys
 sys.path.insert(1, os.path.join(sys.path[0], '..'))
 
-from lib import file, format, present
+from lib import file, present
 
 cumulative_distributions = file.load('cumulative_distributions')
 
@@ -16,7 +16,7 @@ word = [phoneme]
 while True:
 	phoneme = next_phoneme(phoneme, random.random())
 	if phoneme == 'END_WORD':
-		present.present(format.format(word))
+		present.present(word)
 		phoneme = 'START_WORD'
 		word = [phoneme]
 	else:

@@ -10,4 +10,5 @@ def share(filter, frequency_weighting):
 	print 'total generated most probable words:', len(words)
 
 	while True:
-		present.present(random.choice(words))
+		word = random.choice(words)
+		present.present(word)

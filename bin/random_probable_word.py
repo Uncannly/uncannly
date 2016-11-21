@@ -17,6 +17,6 @@ def get():
 	while True:
 		phoneme = next_phoneme(phoneme, random.random())
 		if phoneme == 'END_WORD':
-			return present.present_for_web(format.format(word))
+			return present.present_for_web(word)
 		else:
 			word.append(phoneme)

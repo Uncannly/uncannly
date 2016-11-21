@@ -1,4 +1,4 @@
-import format
+import ipa
 
 def parse(most_probable_next_phonemes, filter):
 	most_probable_words = {}
@@ -28,8 +28,8 @@ def parse(most_probable_next_phonemes, filter):
 				if word_probability < limit:
 					pass
 				elif phoneme == 'END_WORD':
-					formatted_word = format.format(word)
-					most_probable_words[formatted_word] = word_probability
+					ipa_word = ipa.ipa(word[1:])
+					most_probable_words[ipa_word] = word_probability
 				else:	
 					grown_word = word[:]
 					grown_word.append(phoneme)

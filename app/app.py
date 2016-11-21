@@ -25,7 +25,7 @@ CORS(app)
 @app.route('/random_word')
 def random_word():
     word = random_probable_word.get()
-    return json.dumps(word)
+    return json.dumps(word, ensure_ascii = False)
 
 if __name__ == "__main__":
     http_server = WSGIServer(('0.0.0.0', int(os.getenv("PORT", 5000))), app)
