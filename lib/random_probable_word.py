@@ -1,11 +1,9 @@
-import random, time, os, sys
+import random, os, sys
 sys.path.insert(1, os.path.join(sys.path[0], '..'))
 
-from lib import file, present, next_phoneme
+from lib import present, next_phoneme
 
-cumulative_distributions = file.load('cumulative_distributions')
-
-def get(multiple):
+def get(multiple=False):
 	phoneme = 'START_WORD'
 	word = [phoneme]
 	while True:
