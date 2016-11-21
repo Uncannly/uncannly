@@ -1,4 +1,7 @@
-import ipa
+import os, sys
+sys.path.insert(1, os.path.join(sys.path[0], '..', '..'))
+
+from lib import ipa
 
 def parse(most_probable_next_phonemes, filter):
 	most_probable_words = {}

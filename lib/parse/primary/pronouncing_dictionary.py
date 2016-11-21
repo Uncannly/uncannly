@@ -1,5 +1,3 @@
-import file
-
 def parse(word_frequencies):
 	words = []
 	word_pronunciations = []
