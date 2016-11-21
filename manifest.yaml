@@ -1,5 +1,5 @@
 ---
 applications:
 - name: most-phonetically-probable-missing-english-words
-  memory: 64MB
+  memory: 256MB
   buildpack: python_buildpack
