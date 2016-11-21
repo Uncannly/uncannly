@@ -1,7 +1,7 @@
 import random, os, sys
 sys.path.insert(1, os.path.join(sys.path[0], '..'))
 
-from lib import file, ipa
+from lib import file, present
 
 def get(style, filter, weighted_by_frequency, return_count):
 	frequency_weighting = 'weighted' if weighted_by_frequency else 'unweighted'
@@ -14,17 +14,15 @@ def get(style, filter, weighted_by_frequency, return_count):
 			key = most_probable_words.get,
 			reverse = True
 		)
-		trimmed = sorted_words[0:int(return_count)]
+		trimmed_words = sorted_words[0:int(return_count)]
 		output = []
-		for word in trimmed:
-			ipa_word = ipa.ipa(word)
-			output.append(ipa_word)
+		for word in trimmed_words:
+			output.append(present.present_for_web(word.split(' ')))
 		return output
 	else:
 		output = []
 		words = most_probable_words.keys()
 		for i in range(0, int(return_count)):
 			random_word = random.choice(words)
-			ipa_word = ipa.ipa(random_word)
-			output.append(ipa_word)
+			output.append(present.present_for_web(random_word.split(' ')))
 		return output
