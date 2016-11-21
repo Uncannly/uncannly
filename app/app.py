@@ -5,7 +5,7 @@ from flask_cors import CORS
 from flask import Flask, request
 from gevent.wsgi import WSGIServer
 
-from bin import random_probable_word #, most_probable_words
+from lib import random_probable_word #, most_probable_words
 
 app = Flask(__name__)
 CORS(app)
