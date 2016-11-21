@@ -1,7 +1,7 @@
 import os, sys
 sys.path.insert(1, os.path.join(sys.path[0], '..', '..'))
 
-from lib import ipa
+from lib import format
 
 def parse(most_probable_next_phonemes, filter):
 	most_probable_words = {}
@@ -31,8 +31,8 @@ def parse(most_probable_next_phonemes, filter):
 				if word_probability < limit:
 					pass
 				elif phoneme == 'END_WORD':
-					ipa_word = ipa.ipa(word[1:])
-					most_probable_words[ipa_word] = word_probability
+					formatted_word = format.format(word)
+					most_probable_words[formatted_word] = word_probability
 				else:	
 					grown_word = word[:]
 					grown_word.append(phoneme)

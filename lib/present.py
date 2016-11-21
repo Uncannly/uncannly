@@ -11,13 +11,11 @@ def already_in_dictionary(word):
 		return words[index]
 
 def present(word):
-	formatted_word = format.format(word)
-	existing_word = already_in_dictionary(formatted_word)
-	ipa_word = ipa.ipa(word[1:])
+	existing_word = already_in_dictionary(word)
 	if existing_word:
-		print '{} (word exists already: {})'.format(ipa_word, existing_word)
+		print '{} (word exists already: {})'.format(word, existing_word)
 	else:
-		print ipa_word
+		print word
 	time.sleep(0.2)
 
 def present_for_web(word):
