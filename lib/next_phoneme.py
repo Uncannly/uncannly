@@ -1,9 +1,9 @@
 import os, sys
 sys.path.insert(1, os.path.join(sys.path[0], '..'))
 
-from lib import file
+from lib.secondary_data_io import load
 
-cumulative_distributions = file.load('cumulative_distributions')
+cumulative_distributions = load('cumulative_distributions')
 
 def next_phoneme(phoneme, random_number):
 	return next(step['next_phoneme']

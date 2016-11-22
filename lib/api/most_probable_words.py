@@ -1,11 +1,12 @@
 import random, os, sys
 sys.path.insert(1, os.path.join(sys.path[0], '..'))
 
-from lib import file, present
+from lib import present
+from lib.secondary_data_io import load
 
 def get(style, filter, weighted_by_frequency, include_real_words, return_count):
 	frequency_weighting = 'weighted' if weighted_by_frequency else 'unweighted'
-	most_probable_words = file.load(
+	most_probable_words = load(
 		'most_probable_words_by_{}_{}'.format(filter, frequency_weighting)
 	)
 	if style == 'sorted':

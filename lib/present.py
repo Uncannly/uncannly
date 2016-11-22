@@ -1,9 +1,10 @@
 import time
 
-import file, ipa, format
+import ipa, format
+from secondary_data_io import load
 
-words = file.load('words')
-word_pronunciations = file.load('word_pronunciations')
+words = load('words')
+word_pronunciations = load('word_pronunciations')
 
 def present_word(word, existing_word=True, include_real_words=True):
 	if existing_word:
