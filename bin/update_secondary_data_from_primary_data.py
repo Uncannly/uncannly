@@ -3,8 +3,8 @@ sys.path.insert(1, os.path.join(sys.path[0], '..'))
 
 from lib import file
 from lib.parse.primary import frequency_list, pronouncing_dictionary
-from lib.parse.absolute_chain import absolute_chain
-from lib.parse.most_probable_words import by_continued_product, by_averaging
+from lib.parse.secondary.absolute_chain import parse
+from lib.parse.secondary.most_probable_words import by_continued_product, by_averaging
 
 
 ########### PHASE ONE ####################
@@ -33,7 +33,7 @@ file.save(
 
 # use absolute phoneme chain to create cumulative distributions 
 #   for random word generation
-parsed_absolute_chain = absolute_chain.parse(phoneme_chain_absolute)
+parsed_absolute_chain = parse(phoneme_chain_absolute)
 file.save(
 	parsed_absolute_chain['cumulative_distributions'],
 	'cumulative_distributions'
@@ -49,7 +49,7 @@ most_probable_words = {}
 
 # strategy one uses a continued product
 most_probable_words['by_continued_product'] = \
-	by_continued_product.parse(
+	by_continued_product(
 		parsed_absolute_chain['most_probable_next_phonemes']
 	)
 file.save(
@@ -59,7 +59,7 @@ file.save(
 
 # strategy two uses averaging
 most_probable_words['by_averaging'] = \
-	by_averaging.parse(
+	by_averaging(
 		parsed_absolute_chain['most_probable_next_phonemes']
 	)
 file.save(
@@ -75,13 +75,13 @@ file.save(
 phoneme_chain_absolute_unweighted = \
 	parsed_pronouncing_dictionary['phoneme_chain_absolute_unweighted']
 parsed_absolute_chain_unweighted = \
-	absolute_chain.parse(phoneme_chain_absolute_unweighted)
+	parse(phoneme_chain_absolute_unweighted)
 file.save(
 	parsed_absolute_chain_unweighted['cumulative_distributions'],
 	'cumulative_distributions_unweighted'
 )
 most_probable_words['by_continued_product_unweighted'] = \
-	by_continued_product.parse(
+	by_continued_product(
 		parsed_absolute_chain_unweighted['most_probable_next_phonemes']
 	)
 file.save(
@@ -89,7 +89,7 @@ file.save(
 	'most_probable_words_by_continued_product_unweighted'
 )
 most_probable_words['by_averaging_unweighted'] = \
-	by_averaging.parse(
+	by_averaging(
 		parsed_absolute_chain_unweighted['most_probable_next_phonemes']
 	)
 file.save(

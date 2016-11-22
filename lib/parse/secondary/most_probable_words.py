@@ -3,6 +3,12 @@ sys.path.insert(1, os.path.join(sys.path[0], '..', '..'))
 
 from lib import format
 
+def by_averaging(most_probable_next_phonemes):
+	return parse(most_probable_next_phonemes, 'averaging')
+
+def by_continued_product(most_probable_next_phonemes):
+	return parse(most_probable_next_phonemes, 'continued_product')
+
 def parse(most_probable_next_phonemes, filter):
 	most_probable_words = {}
 
