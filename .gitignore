@@ -1,2 +1,3 @@
 *.pyc
 data/secondary_data/*
+venv
