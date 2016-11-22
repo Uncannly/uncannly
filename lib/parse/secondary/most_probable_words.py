@@ -1,7 +1,7 @@
 import os, sys
 sys.path.insert(1, os.path.join(sys.path[0], '..', '..'))
 
-from lib import format
+from lib.type_conversion import array_to_string
 
 def by_averaging(most_probable_next_phonemes):
 	return parse(most_probable_next_phonemes, 'averaging')
@@ -37,8 +37,8 @@ def parse(most_probable_next_phonemes, filter):
 				if word_probability < limit:
 					pass
 				elif phoneme == 'END_WORD':
-					formatted_word = format.format(word)
-					most_probable_words[formatted_word] = word_probability
+					stringified_word = array_to_string(word)
+					most_probable_words[stringified_word] = word_probability
 				else:	
 					grown_word = word[:]
 					grown_word.append(phoneme)

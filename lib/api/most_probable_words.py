@@ -3,6 +3,7 @@ sys.path.insert(1, os.path.join(sys.path[0], '..'))
 
 from lib import present
 from lib.secondary_data_io import load
+from lib.type_conversion import string_to_array
 
 def get(style, filter, weighted_by_frequency, include_real_words, return_count):
 	frequency_weighting = 'weighted' if weighted_by_frequency else 'unweighted'
@@ -19,10 +20,8 @@ def get(style, filter, weighted_by_frequency, include_real_words, return_count):
 		i = 0
 		while len(output) < int(return_count):
 			i += 1
-			result = present.present_for_web(
-				sorted_words[i].split(' '), 
-				include_real_words
-			)
+			arrayified_word = string_to_array(sorted_words[i])
+			result = present.present_for_web(arrayified_word, include_real_words)
 			if result:
 				output.append(result) 	
 		return output
@@ -31,10 +30,8 @@ def get(style, filter, weighted_by_frequency, include_real_words, return_count):
 		words = most_probable_words.keys()
 		while len(output) < int(return_count):
 			random_word = random.choice(words)
-			result = present.present_for_web(
-				random_word.split(' '), 
-				include_real_words
-			)
+			arrayified_word = string_to_array(random_word)
+			result = present.present_for_web(arrayified_word, include_real_words)
 			if result:
 				output.append(result) 
 		return output

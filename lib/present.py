@@ -1,6 +1,7 @@
 import time
 
-import ipa, format
+from ipa import ipa
+from type_conversion import array_to_string
 from secondary_data_io import load
 
 words = load('words')
@@ -26,9 +27,9 @@ def present(word):
 	time.sleep(0.2)
 
 def present_for_web(word, include_real_words):
-	ipa_word = ipa.ipa(word[1:])
+	ipa_word = ipa(word[1:])
 	
-	formatted_word = format.format(word)
-	existing_word = already_in_dictionary(formatted_word)
+	stringified_word = array_to_string(word)
+	existing_word = already_in_dictionary(stringified_word)
 	
 	return present_word(ipa_word, existing_word, include_real_words)
