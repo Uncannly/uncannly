@@ -1,6 +1,12 @@
 # -*- coding: utf-8 -*-
 
-ipa_dict = {
+def ipa(word):
+	output = []
+	for phoneme in word:
+		output.append(ipa_map[phoneme])
+	return ''.join(output)
+
+ipa_map = {
 	'AA':	'ɑ',
 	'AE':	'æ',
 	'AH':	'ʌ',
@@ -41,9 +47,3 @@ ipa_dict = {
 	'Z':	'z',
 	'ZH':	'ʒ'
 }
-
-def ipa_map(phoneme):
-	return ipa_dict[phoneme]
-
-def ipa(word):
-	return ''.join(map(ipa_map, word))

@@ -1,17 +1,19 @@
-def parse(phoneme_chain_absolute):
-	cumulative_distributions = {}
-	this_phonemes_most_probable_next_phonemes = {}
+class AbsoluteChain:
+	@staticmethod
+	def parse(phoneme_chain_absolute):
+		cumulative_distributions = {}
+		this_phonemes_most_probable_next_phonemes = {}
 
-	for phoneme, next_phoneme_occurrences in phoneme_chain_absolute.iteritems():
-		cumulative_distributions[phoneme] = \
-			cumulative_distribution(next_phoneme_occurrences)
-		this_phonemes_most_probable_next_phonemes[phoneme] = \
-			most_probable_next_phonemes(next_phoneme_occurrences)
+		for phoneme, next_phoneme_occurrences in phoneme_chain_absolute.iteritems():
+			cumulative_distributions[phoneme] = \
+				cumulative_distribution(next_phoneme_occurrences)
+			this_phonemes_most_probable_next_phonemes[phoneme] = \
+				most_probable_next_phonemes(next_phoneme_occurrences)
 
-	return {
-		'cumulative_distributions': cumulative_distributions,
-		'most_probable_next_phonemes': this_phonemes_most_probable_next_phonemes
-	}
+		return {
+			'cumulative_distributions': cumulative_distributions,
+			'most_probable_next_phonemes': this_phonemes_most_probable_next_phonemes
+		}
 
 def cumulative_distribution(next_phoneme_occurrences):
 	total_occurrences_of_next_phonemes = sum(next_phoneme_occurrences.itervalues())

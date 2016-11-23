@@ -1,7 +1,7 @@
 import random, os, sys
 sys.path.insert(1, os.path.join(sys.path[0], '..'))
 
-from lib.present import present
+from lib.present import Present
 from lib.secondary_data_io import load
 
 def share(filter, frequency_weighting):
@@ -13,4 +13,4 @@ def share(filter, frequency_weighting):
 
 	while True:
 		word = random.choice(words)
-		present(word)
+		Present.for_terminal(word)

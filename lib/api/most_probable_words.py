@@ -1,7 +1,7 @@
 import random, os, sys
 sys.path.insert(1, os.path.join(sys.path[0], '..'))
 
-from lib.present import present_for_web
+from lib.present import Present
 from lib.secondary_data_io import load
 from lib.type_conversion import string_to_array
 
@@ -21,7 +21,7 @@ def get(style, filter, weighted_by_frequency, include_real_words, return_count):
 		while len(output) < int(return_count):
 			i += 1
 			arrayified_word = string_to_array(sorted_words[i])
-			result = present_for_web(arrayified_word, include_real_words)
+			result = Present.for_web(arrayified_word, include_real_words)
 			if result:
 				output.append(result) 	
 		return output
@@ -31,7 +31,7 @@ def get(style, filter, weighted_by_frequency, include_real_words, return_count):
 		while len(output) < int(return_count):
 			random_word = random.choice(words)
 			arrayified_word = string_to_array(random_word)
-			result = present_for_web(arrayified_word, include_real_words)
+			result = Present.for_web(arrayified_word, include_real_words)
 			if result:
 				output.append(result) 
 		return output
