@@ -13,4 +13,4 @@ def share(filter, frequency_weighting):
 
 	while True:
 		word = random.choice(words)
-		Present.for_terminal(word)
+		Present.for_terminal(word, include_real_words=True)

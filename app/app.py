@@ -19,6 +19,9 @@ def words():
     return_count = request.args.get('return_count') # how many words to return
     # pool_count = request.args.get('pool_count') # how many words to generate to draw from
 
+    weighted_by_frequency = True if weighted_by_frequency == 'true' else False
+    include_real_words = True if include_real_words == 'true' else False
+
     words = most_probable_words.get(
     	style=style, 
     	filter=filter, 
@@ -30,7 +33,13 @@ def words():
 
 @app.route('/random-word')
 def random_word():
-    word = random_probable_word.get()
+    include_real_words = request.args.get('include_real_words') # true or false
+
+    include_real_words = True if include_real_words == 'true' else False
+
+    word = random_probable_word.get(
+        include_real_words=include_real_words
+    )
     return json.dumps(word, ensure_ascii=False)
 
 if __name__ == "__main__":
