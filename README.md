@@ -1,6 +1,8 @@
-# Most Phonetically Probable Missing English Words
+# Uncann.ly
 
-Visit [http://most-phonetically-probable-missing-english-words.cfapps.io](http://most-phonetically-probable-missing-english-words.cfapps.io) for a demonstration.
+Get the most phonetically probable yet missing words in the English language.
+
+Visit [http://uncannly.cfapps.io](http://uncannly.cfapps.io) for a demonstration.
 
 ## Endpoints:
 

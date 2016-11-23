@@ -1,5 +1,5 @@
 ---
 applications:
-- name: most-phonetically-probable-missing-english-words
+- name: uncannly
   memory: 2GB
   buildpack: python_buildpack
