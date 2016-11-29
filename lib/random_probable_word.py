@@ -1,17 +1,19 @@
 import random, os, sys
 sys.path.insert(1, os.path.join(sys.path[0], '..'))
 
-from lib.present import Present
+from present import Present
+from type_conversion import array_to_string
 from next_phoneme import next_phoneme
 
-def get(include_real_words, multiple=False):
+def get(weighted_by_frequency, include_real_words, multiple=False):
 	phoneme = 'START_WORD'
 	word = [phoneme]
 	while True:
-		phoneme = next_phoneme(phoneme, random.random())
+		phoneme = next_phoneme(phoneme, random.random(), weighted_by_frequency)
 		if phoneme == 'END_WORD':
 			if multiple == True:
-				Present.for_terminal(word, include_real_words)
+				stringified_word = array_to_string(word)
+				Present.for_terminal(stringified_word, include_real_words)
 				phoneme = 'START_WORD'
 				word = [phoneme]
 			else:
