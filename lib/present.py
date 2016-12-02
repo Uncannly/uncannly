@@ -1,5 +1,3 @@
-import time
-
 from ipa import ipa
 from type_conversion import array_to_string
 from secondary_data_io import load
@@ -23,7 +21,6 @@ class Present:
 		word = present_word(word, existing_word, include_real_words)
 		if word != None:
 			print word
-		time.sleep(0.2)
 
 def present_word(word, existing_word=True, include_real_words=True):
 	if existing_word:

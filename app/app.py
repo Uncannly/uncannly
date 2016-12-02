@@ -5,15 +5,15 @@ from flask_cors import CORS
 from flask import Flask, request
 from gevent.wsgi import WSGIServer
 
-from lib.api import random_probable_word, most_probable_words
+import random_word, words
 
 app = Flask(__name__)
 CORS(app)
 
 @app.route('/words')
-def words():
-    style = request.args.get('style') # sorted or random
-    filter = request.args.get('filter') # by averaging, by continued product, or none
+def words_route():
+    selection = request.args.get('selection') # top or random
+    threshold = request.args.get('threshold') # by averaging, by continued product, or none
     weighted_by_frequency = request.args.get('weighted_by_frequency') # true or false
     include_real_words = request.args.get('include_real_words') # true or false
     return_count = request.args.get('return_count') # how many words to return
@@ -22,24 +22,24 @@ def words():
     weighted_by_frequency = False if weighted_by_frequency == 'false' else True
     include_real_words = False if include_real_words == 'false' else True
 
-    words = most_probable_words.get(
-    	style=style, 
-    	filter=filter, 
+    probable_words = words.get(
+    	selection=selection, 
+    	threshold=threshold, 
     	weighted_by_frequency=weighted_by_frequency, 
         include_real_words=include_real_words,
     	return_count=return_count
     ) 
-    return json.dumps(words)
+    return json.dumps(probable_words)
 
 @app.route('/random-word')
-def random_word():
+def random_word_route():
     weighted_by_frequency = request.args.get('weighted_by_frequency') # true or false
     include_real_words = request.args.get('include_real_words') # true or false
 
     weighted_by_frequency = False if weighted_by_frequency == 'false' else True
     include_real_words = False if include_real_words == 'false' else True
 
-    word = random_probable_word.get(
+    word = random_word.get(
         weighted_by_frequency=weighted_by_frequency,
         include_real_words=include_real_words
     )
