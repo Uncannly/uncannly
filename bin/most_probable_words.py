@@ -3,33 +3,32 @@ sys.path.insert(1, os.path.join(sys.path[0], '..'))
 
 from lib.terminal import random_most_probable_words, sorted_most_probable_words
 
-# -u --unweighted 
-# -x --exclude-real-words  STILL HAVENT DONE THIS ONE YET
-# -a --by-averaging            
-# -c --by-continued-product   
-# -s --sorted
-# -r --random
+def flagged(short, long):
+	if short in sys.argv or long in sys.argv:
+		return True
+	else:
+		return False
 
-if '-s' in sys.argv or '--sorted' in sys.argv:
+if flagged('-s', '--sorted'):
 	sharer = sorted_most_probable_words
-elif '-r' in sys.argv or '--random' in sys.argv:
+elif flagged('-r', '--random'):
 	sharer = random_most_probable_words
 else:
 	print 'You must specify either random or sorted.'
 
-if '-a' in sys.argv or '--by-averaging' in sys.argv:
+if flagged('-a', '--by-averaging'):
 	filter = 'averaging'
-elif '-c' in sys.argv or '--by-continued-product' in sys.argv:
+elif flagged('-c', '--by-continued-product'):
 	filter = 'continued_product'
 else:
 	print 'You must specify a filter (either by averaging or by continued product).'
 
-if '-u' in sys.argv or '--unweighted' in sys.argv:
+if flagged('-u', '--unweighted'):
 	frequency_weighting = 'unweighted'
 else:
 	frequency_weighting = 'weighted'
 
-if '-x' in sys.argv or '--exclude-real-words' in sys.argv:
+if flagged('-x', '--exclude-real-words'):
 	include_real_words = False
 else:
 	include_real_words = True

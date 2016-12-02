@@ -18,3 +18,16 @@ Query params:
 
 i.e.
 words?style=sorted&filter=continued_product&weighted_by_frequency=true&include_real_words=true&return_count=4
+
+## Terminal scripts:
+
+bin/random_probable_words
+
+bin/most_probable_words
+Flags:
+* -u --unweighted 
+* -x --exclude-real-words  (STILL HAVENT DONE THIS ONE YET)
+* -a --by-averaging            
+* -c --by-continued-product   
+* -s --sorted
+* -r --random
