@@ -11,44 +11,27 @@ from lib.terminal import random_most_probable_words, sorted_most_probable_words
 # -r --random
 
 if '-s' in sys.argv or '--sorted' in sys.argv:
-	if '-a' in sys.argv or '--by-averaging' in sys.argv:
-		filter = 'averaging'
-	elif '-c' in sys.argv or '--by-continued-product' in sys.argv:
-		filter = 'continued_product'
-	else:
-		print 'You must specify a filter (either by averaging or by continued product).'
-
-	if '-u' in sys.argv or '--unweighted' in sys.argv:
-		frequency_weighting = 'unweighted'
-	else:
-		frequency_weighting = 'weighted'
-
-	if '-x' in sys.argv or '--exclude-real-words' in sys.argv:
-		include_real_words = False
-	else:
-		include_real_words = True
-
-	sorted_most_probable_words.share(filter, frequency_weighting, include_real_words)
-
+	sharer = sorted_most_probable_words
 elif '-r' in sys.argv or '--random' in sys.argv:
-	if '-a' in sys.argv or '--by-averaging' in sys.argv:
-		filter = 'averaging'
-	elif '-c' in sys.argv or '--by-continued-product' in sys.argv:
-		filter = 'continued_product'
-	else:
-		print 'You must specify a filter (either by averaging or by continued product).'
-
-	if '-u' in sys.argv or '--unweighted' in sys.argv:
-		frequency_weighting = 'unweighted'
-	else:
-		frequency_weighting = 'weighted'
-
-	if '-x' in sys.argv or '--exclude-real-words' in sys.argv:
-		include_real_words = False
-	else:
-		include_real_words = True
-
-	random_most_probable_words.share(filter, frequency_weighting, include_real_words)
-	
-else: 
+	sharer = random_most_probable_words
+else:
 	print 'You must specify either random or sorted.'
+
+if '-a' in sys.argv or '--by-averaging' in sys.argv:
+	filter = 'averaging'
+elif '-c' in sys.argv or '--by-continued-product' in sys.argv:
+	filter = 'continued_product'
+else:
+	print 'You must specify a filter (either by averaging or by continued product).'
+
+if '-u' in sys.argv or '--unweighted' in sys.argv:
+	frequency_weighting = 'unweighted'
+else:
+	frequency_weighting = 'weighted'
+
+if '-x' in sys.argv or '--exclude-real-words' in sys.argv:
+	include_real_words = False
+else:
+	include_real_words = True
+
+sharer.share(filter, frequency_weighting, include_real_words)
