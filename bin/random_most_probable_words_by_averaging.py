@@ -1,6 +1,0 @@
-import os, sys
-sys.path.insert(1, os.path.join(sys.path[0], '..'))
-
-from lib.terminal import random_most_probable_words
-
-random_most_probable_words.share('averaging', 'weighted')

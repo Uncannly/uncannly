@@ -20,7 +20,9 @@ class Present:
 	@staticmethod
 	def for_terminal(word, include_real_words):
 		existing_word = already_in_dictionary(word)
-		print present_word(word, existing_word, include_real_words)
+		word = present_word(word, existing_word, include_real_words)
+		if word != None:
+			print word
 		time.sleep(0.2)
 
 def present_word(word, existing_word=True, include_real_words=True):
