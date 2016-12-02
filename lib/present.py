@@ -21,6 +21,9 @@ class Present:
 		word = present_word(word, existing_word, include_real_words)
 		if word != None:
 			print word
+			return True
+		else:
+			return False
 
 def present_word(word, existing_word=True, include_real_words=True):
 	if existing_word:

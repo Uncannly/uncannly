@@ -3,9 +3,7 @@ sys.path.insert(1, os.path.join(sys.path[0], '..'))
 
 from lib.present import Present
 from lib.secondary_data_io import load
-
-def flagged(single_char_flag, full_word_flag):
-	return single_char_flag in sys.argv or full_word_flag in sys.argv
+from lib.flagged import flagged
 
 def share(return_count, selection, threshold, frequency_weighting, include_real_words):
 		most_probable_words = load(

@@ -13,10 +13,12 @@ def get(interface, weighted_by_frequency, include_real_words):
 		if phoneme == 'END_WORD':
 			if interface == "bin":
 				stringified_word = array_to_string(word)
-				Present.for_terminal(stringified_word, include_real_words)
-				return
-				# phoneme = 'START_WORD'
-				# word = [phoneme]
+				word_was_presented = Present.for_terminal(stringified_word, include_real_words)
+				if word_was_presented == True:
+					return
+				else:
+					phoneme = 'START_WORD'
+					word = [phoneme]
 			elif interface == "api":
 				word_to_present = Present.for_web(word, include_real_words)
 				if word_to_present != None:

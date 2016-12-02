@@ -25,6 +25,12 @@ words?selection=top&threshold=continued_product&weighted_by_frequency=true&inclu
 ## Terminal scripts:
 
 bin/random_word
+Flags:
+* -u --unweighted 
+* -x --exclude-real-words
+
+i.e.
+python bin/random_word -u -x
 
 bin/words
 Flags:
@@ -33,3 +39,6 @@ Flags:
 * -a --by-averaging            
 * -c --by-continued-product   
 * -r --random (default is top)
+
+i.e.
+python bin/words 100 -a
