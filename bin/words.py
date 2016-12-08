@@ -1,37 +1,7 @@
-import random, os, sys, argparse
+import os, sys, argparse
 sys.path.insert(1, os.path.join(sys.path[0], '..'))
 
-from lib.present import Present
-from lib.secondary_data_io import load
-
-def share(return_count, filtering, weighting, random_selection, exclude_real):
-	most_probable_words = load(
-		'most_probable_words_by_{}_{}'.format(filtering, weighting)
-	)
-
-	print 'total generated most probable words:', len(most_probable_words)
-
-	selector = select_random if random_selection else select_top
-	selector(most_probable_words, return_count, exclude_real)
-
-def select_top(most_probable_words, return_count, exclude_real):
-	words = sorted(most_probable_words,	key=most_probable_words.get, reverse=True)
-	i = 0
-	for _ in xrange(return_count):
-		if i == len(words):
-			print 'Fewer words met criteria than the specified return count.'
-			break
-		presented = False
-		while presented == False:
-			presented = Present.for_terminal(words[i], exclude_real)
-			i += 1
-
-def select_random(most_probable_words, return_count, exclude_real):
-	words = most_probable_words.keys()
-	for _ in xrange(return_count):
-		while Present.for_terminal(random.choice(words), exclude_real) == False:
-			pass
-
+from lib.words import Words
 
 parser = argparse.ArgumentParser(
 	description='Get the most likely yet missing English words.'
@@ -64,7 +34,8 @@ parser.add_argument(
 
 args = parser.parse_args()
 
-share(
+Words.get(
+	interface="bin",
 	return_count=args.return_count, 
 	filtering='averaging' if args.averaging else 'continued_product', 
 	weighting='unweighted' if args.unweighted else 'weighted',
