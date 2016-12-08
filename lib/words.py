@@ -32,7 +32,9 @@ class Words:
 			selector = api_select_random if random_selection else api_select_top
 		elif interface == 'bin':
 			selector = bin_select_random if random_selection else bin_select_top
-			print 'total generated most probable words:', len(most_probable_words)
+			sys.stdout.write(
+				'total generated most probable words: ' + len(most_probable_words) + '\n'
+			)
 		
 		return selector(words, return_count, exclude_real)
 
@@ -40,7 +42,9 @@ def bin_select_top(words, return_count, exclude_real):
 	i = 0
 	for _ in xrange(return_count):
 		if i == len(words):
-			print 'Fewer words met criteria than the specified return count.'
+			sys.stdout.write(
+				'Fewer words met criteria than the specified return count.\n'
+			)
 			break
 		presented = False
 		while presented == False:
@@ -57,7 +61,9 @@ def api_select_top(words, return_count, exclude_real):
 	i = 0
 	while len(output) < return_count:
 		if i == len(words):
-			print 'Fewer words met criteria than the specified return count.'
+			sys.stdout.write(
+				'Fewer words met criteria than the specified return count.\n'
+			)
 			break
 		arrayified_word = string_to_array(words[i])
 		i += 1

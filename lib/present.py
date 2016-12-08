@@ -1,3 +1,5 @@
+import sys
+
 from ipa import ipa
 from type_conversion import array_to_string
 from secondary_data_io import load
@@ -20,7 +22,7 @@ class Present:
 		existing_word = already_in_dictionary(word)
 		word = present_word(word, exclude_real, existing_word)
 		if word != None:
-			print word
+			sys.stdout.write(word + '\n')
 			return True
 		else:
 			return False
