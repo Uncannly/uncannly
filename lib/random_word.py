@@ -7,12 +7,12 @@ from next_phoneme import next_phoneme
 
 def get(interface, unweighted, exclude_real):
 	phoneme = 'START_WORD'
-	word = [phoneme]
+	word = []
 	while True:
 		phoneme = next_phoneme(phoneme, random.random(), unweighted)
 		if phoneme == 'END_WORD':
 			if interface == "bin":
-				stringified_word = array_to_string(word[1:len(word)])
+				stringified_word = array_to_string(word)
 				word_was_presented = Present.for_terminal(stringified_word, exclude_real)
 				if word_was_presented == True:
 					return
