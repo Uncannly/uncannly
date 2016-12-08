@@ -1,17 +1,23 @@
-import random, time, os, sys
+import random, time, os, sys, argparse
 sys.path.insert(1, os.path.join(sys.path[0], '..'))
 
 from lib import random_word
-from lib.flagged import flagged
 
-if flagged('-u', '--unweighted'):
-	weighted_by_frequency = False
-else:
-	weighted_by_frequency = True
+parser = argparse.ArgumentParser(
+	description='Get the most likely yet missing English words.'
+)
 
-if flagged('-x', '--exclude-real-words'):
-	include_real_words = False
-else:
-	include_real_words = True
+parser.add_argument(
+	'--unweighted', '-u',
+	action='store_true',
+	help='Do not weight probabilities by frequency of words in the corpus.'
+)
+parser.add_argument(
+	'--exclude-real', '-x', 
+	action='store_true',
+	help='Do not include words probable by pronunciation that do exist.'
+)
 
-random_word.get("bin", weighted_by_frequency, include_real_words)
+args = parser.parse_args()
+
+random_word.get("bin", unweighted=args.unweighted, exclude_real=args.exclude_real)

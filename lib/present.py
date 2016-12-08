@@ -7,30 +7,27 @@ word_pronunciations = load('word_pronunciations')
 
 class Present:
 	@staticmethod
-	def for_web(word, include_real_words):
-		ipa_word = ipa(word[1:])
+	def for_web(word, exclude_real):
+		ipa_word = ipa(word)
 		
 		stringified_word = array_to_string(word)
 		existing_word = already_in_dictionary(stringified_word)
 		
-		return present_word(ipa_word, existing_word, include_real_words)
+		return present_word(ipa_word, exclude_real, existing_word)
 
 	@staticmethod
-	def for_terminal(word, include_real_words):
+	def for_terminal(word, exclude_real):
 		existing_word = already_in_dictionary(word)
-		word = present_word(word, existing_word, include_real_words)
+		word = present_word(word, exclude_real, existing_word)
 		if word != None:
 			print word
 			return True
 		else:
 			return False
 
-def present_word(word, existing_word=True, include_real_words=True):
+def present_word(word, exclude_real, existing_word):
 	if existing_word:
-		if include_real_words == True:
-			return '{} (word exists already: {})'.format(word, existing_word)
-		else:
-			return None
+		return None if exclude_real else '{} ({})'.format(word, existing_word)
 	else:
 		return word
 

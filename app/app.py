@@ -12,36 +12,21 @@ CORS(app)
 
 @app.route('/words')
 def words_route():
-    selection = request.args.get('selection') # top or random
-    threshold = request.args.get('threshold') # by averaging, by continued product, or none
-    weighted_by_frequency = request.args.get('weighted_by_frequency') # true or false
-    include_real_words = request.args.get('include_real_words') # true or false
-    return_count = request.args.get('return_count') # how many words to return
-    # pool_count = request.args.get('pool_count') # how many words to generate to draw from
-
-    weighted_by_frequency = False if weighted_by_frequency == 'false' else True
-    include_real_words = False if include_real_words == 'false' else True
-
     probable_words = words.get(
-    	selection=selection, 
-    	threshold=threshold, 
-    	weighted_by_frequency=weighted_by_frequency, 
-        include_real_words=include_real_words,
-    	return_count=return_count
+        return_count=request.args.get('return-count'),
+        averaging=request.args.get('averaging'), 
+        random_selection=request.args.get('random-selection'), 
+    	unweighted=request.args.get('unweighted'), 
+        exclude_real=request.args.get('exclude-real'),
+        # pool_count=request.args.get('pool_count')
     ) 
-    return json.dumps(probable_words)
+    return json.dumps(probable_words, ensure_ascii=False)
 
 @app.route('/random-word')
 def random_word_route():
-    weighted_by_frequency = request.args.get('weighted_by_frequency') # true or false
-    include_real_words = request.args.get('include_real_words') # true or false
-
-    weighted_by_frequency = False if weighted_by_frequency == 'false' else True
-    include_real_words = False if include_real_words == 'false' else True
-
     word = random_word.get(
-        weighted_by_frequency=weighted_by_frequency,
-        include_real_words=include_real_words
+        unweighted=request.args.get('unweighted'), 
+        exclude_real=request.args.get('exclude-real')
     )
     return json.dumps(word, ensure_ascii=False)
 

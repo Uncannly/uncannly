@@ -1,44 +1,98 @@
 # Uncann.ly
 
-Get the most phonetically probable yet missing words in the English language.
+Get the most phonetically probable yet missing words of the English language.
 
 Visit [http://uncannly.cfapps.io](http://uncannly.cfapps.io) for a demonstration.
 
-## Endpoints:
+## Endpoint versions:
 
-/random_word
+### /random-word
+
 Query params:
-* weighted_by_frequency: true/false
-* include_real_words: true/false
 
-/words
+* `unweighted`: Do not weight probabilities by frequency of words in the corpus.
+* `exclude-real`: Do not include words probable by pronunciation that do exist.
+
+e.g.
+
+```
+https://uncannly.cfapps.io/random-word?unweighted&exclude-real
+"fɑɪtrɛθrikɑtɪvʌltʌn"
+```
+
+```
+https://uncannly.cfapps.io/random-word
+"pɑtɛndemɛðɛθ"
+```
+
+### /words
+
 Query params:
-* selection: top, random
-* threshold: continued_product, averaging
-* weighted_by_frequency: true/false
-* include_real_words: true/false
-* return_count: int < several thousand or so I guess
 
-i.e.
-words?selection=top&threshold=continued_product&weighted_by_frequency=true&include_real_words=true&return_count=4
+* `return-count`: How many words to return at once (default: `45`).
+* `averaging`: Use the list of most likely words which was created by cutting off words when they passed a threshold based on averaging the probabilities of phonemes following each other (instead of taking the continued product of these probabilities, which is the default). 
+* `random-selection`: From this particularly specified set of most probable words, instead of the absolute topmost probable ones, return a random selection.
+* `unweighted`: Do not weight probabilities by frequency of words in the corpus.
+* `exclude-real`: Do not include words probable by pronunciation that do exist.
 
-## Terminal scripts:
+e.g.
 
-bin/random_word
-Flags:
-* -u --unweighted 
-* -x --exclude-real-words
+```
+https://uncannly.cfapps.io/words?return-count=3&averaging&random-selection&unweighted&exclude-real
+["s", "kʌntʌn", "kʌliʌn"]
+```
 
-i.e.
-python bin/random_word -u -x
+```
+https://uncannly.cfapps.io/words
+["wɑz (WAAS)", "wɚ (WE'RE(2))", "ɪŋ (ING)", "wɑr", "ɪz (IS)", ...]
+```
 
-bin/words
-Flags:
-* -u --unweighted 
-* -x --exclude-real-words
-* -a --by-averaging            
-* -c --by-continued-product   
-* -r --random (default is top)
+## Terminal script versions:
 
-i.e.
-python bin/words 100 -a
+### bin/random_word
+
+Arguments:
+
+* `-u`, `--unweighted`: Do not weight probabilities by frequency of words in the corpus.
+* `-x`, `--exclude-real`: Do not include words probable by pronunciation that do exist.
+
+e.g.
+
+```
+$ python bin/random_word.py -u -x
+Y UW Z IH T AH Z
+```
+
+```
+$ python bin/random_word.py
+G EH R (GAIR)
+```
+
+### bin/words
+
+Arguments:
+
+* `-c`, `--return-count`: How many words to return at once (default: `45`).
+* `-a`, `--averaging`: Use the list of most likely words which was created by cutting off words when they passed a threshold based on averaging the probabilities of phonemes following each other (instead of taking the continued product of these probabilities, which is the default). 
+* `-r`, `--random-selection`: From this particularly specified set of most probable words, instead of the absolute topmost probable ones, return a random selection.
+* `-u`, `--unweighted`: Do not weight probabilities by frequency of words in the corpus.
+* `-x`, `--exclude-real`: Do not include words probable by pronunciation that do exist.
+
+e.g.
+
+```
+$ python bin/words.py -c 3 -a -r -u -x
+K AH L IY AH N
+K AH N T AH N
+S
+```
+
+```
+$ python bin/words.py
+W AA Z (WAAS)
+W ER (WE'RE(2))
+IH NG (ING)
+W AA R
+IH Z (IS)
+...
+```

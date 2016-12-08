@@ -12,12 +12,12 @@ class MostProbableWords:
 	def by_continued_product(most_probable_next_phonemes):
 		return parse(most_probable_next_phonemes, 'continued_product')
 
-def parse(most_probable_next_phonemes, filter):
+def parse(most_probable_next_phonemes, filtering):
 	most_probable_words = {}
 
-	if (filter == 'continued_product'):
+	if (filtering == 'continued_product'):
 		limit = 0.0000000000000000000001
-	elif (filter == 'averaging'):
+	elif (filtering == 'averaging'):
 		limit = 0.2415
 
 	def next_phoneme(word, word_probability):
@@ -31,16 +31,16 @@ def parse(most_probable_next_phonemes, filter):
 				phoneme = pp_tuple[0]
 				probability = pp_tuple[1]
 
-				if (filter == 'continued_product'):
+				if (filtering == 'continued_product'):
 					word_probability *= probability
-				elif (filter == 'averaging'):
+				elif (filtering == 'averaging'):
 					word_probability = (word_length * word_probability + probability) \
 						/ (word_length + 1)
 
 				if word_probability < limit:
 					pass
 				elif phoneme == 'END_WORD':
-					stringified_word = array_to_string(word)
+					stringified_word = array_to_string(word[1:len(word)])
 					most_probable_words[stringified_word] = word_probability
 				else:	
 					grown_word = word[:]
