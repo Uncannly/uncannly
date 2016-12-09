@@ -1,0 +1,11 @@
+label, button, span {
+	display: block;
+}
+
+.return-count {
+	width: 30px;
+}
+
+.random-word span {
+	height: 30px;
+}
