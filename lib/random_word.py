@@ -18,13 +18,13 @@ def get(interface, unweighted, exclude_real):
 					return
 				else:
 					phoneme = 'START_WORD'
-					word = [phoneme]
+					word = []
 			elif interface == "api":
 				word_to_present = Present.for_web(word, exclude_real)
 				if word_to_present != None:
 					return word_to_present
 				else:
 					phoneme = 'START_WORD'
-					word = [phoneme]
+					word = []
 		else:
 			word.append(phoneme)
