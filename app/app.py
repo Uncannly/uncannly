@@ -2,13 +2,17 @@ import json, os, sys
 sys.path.insert(1, os.path.join(sys.path[0], '..'))
 
 from flask_cors import CORS
-from flask import Flask, request
+from flask import Flask, request, render_template
 from gevent.wsgi import WSGIServer
 
 import random_word, words
 
 app = Flask(__name__)
 CORS(app)
+
+@app.route('/')
+def root():
+    return render_template('index.html')
 
 @app.route('/words')
 def words_route():

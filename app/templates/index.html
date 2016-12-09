@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+	<head>
+	  <meta charset="utf-8">
+	  <title>Uncann.ly</title>
+	</head>
+	<body>
+		<div class="random-word">
+			Random word:
+			<label style="display: block;">
+				<input  type="checkbox" class="unweighted">
+				unweighted
+			</label>
+			<label style="display: block;">
+				<input type="checkbox" class="exclude-real">
+				exclude real
+			</label>
+			<button style="display: block;">Refresh</button>
+			<span style="display: block; height: 50px;"></span>
+		</div>
+
+		<div class="words">
+			Words: 
+			<label style="display: block;">
+				<input style="width: 30px;" class="return-count">
+				return count
+			</label>
+			<label style="display: block;">
+				<input type="checkbox" class="averaging">
+				filtering by averaging
+			</label>
+			<label style="display: block;">
+				<input type="checkbox" class="random-selection">
+				random selection
+			</label>
+			<label style="display: block;">
+				<input type="checkbox" class="unweighted">
+				unweighted
+			</label>
+			<label style="display: block;">
+				<input type="checkbox" class="exclude-real">
+				exclude real
+			</label>
+			<button style="display: block;">Refresh</button>
+			<span style="display: block;"></span>
+		</div>
+
+		<script 
+			type=text/javascript 
+			src="{{url_for('static', filename='jquery-3.1.1.min.js')}}"
+		>
+		</script>
+  	<script>
+			$(".random-word button").click(function(e) {
+				let url = '/random-word'
+				const data = []
+				if ($(".random-word .unweighted").is(':checked')) data.push('unweighted')
+				if ($(".random-word .exclude-real").is(':checked')) data.push('exclude-real')
+				if (data.length > 0) url += '?' + data.join('&')
+
+        $.ajax({
+        	url: url,
+        	success: function(result) {
+        		$(".random-word span").html(result);
+    			}
+    		});
+    	});
+
+    	$(".words button").click(function(e) {
+    		let url = '/words'
+				const data = []
+				const returnCount = $(".words .return-count").val()
+				if (returnCount) data.push(`return-count=${returnCount}`)
+				if ($(".words .averaging").is(':checked')) data.push("averaging")
+				if ($(".words .random-selection").is(':checked')) data.push("random-selection")
+				if ($(".words .unweighted").is(':checked')) data.push('unweighted')
+				if ($(".words .exclude-real").is(':checked')) data.push('exclude-real')
+				if (data.length > 0) url += '?' + data.join('&')
+
+        $.ajax({
+        	url: url,
+        	success: function(result) {
+        		$(".words span").html(JSON.parse(result).join('<br>'));
+    			}
+    		});
+    	});
+		</script>
+	</body>
+</html>
