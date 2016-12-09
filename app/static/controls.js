@@ -1,0 +1,33 @@
+$(".random-word button").click(function(e) {
+	let url = '/random-word'
+	const data = []
+	if ($(".random-word .unweighted").is(':checked')) data.push('unweighted')
+	if ($(".random-word .exclude-real").is(':checked')) data.push('exclude-real')
+	if (data.length > 0) url += '?' + data.join('&')
+
+    $.ajax({
+        url: url,
+        success: function(result) {
+        	$(".random-word span").html(result);
+        }
+    });
+});
+
+$(".words button").click(function(e) {
+	let url = '/words'
+	const data = []
+	const returnCount = $(".words .return-count").val()
+	if (returnCount) data.push(`return-count=${returnCount}`)
+	if ($(".words .averaging").is(':checked')) data.push("averaging")
+	if ($(".words .random-selection").is(':checked')) data.push("random-selection")
+	if ($(".words .unweighted").is(':checked')) data.push('unweighted')
+	if ($(".words .exclude-real").is(':checked')) data.push('exclude-real')
+	if (data.length > 0) url += '?' + data.join('&')
+
+    $.ajax({
+    	url: url,
+    	success: function(result) {
+    		$(".words span").html(JSON.parse(result).join('<br>'));
+    		}
+	});
+});
