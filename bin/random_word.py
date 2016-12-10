@@ -1,7 +1,7 @@
 import random, time, os, sys, argparse
 sys.path.insert(1, os.path.join(sys.path[0], '..'))
 
-from lib import random_word
+from lib.random_word import RandomWord
 
 parser = argparse.ArgumentParser(
 	description='Get the most likely yet missing English words.'
@@ -20,4 +20,4 @@ parser.add_argument(
 
 args = parser.parse_args()
 
-random_word.get("bin", unweighted=args.unweighted, exclude_real=args.exclude_real)
+RandomWord.get("bin", unweighted=args.unweighted, exclude_real=args.exclude_real)
