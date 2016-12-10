@@ -33,7 +33,7 @@ class Words:
 		elif interface == 'bin':
 			selector = bin_select_random if random_selection else bin_select_top
 			sys.stdout.write(
-				'total generated most probable words: ' + len(most_probable_words) + '\n'
+				'total generated most probable words: ' + str(len(most_probable_words)) + '\n'
 			)
 		
 		return selector(words, return_count, exclude_real)
