@@ -24,6 +24,7 @@ $(".words button.refresh").click(function(e) {
     if ($(".words .exclude-real").is(':checked')) data.push('exclude-real')
     if (data.length > 0) url += '?' + data.join('&')
 
+    $("#words").html('Loading...')
     $.ajax({
         url: url,
         success: function(result) {
