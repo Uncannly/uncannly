@@ -13,45 +13,47 @@ from lib.parse.secondary.most_probable_words import MostProbableWords
 # parse frequency list
 word_frequencies = frequency_list.parse()
 
-# use frequency list as weight on absolute phoneme chain
+# use frequency list to make weighting an option
 parsed_pronouncing_dictionary = pronouncing_dictionary.parse(word_frequencies)
-phoneme_chain_absolute = parsed_pronouncing_dictionary['phoneme_chain_absolute']
 
-# also receive two analogous lists: all words, and their pronounciations
-save(
-	parsed_pronouncing_dictionary['words'], 
-	'words'
-)
-save(
-	parsed_pronouncing_dictionary['word_pronunciations'],
-	'word_pronunciations'
-)
+# receive two analogous lists: all words, and their pronounciations
+save(parsed_pronouncing_dictionary['words'], 'words')
+save(parsed_pronouncing_dictionary['word_pronunciations'], 'word_pronunciations')
 
 
 ########### PHASE TWO ####################
 
 
-# use absolute phoneme chain to create cumulative distributions 
-#   for random word generation
-parsed_absolute_chain = AbsoluteChain.parse(phoneme_chain_absolute)
+# from absolute phoneme chain, create sorted data structure for everything else
+phoneme_chain_absolute = \
+	parsed_pronouncing_dictionary['phoneme_chain_absolute']
+most_probable_next_phonemes = \
+	AbsoluteChain.parse(phoneme_chain_absolute)
 save(
-	parsed_absolute_chain['cumulative_distributions'],
-	'cumulative_distributions'
+	most_probable_next_phonemes, 
+	'most_probable_next_phonemes'
+)
+
+# also do this for the unweighted version
+phoneme_chain_absolute_unweighted = \
+	parsed_pronouncing_dictionary['phoneme_chain_absolute_unweighted']
+most_probable_next_phonemes_unweighted = \
+	AbsoluteChain.parse(phoneme_chain_absolute_unweighted)
+save(
+	most_probable_next_phonemes_unweighted, 
+	'most_probable_next_phonemes_unweighted'
 )
 
 
 ########### PHASE THREE.ONE ####################
 
-
-# also receive most probable next phonemes per phoneme, 
-#   in order to create a set of one million or so most probable words
+ 
+# create a set of one million or so most probable words
 most_probable_words = {}
 
 # strategy one uses a continued product
 most_probable_words['by_continued_product'] = \
-	MostProbableWords.by_continued_product(
-		parsed_absolute_chain['most_probable_next_phonemes']
-	)
+	MostProbableWords.by_continued_product(most_probable_next_phonemes)
 save(
 	most_probable_words['by_continued_product'], 
 	'most_probable_words_by_continued_product_weighted'
@@ -59,39 +61,22 @@ save(
 
 # strategy two uses averaging
 most_probable_words['by_averaging'] = \
-	MostProbableWords.by_averaging(
-		parsed_absolute_chain['most_probable_next_phonemes']
-	)
+	MostProbableWords.by_averaging(most_probable_next_phonemes)
 save(
 	most_probable_words['by_averaging'], 
 	'most_probable_words_by_averaging_weighted'
 )
 
 
-########### PHASE THREE.TWO ####################
-
-
-# repeat above, for unweighted versions
-phoneme_chain_absolute_unweighted = \
-	parsed_pronouncing_dictionary['phoneme_chain_absolute_unweighted']
-parsed_absolute_chain_unweighted = \
-	AbsoluteChain.parse(phoneme_chain_absolute_unweighted)
-save(
-	parsed_absolute_chain_unweighted['cumulative_distributions'],
-	'cumulative_distributions_unweighted'
-)
+# repeat both above strategies for unweighted versions
 most_probable_words['by_continued_product_unweighted'] = \
-	MostProbableWords.by_continued_product(
-		parsed_absolute_chain_unweighted['most_probable_next_phonemes']
-	)
+	MostProbableWords.by_continued_product(most_probable_next_phonemes_unweighted)
 save(
 	most_probable_words['by_continued_product_unweighted'], 
 	'most_probable_words_by_continued_product_unweighted'
 )
 most_probable_words['by_averaging_unweighted'] = \
-	MostProbableWords.by_averaging(
-		parsed_absolute_chain_unweighted['most_probable_next_phonemes']
-	)
+	MostProbableWords.by_averaging(most_probable_next_phonemes_unweighted)
 save(
 	most_probable_words['by_averaging_unweighted'], 
 	'most_probable_words_by_averaging_unweighted'

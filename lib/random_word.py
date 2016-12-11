@@ -5,8 +5,8 @@ from present import Present
 from secondary_data_io import load
 from type_conversion import array_to_string
 
-weighted_distributions = load('cumulative_distributions')
-unweighted_distributions = load('cumulative_distributions_unweighted')
+next_phonemes_weighted = load('most_probable_next_phonemes')
+next_phonemes_unweighted = load('most_probable_next_phonemes_unweighted')
 
 class RandomWord:
 	@staticmethod
@@ -35,9 +35,10 @@ class RandomWord:
 				word.append(phoneme)
 
 def next_phoneme(phoneme, random_number, unweighted):
-	distributions = unweighted_distributions if unweighted else weighted_distributions
-	
-	return next(step['next_phoneme']
-		for step in distributions[phoneme]
-		if step['accumulated_probability'] >= random_number
-	)
+	next_phonemes = next_phonemes_unweighted if unweighted else next_phonemes_weighted
+
+	accumulated_probability = 0
+	for (phoneme, probability) in next_phonemes[phoneme]:
+	  accumulated_probability += probability
+	  if accumulated_probability >= random_number:
+	  	return phoneme
