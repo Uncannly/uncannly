@@ -7,9 +7,9 @@ label, button, span {
 }
 
 input:not([type]) {
-	width: 30px;
+	width: 50px;
 }
 
-.random-word span {
-	height: 30px;
+#random-word {
+	height: 50px;
 }

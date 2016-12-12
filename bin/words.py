@@ -37,6 +37,11 @@ parser.add_argument(
 	help='Alias for "--scoring-method=mean-arithmetic".'
 )
 parser.add_argument(
+	'--score-threshold', '-t',
+	type=float,
+	help='When specified, will not return words with scores (according to the current scoring method) lower than this threshold.'
+)
+parser.add_argument(
 	'--random-selection', '-r',
 	nargs='?', const=1000000, type=int,
 	help='From this particularly specified set of most probable words, instead of the absolute topmost probable ones, return a random selection.'
@@ -73,6 +78,7 @@ Words.get(
 	interface="bin",
 	return_count=args.return_count, 
 	scoring_method=args.scoring_method,
+	score_threshold=args.score_threshold,
 	weighting='unweighted' if args.unweighted else 'weighted',
 	random_selection=args.random_selection,
 	exclude_real=args.exclude_real

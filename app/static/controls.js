@@ -24,6 +24,9 @@ $(".words button.refresh").click(function(e) {
     if ($(".words .mean-geometric").is(':checked')) data.push("scoring-method=mean-geometric")
     if ($(".words .mean-arithmetic").is(':checked')) data.push("scoring-method=mean-arithmetic")
 
+    const scoreThreshold = $(".words .score-threshold").val()
+    if (scoreThreshold !== '') data.push(`score-threshold=${scoreThreshold}`)
+
     const randomSelection = $(".words .random-selection").val()
     if (randomSelection !== '') data.push(`random-selection=${randomSelection}`)
 

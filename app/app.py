@@ -23,6 +23,7 @@ def words_route():
         score_by_integral_sum=request.args.get('score-by-integral-sum'), 
         score_by_mean_geometric=request.args.get('score-by-mean-geometric'), 
         score_by_mean_arithmetic=request.args.get('score-by-mean-arithmetic'), 
+        score_threshold=request.args.get('score-threshold'),
         random_selection=request.args.get('random-selection'), 
     	unweighted=request.args.get('unweighted'), 
         exclude_real=request.args.get('exclude-real'),

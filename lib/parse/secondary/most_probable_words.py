@@ -78,4 +78,10 @@ def parse(most_probable_next_phonemes, frequency_weighting, scoring_method):
 		reverse=True
 	)
 
-	return sorted_most_probable_words
+	sorted_most_probable_words_with_score = []
+	for word in sorted_most_probable_words:
+		sorted_most_probable_words_with_score.append(
+			(word, most_probable_words[word])
+		)
+
+	return sorted_most_probable_words_with_score

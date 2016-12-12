@@ -11,6 +11,7 @@ def get(
 	score_by_integral_sum,
 	score_by_mean_geometric,
 	score_by_mean_arithmetic,
+	score_threshold,
 	random_selection, 
 	unweighted, 
 	exclude_real):
@@ -36,6 +37,7 @@ def get(
 		interface='api', 
 		return_count=int(return_count) if return_count else 45,	
 		scoring_method=scoring_method, 
+		score_threshold=float(score_threshold) if score_threshold else None,
 		random_selection=random_selection, 
 		weighting='unweighted' if unweighted != None else 'weighted', 
 		exclude_real=exclude_real != None

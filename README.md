@@ -32,6 +32,10 @@ Scoring is required when filtering (one must filter by something). Filtering is 
 
 The default scoring method is `integral-product`.
 
+* **score threshold**
+
+When specified, will not return words with scores (according to the current scoring method) lower than this threshold.
+
 * **random selection**
 
 Return a random set of words drawn from a pool at the top, rather than a ranked list from the top.

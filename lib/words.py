@@ -11,6 +11,7 @@ class Words:
 		interface, 
 		return_count, 
 		scoring_method, 
+		score_threshold,
 		weighting, 
 		random_selection, 
 		exclude_real
@@ -20,11 +21,18 @@ class Words:
 		)
 
 		if random_selection:
-			words = most_probable_words[0:int(random_selection)]
+			word_tuples = most_probable_words[0:int(random_selection)]
 			selector = api_select_random if interface == 'api' else bin_select_random
 		else:
-			words = most_probable_words
+			word_tuples = most_probable_words
 			selector = api_select_top if interface == 'api' else bin_select_top
+
+		words = []
+		for index, (word, score) in enumerate(word_tuples):
+			if score < score_threshold:
+				break
+			else:
+				words.append(word)
 		
 		return selector(words, return_count, exclude_real)
 
@@ -51,9 +59,7 @@ def api_select_top(words, return_count, exclude_real):
 	i = 0
 	while len(output) < return_count:
 		if i == len(words):
-			sys.stdout.write(
-				'Fewer words met criteria than the specified return count.\n'
-			)
+			output.append('Fewer words met criteria than the specified return count.')
 			break
 		arrayified_word = string_to_array(words[i])
 		i += 1
