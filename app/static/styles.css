@@ -2,6 +2,10 @@ label, button, span {
 	display: block;
 }
 
+.scoring-method label {
+	display: inline;
+}
+
 .return-count {
 	width: 30px;
 }
