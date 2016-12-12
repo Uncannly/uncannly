@@ -4,33 +4,41 @@ sys.path.insert(1, os.path.join(sys.path[0], '..', '..'))
 from lib.type_conversion import array_to_string
 
 default_limit_for_scoring_method = {
-	'integral_product': 0.0000000000000000000001,
-	'integral_sum': 0.04475,
-	'mean_geometric': 0.0001,
-	'mean_arithmetic': 0.2415
+	'weighted': {
+		'integral_product': 1     * 10**-22, # 1056044 total returned
+		'integral_sum':     4.44  * 10**-2,  # 1167773 total returned
+		'mean_geometric':   1     * 10**-4,  # 1024405 total returned
+		'mean_arithmetic':  2.415 * 10**-1   # 1034046 total returned
+	},
+	'unweighted': {
+		'integral_product': 8     * 10**-25, # 1016069 total returned
+		'integral_sum':     4.1   * 10**-2,  # 1105730 total returned
+		'mean_geometric':   2.75  * 10**-5,  # 1016940 total returned
+		'mean_arithmetic':  1.845 * 10**-1   # 1031604 total returned
+	}
 }
 
 class MostProbableWords:
 	@staticmethod
-	def by_integral_product(most_probable_next_phonemes):
-		return parse(most_probable_next_phonemes, 'integral_product')
+	def by_integral_product(most_probable_next_phonemes, frequency_weighting):
+		return parse(most_probable_next_phonemes, frequency_weighting, 'integral_product')
 
 	@staticmethod
-	def by_integral_sum(most_probable_next_phonemes):
-		return parse(most_probable_next_phonemes, 'integral_sum')
+	def by_integral_sum(most_probable_next_phonemes, frequency_weighting):
+		return parse(most_probable_next_phonemes, frequency_weighting, 'integral_sum')
 
 	@staticmethod
-	def by_mean_geometric(most_probable_next_phonemes):
-		return parse(most_probable_next_phonemes, 'mean_geometric')
+	def by_mean_geometric(most_probable_next_phonemes, frequency_weighting):
+		return parse(most_probable_next_phonemes, frequency_weighting, 'mean_geometric')
 
 	@staticmethod
-	def by_mean_arithmetic(most_probable_next_phonemes):
-		return parse(most_probable_next_phonemes, 'mean_arithmetic')
+	def by_mean_arithmetic(most_probable_next_phonemes, frequency_weighting):
+		return parse(most_probable_next_phonemes, frequency_weighting, 'mean_arithmetic')
 
-def parse(most_probable_next_phonemes, scoring_method):
+def parse(most_probable_next_phonemes, frequency_weighting, scoring_method):
 	most_probable_words = {}
 
-	limit = default_limit_for_scoring_method[scoring_method]
+	limit = default_limit_for_scoring_method[frequency_weighting][scoring_method]
 
 	def next_phoneme(word, score):
 		word_length = len(word)
@@ -63,8 +71,5 @@ def parse(most_probable_next_phonemes, scoring_method):
 					next_phoneme(grown_word, score)
 
 	next_phoneme(['START_WORD'], 1.0)
-
-	# # this is nice to have when trying to get the counts right
-	# print len(most_probable_words.keys()) 
 
 	return most_probable_words
