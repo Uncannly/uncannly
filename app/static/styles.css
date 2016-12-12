@@ -6,8 +6,8 @@ label, button, span {
 	display: inline;
 }
 
-input:not([type]) {
-	width: 50px;
+input[type=number] {
+	width: 100px;
 }
 
 #random-word {
