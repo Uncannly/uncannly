@@ -37,7 +37,7 @@ args = parser.parse_args()
 Words.get(
 	interface="bin",
 	return_count=args.return_count, 
-	filtering='mean_arithmetic' if args.mean_arithmetic else 'integral_product', 
+	scoring_method='mean_arithmetic' if args.mean_arithmetic else 'integral_product', 
 	weighting='unweighted' if args.unweighted else 'weighted',
 	random_selection=args.random_selection,
 	exclude_real=args.exclude_real

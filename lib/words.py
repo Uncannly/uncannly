@@ -10,13 +10,13 @@ class Words:
 	def get(
 		interface, 
 		return_count, 
-		filtering, 
+		scoring_method, 
 		weighting, 
 		random_selection, 
 		exclude_real
 	):
 		most_probable_words = load(
-			'most_probable_words_by_{}_{}'.format(filtering, weighting)
+			'most_probable_words_by_{}_{}'.format(scoring_method, weighting)
 		)
 
 		if random_selection:
