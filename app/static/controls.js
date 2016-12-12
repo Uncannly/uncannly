@@ -22,7 +22,7 @@ $(".random-word button.refresh").click(function(e) {
     if ($(".random-word .mean-geometric").is(':checked')) data.push("scoring-method=mean-geometric")
     if ($(".random-word .mean-arithmetic").is(':checked')) data.push("scoring-method=mean-arithmetic")
 
-    const scoreThreshold = $(".random-word .score-threshold").val()
+    const scoreThreshold = $(".random-word .score-threshold").val() * Math.pow(10, $(".random-word .score-threshold-power").val())
     if (scoreThreshold !== '') data.push(`score-threshold=${scoreThreshold}`)
 
     if ($(".random-word .unweighted").is(':checked')) data.push('unweighted')
@@ -52,7 +52,7 @@ $(".words button.refresh").click(function(e) {
     if ($(".words .mean-geometric").is(':checked')) data.push("scoring-method=mean-geometric")
     if ($(".words .mean-arithmetic").is(':checked')) data.push("scoring-method=mean-arithmetic")
 
-    const scoreThreshold = $(".words .score-threshold").val()
+    const scoreThreshold = $(".words .score-threshold").val() * Math.pow(10, $(".words .score-threshold-power").val())
     if (scoreThreshold !== '') data.push(`score-threshold=${scoreThreshold}`)
 
     const randomSelection = $(".words .random-selection-value").val()

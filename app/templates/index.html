@@ -23,7 +23,16 @@
 					arithmetic mean
 				</label>
 			</div>
-			<label><input type="number" max="1" min="0" step="0.001" class="score-threshold">score threshold</label>
+			<label>
+				<input 
+					type="number" 
+					max="10" 
+					min="0" 
+					step="0.001" 
+					class="score-threshold"
+				>score threshold * 10^
+				<input type="number" step="1" max="-1" class="score-threshold-power" value="-1">
+			</label>
 			<label><input type="checkbox" class="unweighted">unweighted</label>
 			<label><input type="checkbox" class="exclude-real">exclude real</label>
 			<button class="refresh">Refresh</button>
@@ -68,7 +77,16 @@
 					arithmetic mean
 				</label>
 			</div>
-			<label><input type="number" max="1" min="0" step="0.001" class="score-threshold">score threshold</label>
+			<label>
+				<input 
+					type="number" 
+					max="10" 
+					min="0" 
+					step="0.001" 
+					class="score-threshold"
+				>score threshold * 10^
+				<input type="number" step="1" max="-1" maxclass="score-threshold-power" value="-1">
+			</label>
 			<label>
 				<input type="checkbox" class="random-selection">random selection
 				<input type="number" max="1000000" min="0" step="1" class="random-selection-value" disabled>
