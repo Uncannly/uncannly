@@ -12,7 +12,7 @@ parser.add_argument(
 	help='How many words to return at once.'
 )
 parser.add_argument(
-	'--averaging', '-a',
+	'--mean-arithmetic', '-a',
 	action='store_true',
 	help='Use the list of most likely words which was created by cutting off words when they passed a threshold based on averaging the probabilities of phonemes following each other (instead of taking the continued product of these probabilities, which is the default).'
 )
@@ -37,7 +37,7 @@ args = parser.parse_args()
 Words.get(
 	interface="bin",
 	return_count=args.return_count, 
-	filtering='averaging' if args.averaging else 'integral_product', 
+	filtering='mean_arithmetic' if args.mean_arithmetic else 'integral_product', 
 	weighting='unweighted' if args.unweighted else 'weighted',
 	random_selection=args.random_selection,
 	exclude_real=args.exclude_real

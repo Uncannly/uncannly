@@ -18,7 +18,7 @@ $(".words button.refresh").click(function(e) {
     const data = []
     const returnCount = $(".words .return-count").val()
     if (returnCount) data.push(`return-count=${returnCount}`)
-    if ($(".words .averaging").is(':checked')) data.push("averaging")
+    if ($(".words .mean-arithmetic").is(':checked')) data.push("mean-arithmetic")
     if ($(".words .random-selection").is(':checked')) data.push("random-selection")
     if ($(".words .unweighted").is(':checked')) data.push('unweighted')
     if ($(".words .exclude-real").is(':checked')) data.push('exclude-real')

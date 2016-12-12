@@ -5,8 +5,8 @@ from lib.type_conversion import array_to_string
 
 class MostProbableWords:
 	@staticmethod
-	def by_averaging(most_probable_next_phonemes):
-		return parse(most_probable_next_phonemes, 'averaging')
+	def by_mean_arithmetic(most_probable_next_phonemes):
+		return parse(most_probable_next_phonemes, 'mean_arithmetic')
 
 	@staticmethod
 	def by_integral_product(most_probable_next_phonemes):
@@ -17,7 +17,7 @@ def parse(most_probable_next_phonemes, filtering):
 
 	if (filtering == 'integral_product'):
 		limit = 0.0000000000000000000001
-	elif (filtering == 'averaging'):
+	elif (filtering == 'mean_arithmetic'):
 		limit = 0.2415
 
 	def next_phoneme(word, word_probability):
@@ -33,7 +33,7 @@ def parse(most_probable_next_phonemes, filtering):
 
 				if (filtering == 'integral_product'):
 					word_probability *= probability
-				elif (filtering == 'averaging'):
+				elif (filtering == 'mean_arithmetic'):
 					word_probability = (word_length * word_probability + probability) \
 						/ (word_length + 1)
 

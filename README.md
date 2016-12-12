@@ -30,7 +30,7 @@ https://uncannly.cfapps.io/random-word
 Query params:
 
 * `return-count`: How many words to return at once (default: `45`).
-* `averaging`: Use the list of most likely words which was created by cutting off words when they passed a threshold based on averaging the probabilities of phonemes following each other (instead of taking the continued product of these probabilities, which is the default). 
+* `mean-arithmetic`: Use the list of most likely words which was created by cutting off words when they passed a threshold based on averaging the probabilities of phonemes following each other (instead of taking the continued product of these probabilities, which is the default). 
 * `random-selection`: From this particularly specified set of most probable words, instead of the absolute topmost probable ones, return a random selection.
 * `unweighted`: Do not weight probabilities by frequency of words in the corpus.
 * `exclude-real`: Do not include words probable by pronunciation that do exist.
@@ -38,7 +38,7 @@ Query params:
 e.g.
 
 ```
-https://uncannly.cfapps.io/words?return-count=3&averaging&random-selection&unweighted&exclude-real
+https://uncannly.cfapps.io/words?return-count=3&mean-arithmetic&random-selection&unweighted&exclude-real
 ["s", "kʌntʌn", "kʌliʌn"]
 ```
 
@@ -73,7 +73,7 @@ G EH R (GAIR)
 Arguments:
 
 * `-c`, `--return-count`: How many words to return at once (default: `45`).
-* `-a`, `--averaging`: Use the list of most likely words which was created by cutting off words when they passed a threshold based on averaging the probabilities of phonemes following each other (instead of taking the continued product of these probabilities, which is the default). 
+* `-a`, `--mean-arithmetic`: Use the list of most likely words which was created by cutting off words when they passed a threshold based on averaging the probabilities of phonemes following each other (instead of taking the continued product of these probabilities, which is the default). 
 * `-r`, `--random-selection`: From this particularly specified set of most probable words, instead of the absolute topmost probable ones, return a random selection.
 * `-u`, `--unweighted`: Do not weight probabilities by frequency of words in the corpus.
 * `-x`, `--exclude-real`: Do not include words probable by pronunciation that do exist.

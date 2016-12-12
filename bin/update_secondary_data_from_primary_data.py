@@ -59,12 +59,12 @@ save(
 	'most_probable_words_by_integral_product_weighted'
 )
 
-# strategy two uses averaging
-most_probable_words['by_averaging'] = \
-	MostProbableWords.by_averaging(most_probable_next_phonemes)
+# strategy two uses a mean, arithmetic
+most_probable_words['by_mean_arithmetic'] = \
+	MostProbableWords.by_mean_arithmetic(most_probable_next_phonemes)
 save(
-	most_probable_words['by_averaging'], 
-	'most_probable_words_by_averaging_weighted'
+	most_probable_words['by_mean_arithmetic'], 
+	'most_probable_words_by_mean_arithmetic_weighted'
 )
 
 
@@ -75,9 +75,9 @@ save(
 	most_probable_words['by_integral_product_unweighted'], 
 	'most_probable_words_by_integral_product_unweighted'
 )
-most_probable_words['by_averaging_unweighted'] = \
-	MostProbableWords.by_averaging(most_probable_next_phonemes_unweighted)
+most_probable_words['by_mean_arithmetic_unweighted'] = \
+	MostProbableWords.by_mean_arithmetic(most_probable_next_phonemes_unweighted)
 save(
-	most_probable_words['by_averaging_unweighted'], 
-	'most_probable_words_by_averaging_unweighted'
+	most_probable_words['by_mean_arithmetic_unweighted'], 
+	'most_probable_words_by_mean_arithmetic_unweighted'
 )

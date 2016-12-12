@@ -18,7 +18,7 @@ def root():
 def words_route():
     probable_words = words.get(
         return_count=request.args.get('return-count'),
-        averaging=request.args.get('averaging'), 
+        mean_arithmetic=request.args.get('mean-arithmetic'), 
         random_selection=request.args.get('random-selection'), 
     	unweighted=request.args.get('unweighted'), 
         exclude_real=request.args.get('exclude-real'),
