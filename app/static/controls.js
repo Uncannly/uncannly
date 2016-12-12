@@ -2,6 +2,17 @@ $(".random-word .score-threshold").change(function(e) {
     $(".random-word .scoring-method input").prop("disabled", e.target.value == '')
 });
 
+$(".words .random-selection").change(function(e) {
+    if (this.checked) {
+        $(".random-selection-value").prop("disabled", false)
+        if ($(".random-selection-value").val() == '') {
+            $(".random-selection-value").val(1000000)
+        }
+    } else {
+        $(".random-selection-value").prop("disabled", true)
+    }
+});
+
 $(".random-word button.refresh").click(function(e) {
     let url = '/random-word'
     const data = []
@@ -44,8 +55,10 @@ $(".words button.refresh").click(function(e) {
     const scoreThreshold = $(".words .score-threshold").val()
     if (scoreThreshold !== '') data.push(`score-threshold=${scoreThreshold}`)
 
-    const randomSelection = $(".words .random-selection").val()
-    if (randomSelection !== '') data.push(`random-selection=${randomSelection}`)
+    const randomSelection = $(".words .random-selection-value").val()
+    if (randomSelection !== '' && $(".words .random-selection").is(':checked')) {
+        data.push(`random-selection=${randomSelection}`)
+    }
 
     if ($(".words .unweighted").is(':checked')) data.push('unweighted')
 
