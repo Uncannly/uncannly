@@ -6,7 +6,7 @@ label, button, span {
 	display: inline;
 }
 
-.return-count {
+input:not([type]) {
 	width: 30px;
 }
 

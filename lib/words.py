@@ -20,21 +20,11 @@ class Words:
 		)
 
 		if random_selection:
-			words = most_probable_words.keys()
+			words = most_probable_words[0:int(random_selection)]
+			selector = api_select_random if interface == 'api' else bin_select_random
 		else:
-			words = sorted(
-				most_probable_words,
-				key=most_probable_words.get,
-				reverse=True
-			)
-
-		if interface == 'api':
-			selector = api_select_random if random_selection else api_select_top
-		elif interface == 'bin':
-			selector = bin_select_random if random_selection else bin_select_top
-			sys.stdout.write(
-				'total generated most probable words: ' + str(len(most_probable_words)) + '\n'
-			)
+			words = most_probable_words
+			selector = api_select_top if interface == 'api' else bin_select_top
 		
 		return selector(words, return_count, exclude_real)
 

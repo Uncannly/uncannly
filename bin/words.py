@@ -38,7 +38,7 @@ parser.add_argument(
 )
 parser.add_argument(
 	'--random-selection', '-r',
-	action='store_true',
+	nargs='?', const=1000000, type=int,
 	help='From this particularly specified set of most probable words, instead of the absolute topmost probable ones, return a random selection.'
 )
 parser.add_argument(

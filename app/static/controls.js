@@ -24,7 +24,9 @@ $(".words button.refresh").click(function(e) {
     if ($(".words .mean-geometric").is(':checked')) data.push("scoring-method=mean-geometric")
     if ($(".words .mean-arithmetic").is(':checked')) data.push("scoring-method=mean-arithmetic")
 
-    if ($(".words .random-selection").is(':checked')) data.push("random-selection")
+    const randomSelection = $(".words .random-selection").val()
+    if (randomSelection !== '') data.push(`random-selection=${randomSelection}`)
+
     if ($(".words .unweighted").is(':checked')) data.push('unweighted')
     if ($(".words .exclude-real").is(':checked')) data.push('exclude-real')
     if (data.length > 0) url += '?' + data.join('&')

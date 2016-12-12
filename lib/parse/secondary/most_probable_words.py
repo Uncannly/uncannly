@@ -72,4 +72,10 @@ def parse(most_probable_next_phonemes, frequency_weighting, scoring_method):
 
 	next_phoneme(['START_WORD'], 1.0)
 
-	return most_probable_words
+	sorted_most_probable_words = sorted(
+		most_probable_words,
+		key=most_probable_words.get,
+		reverse=True
+	)
+
+	return sorted_most_probable_words

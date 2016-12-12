@@ -34,7 +34,13 @@ The default scoring method is `integral-product`.
 
 * **random selection**
 
-From this particularly specified set of most probable words, instead of the absolute topmost probable ones, return a random selection.
+Return a random set of words drawn from a pool at the top, rather than a ranked list from the top.
+
+If you pass a value, it will be taken as the number of words to include in the pool. 
+
+The value may be lower than the return count. You will just get more repeats than you might normally.
+
+The maximum and default are both 1000000.
 
 * **unweighted**
 
@@ -80,7 +86,7 @@ Query params:
 e.g.
 
 ```
-https://uncannly.cfapps.io/words?return-count=3&scoring-method=mean-arithmetic&random-selection&unweighted&exclude-real
+https://uncannly.cfapps.io/words?return-count=3&scoring-method=mean-arithmetic&random-selection=500&unweighted&exclude-real
 ["s", "kʌntʌn", "kʌliʌn"]
 ```
 
@@ -125,7 +131,7 @@ Arguments:
 e.g.
 
 ```
-$ python bin/words.py -c 3 -a -r -u -x
+$ python bin/words.py -c 3 -a -r 500 -u -x
 K AH L IY AH N
 K AH N T AH N
 S
