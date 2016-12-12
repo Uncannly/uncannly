@@ -13,8 +13,28 @@ parser.add_argument(
 	help='How many words to return at once.'
 )
 parser.add_argument(
-	'--scoring-method', '-s',
+	'--scoring-method', '-m',
 	help='The method used to score words by, and filter out the lower scoring ones. Four methods exist in a 2x2 matrix relationship: integral-product, integral-sum, mean-geometric, mean-arithmetic.'
+)
+parser.add_argument(
+	'--score-by-integral-product', '-p',
+	action='store_true',
+	help='Alias for "--scoring-method=integral-product".'
+)
+parser.add_argument(
+	'--score-by-integral-sum', '-s',
+	action='store_true',
+	help='Alias for "--scoring-method=integral-sum".'
+)
+parser.add_argument(
+	'--score-by-mean-geometric', '-g',
+	action='store_true',
+	help='Alias for "--scoring-method=mean-geometric".'
+)
+parser.add_argument(
+	'--score-by-mean-arithmetic', '-a',
+	action='store_true',
+	help='Alias for "--scoring-method=mean-arithmetic".'
 )
 parser.add_argument(
 	'--random-selection', '-r',
@@ -33,6 +53,15 @@ parser.add_argument(
 )
 
 args = parser.parse_args()
+
+if args.score_by_mean_arithmetic:
+	args.scoring_method = 'mean_arithmetic'
+if args.score_by_mean_geometric:
+	args.scoring_method = 'mean_geometric'
+if args.score_by_integral_sum:
+	args.scoring_method = 'integral_sum'
+if args.score_by_integral_product:
+	args.scoring_method = 'integral_product'
 
 if args.scoring_method == None:
 	args.scoring_method = 'integral_product'

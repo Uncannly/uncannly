@@ -69,6 +69,10 @@ https://uncannly.cfapps.io/random-word
 Query params:
 * `return-count`
 * `scoring-method`
+* `score-by-integral-product`
+* `score-by-integral-sum`
+* `score-by-mean-geometric`
+* `score-by-mean-arithmetic`
 * `random-selection`
 * `unweighted`
 * `exclude-real`
@@ -109,7 +113,11 @@ G EH R (GAIR)
 
 Arguments:
 * `-c`, `--return-count`
-* `-s`, `--scoring-method`
+* `-m`, `--scoring-method`
+* `-p`, `--score-by-integral-product`
+* `-s`, `--score-by-integral-sum`
+* `-g`, `--score-by-mean-geometric`
+* `-a`, `--score-by-mean-arithmetic`
 * `-r`, `--random-selection`
 * `-u`, `--unweighted`
 * `-x`, `--exclude-real`
@@ -117,7 +125,7 @@ Arguments:
 e.g.
 
 ```
-$ python bin/words.py -c 3 -s mean-arithmetic -r -u -x
+$ python bin/words.py -c 3 -a -r -u -x
 K AH L IY AH N
 K AH N T AH N
 S
