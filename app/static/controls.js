@@ -1,3 +1,7 @@
+$(".random-word .score-threshold").change(function(e) {
+    $(".random-word .scoring-method input").prop("disabled", e.target.value == '')
+});
+
 $(".random-word button.refresh").click(function(e) {
     let url = '/random-word'
     const data = []
