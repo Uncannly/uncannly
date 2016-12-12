@@ -37,7 +37,7 @@ args = parser.parse_args()
 Words.get(
 	interface="bin",
 	return_count=args.return_count, 
-	filtering='averaging' if args.averaging else 'continued_product', 
+	filtering='averaging' if args.averaging else 'integral_product', 
 	weighting='unweighted' if args.unweighted else 'weighted',
 	random_selection=args.random_selection,
 	exclude_real=args.exclude_real

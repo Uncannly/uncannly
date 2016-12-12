@@ -7,7 +7,7 @@ def get(return_count,	averaging, random_selection, unweighted, exclude_real):
 	return Words.get(
 		interface='api', 
 		return_count=int(return_count) if return_count else 45,	
-		filtering='averaging' if averaging != None else 'continued_product', 
+		filtering='averaging' if averaging != None else 'integral_product', 
 		random_selection=random_selection != None, 
 		weighting='unweighted' if unweighted != None else 'weighted', 
 		exclude_real=exclude_real != None

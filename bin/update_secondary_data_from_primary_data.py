@@ -51,12 +51,12 @@ save(
 # create a set of one million or so most probable words
 most_probable_words = {}
 
-# strategy one uses a continued product
-most_probable_words['by_continued_product'] = \
-	MostProbableWords.by_continued_product(most_probable_next_phonemes)
+# strategy one uses an integral product
+most_probable_words['by_integral_product'] = \
+	MostProbableWords.by_integral_product(most_probable_next_phonemes)
 save(
-	most_probable_words['by_continued_product'], 
-	'most_probable_words_by_continued_product_weighted'
+	most_probable_words['by_integral_product'], 
+	'most_probable_words_by_integral_product_weighted'
 )
 
 # strategy two uses averaging
@@ -69,11 +69,11 @@ save(
 
 
 # repeat both above strategies for unweighted versions
-most_probable_words['by_continued_product_unweighted'] = \
-	MostProbableWords.by_continued_product(most_probable_next_phonemes_unweighted)
+most_probable_words['by_integral_product_unweighted'] = \
+	MostProbableWords.by_integral_product(most_probable_next_phonemes_unweighted)
 save(
-	most_probable_words['by_continued_product_unweighted'], 
-	'most_probable_words_by_continued_product_unweighted'
+	most_probable_words['by_integral_product_unweighted'], 
+	'most_probable_words_by_integral_product_unweighted'
 )
 most_probable_words['by_averaging_unweighted'] = \
 	MostProbableWords.by_averaging(most_probable_next_phonemes_unweighted)

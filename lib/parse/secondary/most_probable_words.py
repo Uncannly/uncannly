@@ -9,13 +9,13 @@ class MostProbableWords:
 		return parse(most_probable_next_phonemes, 'averaging')
 
 	@staticmethod
-	def by_continued_product(most_probable_next_phonemes):
-		return parse(most_probable_next_phonemes, 'continued_product')
+	def by_integral_product(most_probable_next_phonemes):
+		return parse(most_probable_next_phonemes, 'integral_product')
 
 def parse(most_probable_next_phonemes, filtering):
 	most_probable_words = {}
 
-	if (filtering == 'continued_product'):
+	if (filtering == 'integral_product'):
 		limit = 0.0000000000000000000001
 	elif (filtering == 'averaging'):
 		limit = 0.2415
@@ -31,7 +31,7 @@ def parse(most_probable_next_phonemes, filtering):
 				phoneme = pp_tuple[0]
 				probability = pp_tuple[1]
 
-				if (filtering == 'continued_product'):
+				if (filtering == 'integral_product'):
 					word_probability *= probability
 				elif (filtering == 'averaging'):
 					word_probability = (word_length * word_probability + probability) \
