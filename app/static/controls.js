@@ -8,7 +8,7 @@ $(".random-word button.refresh").click(function(e) {
     $.ajax({
         url: url,
         success: function(result) {
-            $("#random-word").html(result);
+            $("#random-word").html(result.slice(1, -1));
         }
     });
 });
