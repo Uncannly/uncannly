@@ -1,8 +1,19 @@
 $(".random-word button.refresh").click(function(e) {
     let url = '/random-word'
     const data = []
+    
+    if ($(".random-word .integral-product").is(':checked')) data.push("scoring-method=integral-product")
+    if ($(".random-word .integral-sum").is(':checked')) data.push("scoring-method=integral-sum")
+    if ($(".random-word .mean-geometric").is(':checked')) data.push("scoring-method=mean-geometric")
+    if ($(".random-word .mean-arithmetic").is(':checked')) data.push("scoring-method=mean-arithmetic")
+
+    const scoreThreshold = $(".random-word .score-threshold").val()
+    if (scoreThreshold !== '') data.push(`score-threshold=${scoreThreshold}`)
+
     if ($(".random-word .unweighted").is(':checked')) data.push('unweighted')
+
     if ($(".random-word .exclude-real").is(':checked')) data.push('exclude-real')
+
     if (data.length > 0) url += '?' + data.join('&')
 
     $.ajax({
@@ -16,6 +27,7 @@ $(".random-word button.refresh").click(function(e) {
 $(".words button.refresh").click(function(e) {
     let url = '/words'
     const data = []
+
     const returnCount = $(".words .return-count").val()
     if (returnCount) data.push(`return-count=${returnCount}`)
 
@@ -31,7 +43,9 @@ $(".words button.refresh").click(function(e) {
     if (randomSelection !== '') data.push(`random-selection=${randomSelection}`)
 
     if ($(".words .unweighted").is(':checked')) data.push('unweighted')
+
     if ($(".words .exclude-real").is(':checked')) data.push('exclude-real')
+
     if (data.length > 0) url += '?' + data.join('&')
 
     $("#words").html('Loading...')

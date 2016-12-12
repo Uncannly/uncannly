@@ -73,7 +73,6 @@ if args.scoring_method == None:
 else:
 	args.scoring_method = kebab_to_snake(args.scoring_method)
 
-
 Words.get(
 	interface="bin",
 	return_count=args.return_count, 

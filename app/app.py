@@ -34,6 +34,12 @@ def words_route():
 @app.route('/random-word')
 def random_word_route():
     word = random_word.get(
+        scoring_method=request.args.get('scoring-method'), 
+        score_by_integral_product=request.args.get('score-by-integral-product'), 
+        score_by_integral_sum=request.args.get('score-by-integral-sum'), 
+        score_by_mean_geometric=request.args.get('score-by-mean-geometric'), 
+        score_by_mean_arithmetic=request.args.get('score-by-mean-arithmetic'), 
+        score_threshold=request.args.get('score-threshold'),
         unweighted=request.args.get('unweighted'), 
         exclude_real=request.args.get('exclude-real')
     )
