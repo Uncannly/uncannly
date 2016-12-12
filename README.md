@@ -83,6 +83,7 @@ Query params:
 * `score-by-integral-sum`
 * `score-by-mean-geometric`
 * `score-by-mean-arithmetic`
+* `score-threshold`
 * `random-selection`
 * `unweighted`
 * `exclude-real`
@@ -90,7 +91,7 @@ Query params:
 e.g.
 
 ```
-https://uncannly.cfapps.io/words?return-count=3&scoring-method=mean-arithmetic&random-selection=500&unweighted&exclude-real
+https://uncannly.cfapps.io/words?return-count=3&scoring-method=mean-arithmetic&score-threshold=0.2random-selection=500&unweighted&exclude-real
 ["s", "kʌntʌn", "kʌliʌn"]
 ```
 
@@ -128,6 +129,7 @@ Arguments:
 * `-s`, `--score-by-integral-sum`
 * `-g`, `--score-by-mean-geometric`
 * `-a`, `--score-by-mean-arithmetic`
+* `-t`, `--score-threshold`
 * `-r`, `--random-selection`
 * `-u`, `--unweighted`
 * `-x`, `--exclude-real`
@@ -135,7 +137,7 @@ Arguments:
 e.g.
 
 ```
-$ python bin/words.py -c 3 -a -r 500 -u -x
+$ python bin/words.py -c 3 -a -t 2.0 -r 500 -u -x
 K AH L IY AH N
 K AH N T AH N
 S
