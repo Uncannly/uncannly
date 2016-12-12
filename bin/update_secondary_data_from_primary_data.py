@@ -45,13 +45,13 @@ save(
 )
 
 
-########### PHASE THREE.ONE ####################
+########### PHASE THREE ####################
 
  
 # create a set of one million or so most probable words
 most_probable_words = {}
 
-# strategy one uses an integral product
+# strategy A1 uses an integral, product
 most_probable_words['by_integral_product'] = \
 	MostProbableWords.by_integral_product(most_probable_next_phonemes)
 save(
@@ -59,7 +59,23 @@ save(
 	'most_probable_words_by_integral_product_weighted'
 )
 
-# strategy two uses a mean, arithmetic
+# strategy A2 uses an integral, sum
+most_probable_words['by_integral_sum'] = \
+	MostProbableWords.by_integral_sum(most_probable_next_phonemes)
+save(
+	most_probable_words['by_integral_sum'], 
+	'most_probable_words_by_integral_sum_weighted'
+)
+
+# strategy B1 uses a mean, geometric
+most_probable_words['by_mean_geometric'] = \
+	MostProbableWords.by_mean_geometric(most_probable_next_phonemes)
+save(
+	most_probable_words['by_mean_geometric'], 
+	'most_probable_words_by_mean_geometric_weighted'
+)
+
+# strategy B2 uses a mean, arithmetic
 most_probable_words['by_mean_arithmetic'] = \
 	MostProbableWords.by_mean_arithmetic(most_probable_next_phonemes)
 save(
@@ -67,13 +83,24 @@ save(
 	'most_probable_words_by_mean_arithmetic_weighted'
 )
 
-
-# repeat both above strategies for unweighted versions
+# repeat all above strategies for unweighted versions
 most_probable_words['by_integral_product_unweighted'] = \
 	MostProbableWords.by_integral_product(most_probable_next_phonemes_unweighted)
 save(
 	most_probable_words['by_integral_product_unweighted'], 
 	'most_probable_words_by_integral_product_unweighted'
+)
+most_probable_words['by_integral_sum_unweighted'] = \
+	MostProbableWords.by_integral_sum(most_probable_next_phonemes_unweighted)
+save(
+	most_probable_words['by_integral_sum_unweighted'], 
+	'most_probable_words_by_integral_sum_unweighted'
+)
+most_probable_words['by_mean_geometric_unweighted'] = \
+	MostProbableWords.by_mean_geometric(most_probable_next_phonemes_unweighted)
+save(
+	most_probable_words['by_mean_geometric_unweighted'], 
+	'most_probable_words_by_mean_geometric_unweighted'
 )
 most_probable_words['by_mean_arithmetic_unweighted'] = \
 	MostProbableWords.by_mean_arithmetic(most_probable_next_phonemes_unweighted)

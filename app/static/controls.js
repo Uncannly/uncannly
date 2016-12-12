@@ -18,7 +18,12 @@ $(".words button.refresh").click(function(e) {
     const data = []
     const returnCount = $(".words .return-count").val()
     if (returnCount) data.push(`return-count=${returnCount}`)
-    if ($(".words .mean-arithmetic").is(':checked')) data.push("mean-arithmetic")
+
+    if ($(".words .integral-product").is(':checked')) data.push("scoring-method=integral-product")
+    if ($(".words .integral-sum").is(':checked')) data.push("scoring-method=integral-sum")
+    if ($(".words .mean-geometric").is(':checked')) data.push("scoring-method=mean-geometric")
+    if ($(".words .mean-arithmetic").is(':checked')) data.push("scoring-method=mean-arithmetic")
+
     if ($(".words .random-selection").is(':checked')) data.push("random-selection")
     if ($(".words .unweighted").is(':checked')) data.push('unweighted')
     if ($(".words .exclude-real").is(':checked')) data.push('exclude-real')

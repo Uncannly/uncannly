@@ -12,7 +12,7 @@ How many words to return at once (default: 45).
 
 * **scoring method**
 
-The method used to score words by, and filter out all but the highest scoring ones. Four methods exist in a 2×2 matrix relationship:
+The method used to score words by, and filter out the lower scoring ones. Four methods exist in a 2×2 matrix relationship:
 
 | operation \ value | total              | average           |
 | ----------------- | ------------------ | ----------------- |
@@ -20,7 +20,7 @@ The method used to score words by, and filter out all but the highest scoring on
 | addition          | `integral-sum`     | `mean-arithmetic` |
 
 1) `integral-product`: the probability from each phoneme to the next is continuously multiplied.
-2) `integral-sum`: the probability from each phoneme to the next is continuously added (except that it's actually 1 minus each probability which gets summed, scoring and filtering ascendingly). 
+2) `integral-sum`: the probability from each phoneme to the next is continuously added (except that it's actually 1 minus each probability which gets summed, and then the reciprocal of that number so that we can sort the same direction as the other three methods). 
 3) `mean-geometric`: like the integral product except that the nth root of the result is taken, where n is the number of phonemes up to that point.
 4) `mean-arithmetic`: just the average of all probabilies thus far.
 
@@ -109,10 +109,7 @@ G EH R (GAIR)
 
 Arguments:
 * `-c`, `--return-count`
-* `-p`, `--scoring-method=integral-product`
-* `-s`, `--scoring-method=integral-sum`
-* `-g`, `--scoring-method=mean-geometric`
-* `-a`, `--scoring-method=mean-arithmetic`
+* `-s`, `--scoring-method`
 * `-r`, `--random-selection`
 * `-u`, `--unweighted`
 * `-x`, `--exclude-real`
@@ -120,7 +117,7 @@ Arguments:
 e.g.
 
 ```
-$ python bin/words.py -c 3 -a -r -u -x
+$ python bin/words.py -c 3 -s mean-arithmetic -r -u -x
 K AH L IY AH N
 K AH N T AH N
 S
