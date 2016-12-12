@@ -16,6 +16,7 @@ $(".random-word button.refresh").click(function(e) {
 
     if (data.length > 0) url += '?' + data.join('&')
 
+    $("#random-word").html('Loading...')
     $.ajax({
         url: url,
         success: function(result) {
