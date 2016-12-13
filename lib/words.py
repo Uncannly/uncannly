@@ -13,9 +13,10 @@ class Words:
 		random_selection, 
 		scoring_method, 
 		score_threshold,
-		weighting, 
+		unweighted, 
 		exclude_real
 	):
+		weighting = 'unweighted' if unweighted else 'weighted'
 		most_probable_words = load(
 			'most_probable_words_by_{}_{}'.format(scoring_method, weighting)
 		)

@@ -17,7 +17,7 @@ class RandomWord:
 		random_selection, # thrown away
 		scoring_method, 
 		score_threshold, 
-		weighting, 
+		unweighted, 
 		exclude_real):
 
 		phoneme = 'START_WORD'
@@ -32,7 +32,7 @@ class RandomWord:
 				score, 
 				scoring_method, 
 				score_threshold, 
-				unweighted=weighting != 'weighted'
+				unweighted
 			)
 
 			if phoneme_tuple == None:

@@ -28,8 +28,6 @@ def get_by_mode(mode, interface, args):
 	else:
 		args['score_threshold'] = None
 
-	args['weighting'] = 'unweighted' if args['unweighted'] else 'weighted'
-
 	getter = Words if mode == 'words' else RandomWord
 	return getter.get(
 		interface=interface,
@@ -37,6 +35,6 @@ def get_by_mode(mode, interface, args):
 		random_selection=args['random_selection'],
 		scoring_method=args['scoring_method'],
 		score_threshold=args['score_threshold'],
-		weighting=args['weighting'],
+		unweighted=args['unweighted'],
 		exclude_real=args['exclude_real']
 	)
