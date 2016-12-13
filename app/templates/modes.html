@@ -1,0 +1,69 @@
+{% macro modes(mode) -%}
+	<div 
+		class="scoring" 
+		title="Choose a threshold and method to see suggested threshold ranges."
+	>
+		<div class="scoring-method">
+			scoring by
+			<label>
+				<input 
+					type="radio" 
+					name="{{ mode }}-scoring-method" 
+					class="integral-product" 
+					{{ 'checked' if mode == 'words' else 'disabled' }}
+				>
+				integral product
+			</label>
+			<label>
+				<input 
+					type="radio" 
+					name="{{ mode }}-scoring-method" 
+					class="integral-sum" 
+					{{ '' if mode == 'words' else 'disabled' }}
+				>
+				integral sum
+			</label>
+			<label>
+				<input 
+					type="radio" 
+					name="{{ mode }}-scoring-method" 
+					class="mean-geometric" 
+					{{ '' if mode == 'words' else 'disabled' }}
+				>
+				geometric mean
+			</label>
+			<label>
+				<input 
+					type="radio" 
+					name="{{ mode }}-scoring-method" 
+					class="mean-arithmetic" 
+					{{ '' if mode == 'words' else 'disabled' }}
+				>
+				arithmetic mean
+			</label>
+		</div>
+		<label>
+			<input 
+				type="number" 
+				max="10" 
+				min="0" 
+				step="0.001" 
+				value="{{ -1 if mode == 'words' else 0}}"
+				class="score-threshold"
+			>
+			score threshold * 10^
+			<input 
+				type="number" 
+				max="-1" 
+				step="1" 
+				value="{{ -22 if mode == 'words' else -1}}"
+				class="score-threshold-power" 
+			>
+		</label>
+	</div>
+	<label><input type="checkbox" class="unweighted">unweighted</label>
+	<label><input type="checkbox" class="exclude-real">exclude real</label>
+	<button class="refresh">Refresh</button>
+	<button id="copy-{{ mode }}" data-clipboard-target="#{{ mode }}">Copy</button>
+	<div id="{{ mode }}"></div>
+{%- endmacro %}
