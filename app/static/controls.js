@@ -51,7 +51,8 @@ const modes = function(mode) {
 ['random-word', 'words'].forEach(function(mode) { modes(mode); });
 
 $(".random-word .score-threshold").change(function(e) {
-    $(".random-word .scoring-method input").prop("disabled", e.target.value == '');
+    const disable = e.target.value == '' || e.target.value == '0'
+    $(".random-word .scoring-method input").prop("disabled", disable);
 });
 
 $(".words .random-selection").change(function(e) {
