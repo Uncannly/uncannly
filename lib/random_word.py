@@ -4,6 +4,7 @@ sys.path.insert(1, os.path.join(sys.path[0], '..'))
 from present import Present
 from secondary_data_io import load
 from type_conversion import array_to_string
+from score import get_score
 
 next_phonemes_weighted = load('most_probable_next_phonemes')
 next_phonemes_unweighted = load('most_probable_next_phonemes_unweighted')
@@ -74,17 +75,5 @@ def next_phoneme(
 	for (phoneme, probability) in next_phonemes[phoneme]:
 		accumulated_probability += probability
 		if accumulated_probability >= random_number:
-
-			if (scoring_method == 'integral_product'):
-				score = score * probability
-			elif (scoring_method == 'integral_sum'):
-				score = 1 / ((1 / score) + (1 - probability))
-			elif (scoring_method == 'mean_geometric'):
-				previous_weighted_probability = score ** word_length
-				multiply_in_new_probability = previous_weighted_probability * probability
-				root = 1.0 / float(word_length)
-				score = multiply_in_new_probability ** root
-			elif (scoring_method == 'mean_arithmetic'):
-				score = ((score * (word_length)) + probability) / (word_length + 1)
-			
+			score = get_score(score, scoring_method, probability, word_length)
 			return None if score < score_threshold else (phoneme, score)

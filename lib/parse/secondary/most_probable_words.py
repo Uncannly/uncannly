@@ -2,6 +2,7 @@ import os, sys
 sys.path.insert(1, os.path.join(sys.path[0], '..', '..'))
 
 from lib.type_conversion import array_to_string
+from lib.score import get_score
 
 default_limit_for_scoring_method = {
 	'weighted': {
@@ -48,18 +49,7 @@ def parse(most_probable_next_phonemes, frequency_weighting, scoring_method):
 			pass
 		else:
 			for (phoneme, probability) in most_probable_next_phonemes[current_phoneme]:
-				if (scoring_method == 'integral_product'):
-					score = score * probability
-				elif (scoring_method == 'integral_sum'):
-					score = 1 / ((1 / score) + (1 - probability))
-				elif (scoring_method == 'mean_geometric'):
-					previous_weighted_probability = score ** word_length
-					multiply_in_new_probability = previous_weighted_probability * probability
-					root = 1.0 / float(word_length)
-					score = multiply_in_new_probability ** root
-				elif (scoring_method == 'mean_arithmetic'):
-					score = ((score * (word_length)) + probability) / (word_length + 1)
-			
+				score = get_score(score, scoring_method, probability, word_length)		
 				if score < limit:
 					pass
 				elif phoneme == 'END_WORD':
