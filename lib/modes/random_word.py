@@ -1,10 +1,10 @@
 import random, os, sys
 sys.path.insert(1, os.path.join(sys.path[0], '..'))
 
-from present import Present
-from secondary_data_io import load
-from type_conversion import array_to_string
-from score import get_score
+from lib.present import Present
+from lib.secondary_data_io import load
+from lib.type_conversion import array_to_string
+from lib.score import get_score
 
 next_phonemes_weighted = load('most_probable_next_phonemes')
 next_phonemes_unweighted = load('most_probable_next_phonemes_unweighted')

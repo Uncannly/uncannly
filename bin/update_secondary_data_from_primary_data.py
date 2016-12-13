@@ -53,7 +53,9 @@ most_probable_words = {}
 
 # strategy A1 uses an integral, product
 most_probable_words['by_integral_product'] = \
-	MostProbableWords.by_integral_product(most_probable_next_phonemes, 'weighted')
+	MostProbableWords.get(
+		most_probable_next_phonemes, 'weighted', 'integral_product'
+	)
 save(
 	most_probable_words['by_integral_product'], 
 	'most_probable_words_by_integral_product_weighted'
@@ -61,7 +63,9 @@ save(
 
 # strategy A2 uses an integral, sum
 most_probable_words['by_integral_sum'] = \
-	MostProbableWords.by_integral_sum(most_probable_next_phonemes, 'weighted')
+	MostProbableWords.get(
+		most_probable_next_phonemes, 'weighted', 'integral_sum'
+	)
 save(
 	most_probable_words['by_integral_sum'], 
 	'most_probable_words_by_integral_sum_weighted'
@@ -69,7 +73,9 @@ save(
 
 # strategy B1 uses a mean, geometric
 most_probable_words['by_mean_geometric'] = \
-	MostProbableWords.by_mean_geometric(most_probable_next_phonemes, 'weighted')
+	MostProbableWords.get(
+		most_probable_next_phonemes, 'weighted', 'mean_geometric'
+	)
 save(
 	most_probable_words['by_mean_geometric'], 
 	'most_probable_words_by_mean_geometric_weighted'
@@ -77,7 +83,9 @@ save(
 
 # strategy B2 uses a mean, arithmetic
 most_probable_words['by_mean_arithmetic'] = \
-	MostProbableWords.by_mean_arithmetic(most_probable_next_phonemes, 'weighted')
+	MostProbableWords.get(
+		most_probable_next_phonemes, 'weighted', 'mean_arithmetic'
+	)
 save(
 	most_probable_words['by_mean_arithmetic'], 
 	'most_probable_words_by_mean_arithmetic_weighted'
@@ -85,25 +93,33 @@ save(
 
 # repeat all above strategies for unweighted versions
 most_probable_words['by_integral_product_unweighted'] = \
-	MostProbableWords.by_integral_product(most_probable_next_phonemes_unweighted, 'unweighted')
+	MostProbableWords.get(
+		most_probable_next_phonemes_unweighted, 'unweighted', 'integral_product'
+	)
 save(
 	most_probable_words['by_integral_product_unweighted'], 
 	'most_probable_words_by_integral_product_unweighted'
 )
 most_probable_words['by_integral_sum_unweighted'] = \
-	MostProbableWords.by_integral_sum(most_probable_next_phonemes_unweighted, 'unweighted')
+	MostProbableWords.get(
+		most_probable_next_phonemes_unweighted, 'unweighted', 'integral_sum'
+	)
 save(
 	most_probable_words['by_integral_sum_unweighted'], 
 	'most_probable_words_by_integral_sum_unweighted'
 )
 most_probable_words['by_mean_geometric_unweighted'] = \
-	MostProbableWords.by_mean_geometric(most_probable_next_phonemes_unweighted, 'unweighted')
+	MostProbableWords.get(
+		most_probable_next_phonemes_unweighted, 'unweighted', 'mean_geometric'
+	)
 save(
 	most_probable_words['by_mean_geometric_unweighted'], 
 	'most_probable_words_by_mean_geometric_unweighted'
 )
 most_probable_words['by_mean_arithmetic_unweighted'] = \
-	MostProbableWords.by_mean_arithmetic(most_probable_next_phonemes_unweighted, 'unweighted')
+	MostProbableWords.get(
+		most_probable_next_phonemes_unweighted, 'unweighted', 'mean_arithmetic'
+	)
 save(
 	most_probable_words['by_mean_arithmetic_unweighted'], 
 	'most_probable_words_by_mean_arithmetic_unweighted'

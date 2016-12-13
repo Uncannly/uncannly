@@ -21,57 +21,42 @@ default_limit_for_scoring_method = {
 
 class MostProbableWords:
 	@staticmethod
-	def by_integral_product(most_probable_next_phonemes, frequency_weighting):
-		return parse(most_probable_next_phonemes, frequency_weighting, 'integral_product')
+	def get(most_probable_next_phonemes, frequency_weighting, scoring_method):
+		most_probable_words = {}
 
-	@staticmethod
-	def by_integral_sum(most_probable_next_phonemes, frequency_weighting):
-		return parse(most_probable_next_phonemes, frequency_weighting, 'integral_sum')
+		limit = default_limit_for_scoring_method[frequency_weighting][scoring_method]
 
-	@staticmethod
-	def by_mean_geometric(most_probable_next_phonemes, frequency_weighting):
-		return parse(most_probable_next_phonemes, frequency_weighting, 'mean_geometric')
+		def next_phoneme(word, score):
+			word_length = len(word)
+			current_phoneme = word[word_length - 1]
 
-	@staticmethod
-	def by_mean_arithmetic(most_probable_next_phonemes, frequency_weighting):
-		return parse(most_probable_next_phonemes, frequency_weighting, 'mean_arithmetic')
+			if word_length > 20:
+				pass
+			else:
+				for (phoneme, probability) in most_probable_next_phonemes[current_phoneme]:
+					score = get_score(score, scoring_method, probability, word_length)		
+					if score < limit:
+						pass
+					elif phoneme == 'END_WORD':
+						stringified_word = array_to_string(word[1:len(word)])
+						most_probable_words[stringified_word] = score
+					else:	
+						grown_word = word[:]
+						grown_word.append(phoneme)
+						next_phoneme(grown_word, score)
 
-def parse(most_probable_next_phonemes, frequency_weighting, scoring_method):
-	most_probable_words = {}
+		next_phoneme(['START_WORD'], 1.0)
 
-	limit = default_limit_for_scoring_method[frequency_weighting][scoring_method]
-
-	def next_phoneme(word, score):
-		word_length = len(word)
-		current_phoneme = word[word_length - 1]
-
-		if word_length > 20:
-			pass
-		else:
-			for (phoneme, probability) in most_probable_next_phonemes[current_phoneme]:
-				score = get_score(score, scoring_method, probability, word_length)		
-				if score < limit:
-					pass
-				elif phoneme == 'END_WORD':
-					stringified_word = array_to_string(word[1:len(word)])
-					most_probable_words[stringified_word] = score
-				else:	
-					grown_word = word[:]
-					grown_word.append(phoneme)
-					next_phoneme(grown_word, score)
-
-	next_phoneme(['START_WORD'], 1.0)
-
-	sorted_most_probable_words = sorted(
-		most_probable_words,
-		key=most_probable_words.get,
-		reverse=True
-	)
-
-	sorted_most_probable_words_with_score = []
-	for word in sorted_most_probable_words:
-		sorted_most_probable_words_with_score.append(
-			(word, most_probable_words[word])
+		sorted_most_probable_words = sorted(
+			most_probable_words,
+			key=most_probable_words.get,
+			reverse=True
 		)
 
-	return sorted_most_probable_words_with_score
+		sorted_most_probable_words_with_score = []
+		for word in sorted_most_probable_words:
+			sorted_most_probable_words_with_score.append(
+				(word, most_probable_words[word])
+			)
+
+		return sorted_most_probable_words_with_score

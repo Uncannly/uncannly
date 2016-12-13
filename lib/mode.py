@@ -1,5 +1,5 @@
-from words import Words
-from random_word import RandomWord
+from modes.words import Words
+from modes.random_word import RandomWord
 from case_conversion import kebab_to_snake
 
 def get_by_mode(mode, interface, args):

@@ -1,9 +1,9 @@
 import random, os, sys
 sys.path.insert(1, os.path.join(sys.path[0], '..'))
 
-from present import Present
-from secondary_data_io import load
-from type_conversion import string_to_array
+from lib.present import Present
+from lib.secondary_data_io import load
+from lib.type_conversion import string_to_array
 
 class Words:
 	@staticmethod
