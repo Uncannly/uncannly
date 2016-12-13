@@ -27,7 +27,7 @@ def route(mode, request):
         'unweighted': request.args.get('unweighted'), 
         'exclude_real': request.args.get('exclude-real')
     }
-    response = api(mode, **request_args)
+    response = api(mode, request_args)
     return json.dumps(response, ensure_ascii=False)
 
 @app.route('/random-word')

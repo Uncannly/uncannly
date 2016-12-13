@@ -1,9 +1,7 @@
 import argparse, os, sys
 sys.path.insert(1, os.path.join(sys.path[0], '..'))
 
-from lib.words import Words
-from lib.random_word import RandomWord
-from lib.case_conversion import kebab_to_snake
+from lib.mode import get_by_mode
 
 def bin(mode):
 	parser = argparse.ArgumentParser(
@@ -61,28 +59,4 @@ def bin(mode):
 	)
 
 	args = parser.parse_args()
-
-	if args.score_by_mean_arithmetic:
-		args.scoring_method = 'mean_arithmetic'
-	if args.score_by_mean_geometric:
-		args.scoring_method = 'mean_geometric'
-	if args.score_by_integral_sum:
-		args.scoring_method = 'integral_sum'
-	if args.score_by_integral_product:
-		args.scoring_method = 'integral_product'
-
-	if args.scoring_method == None:
-		args.scoring_method = 'integral_product'
-	else:
-		args.scoring_method = kebab_to_snake(args.scoring_method)
-
-	getter = Words if mode == 'words' else RandomWord
-	getter.get(
-		interface="bin",
-		return_count=args.return_count, 
-		random_selection=args.random_selection,
-		scoring_method=args.scoring_method,
-		score_threshold=args.score_threshold,
-		weighting='unweighted' if args.unweighted else 'weighted',
-		exclude_real=args.exclude_real
-	)
+	get_by_mode(mode=mode, interface='bin', args=vars(args))
