@@ -6,13 +6,14 @@ from flask import Flask, request, render_template
 from gevent.wsgi import WSGIServer
 
 from lib.mode import get_by_mode
+from lib.readme import readme
 
 app = Flask(__name__)
 CORS(app)
 
 @app.route('/')
 def root():
-    return render_template('index.html')
+    return render_template('index.html', readme=readme)
 
 def route(mode, request):
     args = {

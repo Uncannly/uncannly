@@ -16,9 +16,9 @@
 			<input type="radio" name="mode" value="words">Words
 		</label>
 
-		{{ modes('random-word') }}
+		{{ modes('random-word', readme) }}
 
-		{{ modes('words') }}
+		{{ modes('words', readme) }}
 
 		<script src="{{url_for('static', filename='jquery-3.1.1.min.js')}}"></script>
   	<script src="{{url_for('static', filename='clipboard.min.js')}}"></script>

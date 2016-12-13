@@ -1,8 +1,8 @@
-{% macro modes(mode) -%}
+{% macro modes(mode, readme) -%}
 <div class="{{ mode }}" style="{{ 'display: none' if mode == 'words' }}">
 	<label 
 		style="{{ 'visibility: hidden' if mode == 'random-word' }}"
-		title="How many words to return at once."
+		title="{{ readme.return_count }}"
 	>
 		<input 
 			type="number" 
@@ -15,7 +15,8 @@
 	</label>
 	<label 
 		style="{{ 'visibility: hidden' if mode == 'random-word' }}"
-		title="From this particularly specified set of most probable words, instead of the absolute topmost probable ones, return a random selection."
+		title="{{ readme.random_selection }}"
+		class="own-line"
 	>
 		<input 
 			type="checkbox" 
@@ -30,72 +31,74 @@
 			disabled
 		>
 	</label>
-	<div 
-		class="scoring" 
-		title="Choose a threshold and method to see suggested threshold ranges."
-	>
-		<div class="scoring-method">
-			scoring by
-			<label>
-				<input 
-					type="radio" 
-					name="{{ mode }}-scoring-method" 
-					class="integral-product" 
-					{{ 'disabled' if mode == 'random-word' else 'checked' }}
-				>
-				integral product
-			</label>
-			<label>
-				<input 
-					type="radio" 
-					name="{{ mode }}-scoring-method" 
-					class="integral-sum" 
-					{{ 'disabled' if mode == 'random-word' }}
-				>
-				integral sum
-			</label>
-			<label>
-				<input 
-					type="radio" 
-					name="{{ mode }}-scoring-method" 
-					class="mean-geometric" 
-					{{ 'disabled' if mode == 'random-word' }}
-				>
-				geometric mean
-			</label>
-			<label>
-				<input 
-					type="radio" 
-					name="{{ mode }}-scoring-method" 
-					class="mean-arithmetic" 
-					{{ 'disabled' if mode == 'random-word' }}
-				>
-				arithmetic mean
-			</label>
-		</div>
+	<div class="scoring-method" title="{{ readme.scoring_method }}">
+		scoring by
 		<label>
 			<input 
-				type="number" 
-				max="10" 
-				min="0" 
-				step="0.001" 
-				value="{{ -1 if mode == 'words' else 0}}"
-				class="score-threshold"
+				type="radio" 
+				name="{{ mode }}-scoring-method" 
+				class="integral-product" 
+				{{ 'disabled' if mode == 'random-word' else 'checked' }}
 			>
-			score threshold * 10^
+			integral product
+		</label>
+		<label>
 			<input 
-				type="number" 
-				max="-1" 
-				step="1" 
-				value="{{ -22 if mode == 'words' else -1}}"
-				class="score-threshold-power" 
+				type="radio" 
+				name="{{ mode }}-scoring-method" 
+				class="integral-sum" 
+				{{ 'disabled' if mode == 'random-word' }}
 			>
+			integral sum
+		</label>
+		<label>
+			<input 
+				type="radio" 
+				name="{{ mode }}-scoring-method" 
+				class="mean-geometric" 
+				{{ 'disabled' if mode == 'random-word' }}
+			>
+			geometric mean
+		</label>
+		<label>
+			<input 
+				type="radio" 
+				name="{{ mode }}-scoring-method" 
+				class="mean-arithmetic" 
+				{{ 'disabled' if mode == 'random-word' }}
+			>
+			arithmetic mean
 		</label>
 	</div>
-	<label title="Do not weight probabilities by frequency of words in the corpus.">
+	<label title="{{ readme.score_threshold }}">
+		<input 
+			type="number" 
+			max="10" 
+			min="0" 
+			step="0.001" 
+			value="{{ -1 if mode == 'words' else 0}}"
+			class="score-threshold"
+		>
+		score threshold * 10^
+		<input 
+			type="number" 
+			max="-1" 
+			step="1" 
+			value="{{ -22 if mode == 'words' else -1}}"
+			class="score-threshold-power" 
+		>
+	</label>
+	<div 
+		class="scoring" 
+		style="display: inline"
+		title="Choose a threshold and method to see suggested threshold settings."
+	>
+		[threshold hint]
+	</div>
+	<label title="{{ readme.unweighted }}" class="own-line">
 		<input type="checkbox" class="unweighted">unweighted
 	</label>
-	<label title="Do not include words probable by pronunciation that do exist.">
+	<label title="{{ readme.exclude_real }}" class="own-line">
 		<input type="checkbox" class="exclude-real">exclude real
 	</label>
 	<button class="refresh">Refresh</button>

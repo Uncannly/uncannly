@@ -1,9 +1,9 @@
-label, button {
+button {
 	display: block;
 }
 
-.scoring-method label {
-	display: inline;
+label.own-line {
+	display: block;
 }
 
 input[type=number] {
