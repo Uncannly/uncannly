@@ -1,26 +1,56 @@
 <!doctype html>
 <html lang="en">
+
 	<head>
 	  <meta charset="utf-8">
 	  <title>Uncann.ly</title>
 	  <link rel="stylesheet" href="{{url_for('static', filename='styles.css')}}">
 	</head>
+
 	<body>
+
 		<div class="random-word">
 			Random word:
-			<div class="scoring" title="Choose a threshold and method to see suggested threshold ranges.">
+			<div 
+				class="scoring" 
+				title="Choose a threshold and method to see suggested threshold ranges."
+			>
 				<div class="scoring-method">
 					scoring by
-					<label><input type="radio" name="random-word-scoring-method" class="integral-product" disabled>
+					<label>
+						<input 
+							type="radio" 
+							name="random-word-scoring-method" 
+							class="integral-product" 
+							disabled
+						>
 						integral product
 					</label>
-					<label><input type="radio" name="random-word-scoring-method" class="integral-sum" disabled>
+					<label>
+						<input 
+							type="radio" 
+							name="random-word-scoring-method" 
+							class="integral-sum" 
+							disabled
+						>
 						integral sum
 					</label>
-					<label><input type="radio" name="random-word-scoring-method" class="mean-geometric" disabled>
+					<label>
+						<input 
+							type="radio" 
+							name="random-word-scoring-method" 
+							class="mean-geometric" 
+							disabled
+						>
 						geometric mean
 					</label>
-					<label><input type="radio" name="random-word-scoring-method" class="mean-arithmetic" disabled>
+					<label>
+						<input 
+							type="radio" 
+							name="random-word-scoring-method" 
+							class="mean-arithmetic" 
+							disabled
+						>
 						arithmetic mean
 					</label>
 				</div>
@@ -31,8 +61,15 @@
 						min="0" 
 						step="0.001" 
 						class="score-threshold"
-					>score threshold * 10^
-					<input type="number" step="1" max="-1" class="score-threshold-power" value="-1">
+					>
+					score threshold * 10^
+					<input 
+						type="number" 
+						max="-1" 
+						step="1" 
+						value="-1"
+						class="score-threshold-power" 
+					>
 				</label>
 			</div>
 			<label><input type="checkbox" class="unweighted">unweighted</label>
@@ -54,7 +91,10 @@
 					value="45"
 				>return count
 			</label>
-			<div class="scoring" title="Choose a threshold and method to see suggested threshold ranges.">
+			<div 
+				class="scoring" 
+				title="Choose a threshold and method to see suggested threshold ranges."
+			>
 				<div class="scoring-method">
 					scoring by
 					<label>
@@ -73,10 +113,20 @@
 							class="integral-sum"
 						>integral sum
 					</label>
-					<label><input type="radio" name="words-scoring-method" class="mean-geometric">
+					<label>
+						<input 
+							type="radio" 
+							name="words-scoring-method" 
+							class="mean-geometric"
+						>
 						geometric mean
 					</label>
-					<label><input type="radio" name="words-scoring-method" class="mean-arithmetic">
+					<label>
+						<input 
+							type="radio" 
+							name="words-scoring-method" 
+							class="mean-arithmetic"
+						>
 						arithmetic mean
 					</label>
 				</div>
