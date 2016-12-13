@@ -5,6 +5,8 @@ from lib.random_word import RandomWord
 from lib.case_conversion import kebab_to_snake
 
 def get(
+	return_count,	
+	random_selection, 
 	unweighted, 
 	scoring_method, 
   score_by_integral_product, 
