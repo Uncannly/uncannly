@@ -11,7 +11,15 @@ next_phonemes_unweighted = load('most_probable_next_phonemes_unweighted')
 
 class RandomWord:
 	@staticmethod
-	def get(interface, scoring_method, score_threshold, unweighted, exclude_real):
+	def get(
+		interface, 
+		return_count, # thrown away
+		random_selection, # thrown away
+		scoring_method, 
+		score_threshold, 
+		weighting, 
+		exclude_real):
+
 		phoneme = 'START_WORD'
 		score = 1.0
 		word = []
@@ -24,7 +32,7 @@ class RandomWord:
 				score, 
 				scoring_method, 
 				score_threshold, 
-				unweighted
+				unweighted=weighting != 'weighted'
 			)
 
 			if phoneme_tuple == None:

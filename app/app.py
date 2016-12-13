@@ -5,7 +5,7 @@ from flask_cors import CORS
 from flask import Flask, request, render_template
 from gevent.wsgi import WSGIServer
 
-import random_word, words
+from api import api
 
 app = Flask(__name__)
 CORS(app)
@@ -27,16 +27,16 @@ def route(mode, request):
         'unweighted': request.args.get('unweighted'), 
         'exclude_real': request.args.get('exclude-real')
     }
-    response = mode.get(**request_args)
+    response = api(mode, **request_args)
     return json.dumps(response, ensure_ascii=False)
 
 @app.route('/random-word')
 def random_word_route():
-    return route(random_word, request)
+    return route('random_word', request)
 
 @app.route('/words')
 def words_route():
-    return route(words, request)
+    return route('words', request)
 
 if __name__ == "__main__":
     http_server = WSGIServer(('0.0.0.0', int(os.getenv("PORT", 5000))), app)

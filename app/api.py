@@ -2,19 +2,24 @@ import random, os, sys
 sys.path.insert(1, os.path.join(sys.path[0], '..'))
 
 from lib.random_word import RandomWord
+from lib.words import Words
 from lib.case_conversion import kebab_to_snake
 
-def get(
+def api(
+	mode, 
 	return_count,	
 	random_selection, 
-	unweighted, 
 	scoring_method, 
-  score_by_integral_product, 
-  score_by_integral_sum, 
-  score_by_mean_geometric, 
-  score_by_mean_arithmetic, 
-  score_threshold,
+	score_by_integral_product,
+	score_by_integral_sum,
+	score_by_mean_geometric,
+	score_by_mean_arithmetic,
+	score_threshold,
+	unweighted, 
 	exclude_real):
+
+	if random_selection == '':
+		random_selection = 1000000
 
 	if score_by_mean_arithmetic:
 		scoring_method = 'mean_arithmetic'
@@ -30,10 +35,13 @@ def get(
 	else:
 		scoring_method = kebab_to_snake(scoring_method)
 
-	return RandomWord.get(
-		interface="api", 
+	getter = Words if mode == 'words' else RandomWord
+	return getter.get(
+		interface='api', 
+		return_count=int(return_count) if return_count else 45,	
+		random_selection=random_selection, 
 		scoring_method=scoring_method, 
 		score_threshold=float(score_threshold) if score_threshold else None,
-		unweighted=unweighted != None, 
+		weighting='unweighted' if unweighted != None else 'weighted', 
 		exclude_real=exclude_real != None
 	)
