@@ -10,10 +10,10 @@ class Words:
 	def get(
 		interface, 
 		return_count, 
+		random_selection, 
 		scoring_method, 
 		score_threshold,
 		weighting, 
-		random_selection, 
 		exclude_real
 	):
 		most_probable_words = load(

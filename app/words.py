@@ -6,15 +6,18 @@ from lib.case_conversion import kebab_to_snake
 
 def get(
 	return_count,	
+	random_selection, 
 	scoring_method, 
 	score_by_integral_product,
 	score_by_integral_sum,
 	score_by_mean_geometric,
 	score_by_mean_arithmetic,
 	score_threshold,
-	random_selection, 
 	unweighted, 
 	exclude_real):
+
+	if random_selection == '':
+		random_selection = 1000000
 
 	if score_by_mean_arithmetic:
 		scoring_method = 'mean_arithmetic'
@@ -30,15 +33,12 @@ def get(
 	else:
 		scoring_method = kebab_to_snake(scoring_method)
 
-	if random_selection == '':
-		random_selection = 1000000
-
 	return Words.get(
 		interface='api', 
 		return_count=int(return_count) if return_count else 45,	
+		random_selection=random_selection, 
 		scoring_method=scoring_method, 
 		score_threshold=float(score_threshold) if score_threshold else None,
-		random_selection=random_selection, 
 		weighting='unweighted' if unweighted != None else 'weighted', 
 		exclude_real=exclude_real != None
 	)

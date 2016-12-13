@@ -13,6 +13,11 @@ parser.add_argument(
 	help='How many words to return at once.'
 )
 parser.add_argument(
+	'--random-selection', '-r',
+	nargs='?', const=1000000, type=int,
+	help='From this particularly specified set of most probable words, instead of the absolute topmost probable ones, return a random selection.'
+)
+parser.add_argument(
 	'--scoring-method', '-m',
 	help='The method used to score words by, and filter out the lower scoring ones. Four methods exist in a 2x2 matrix relationship: integral-product, integral-sum, mean-geometric, mean-arithmetic.'
 )
@@ -40,11 +45,6 @@ parser.add_argument(
 	'--score-threshold', '-t',
 	type=float,
 	help='When specified, will not return words with scores (according to the current scoring method) lower than this threshold.'
-)
-parser.add_argument(
-	'--random-selection', '-r',
-	nargs='?', const=1000000, type=int,
-	help='From this particularly specified set of most probable words, instead of the absolute topmost probable ones, return a random selection.'
 )
 parser.add_argument(
 	'--unweighted', '-u',
@@ -76,9 +76,9 @@ else:
 Words.get(
 	interface="bin",
 	return_count=args.return_count, 
+	random_selection=args.random_selection,
 	scoring_method=args.scoring_method,
 	score_threshold=args.score_threshold,
 	weighting='unweighted' if args.unweighted else 'weighted',
-	random_selection=args.random_selection,
 	exclude_real=args.exclude_real
 )

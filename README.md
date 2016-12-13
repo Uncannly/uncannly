@@ -8,7 +8,11 @@ Visit [http://uncannly.cfapps.io](http://uncannly.cfapps.io) for a demonstration
 
 * **return count**
 
-How many words to return at once (default: 45).
+How many words to return at once. Only used for `words` mode. Default: 45.
+
+* **random selection**
+
+Return a random set of words drawn from a pool at the top, rather than a ranked list from the top. Only used for `words` mode.
 
 * **scoring method**
 
@@ -35,10 +39,6 @@ The default scoring method is `integral-product`.
 * **score threshold**
 
 When specified, will not return words with scores (according to the current scoring method) lower than this threshold.
-
-* **random selection**
-
-Return a random set of words drawn from a pool at the top, rather than a ranked list from the top.
 
 If you pass a value, it will be taken as the number of words to include in the pool. 
 
@@ -78,20 +78,20 @@ https://uncannly.cfapps.io/random-word
 
 Query params:
 * `return-count`
+* `random-selection`
 * `scoring-method`
 * `score-by-integral-product`
 * `score-by-integral-sum`
 * `score-by-mean-geometric`
 * `score-by-mean-arithmetic`
 * `score-threshold`
-* `random-selection`
 * `unweighted`
 * `exclude-real`
 
 e.g.
 
 ```
-https://uncannly.cfapps.io/words?return-count=3&scoring-method=mean-arithmetic&score-threshold=0.2random-selection=500&unweighted&exclude-real
+https://uncannly.cfapps.io/words?return-count=3&random-selection=500&scoring-method=mean-arithmetic&score-threshold=0.2&unweighted&exclude-real
 ["s", "kʌntʌn", "kʌliʌn"]
 ```
 
@@ -124,20 +124,20 @@ G EH R (GAIR)
 
 Arguments:
 * `-c`, `--return-count`
+* `-r`, `--random-selection`
 * `-m`, `--scoring-method`
 * `-p`, `--score-by-integral-product`
 * `-s`, `--score-by-integral-sum`
 * `-g`, `--score-by-mean-geometric`
 * `-a`, `--score-by-mean-arithmetic`
 * `-t`, `--score-threshold`
-* `-r`, `--random-selection`
 * `-u`, `--unweighted`
 * `-x`, `--exclude-real`
 
 e.g.
 
 ```
-$ python bin/words.py -c 3 -a -t 2.0 -r 500 -u -x
+$ python bin/words.py -c 3 -r 500 -a -t 2.0 -u -x
 K AH L IY AH N
 K AH N T AH N
 S
