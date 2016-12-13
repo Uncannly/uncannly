@@ -1,107 +1,25 @@
-// random-word
+const addListener = function(mode, method, significands, powers) {
+    $(`.${mode} .${method}`).change(function() {
+        $(`.${mode} .scoring`).attr(
+            'title',
+            [
+                'for default settings:',
+                `> 1 possibility: ${significands[0]} * 10^-${powers[0]}`,
+                `> 100 possibilities:  ${significands[1]} * 10^-${powers[1]}`,
+                `> 10000 possibilities: ${significands[2]} * 10^-${powers[2]}`,
+                `> 1000000 possibilities: ${significands[3]} * 10^-${powers[3]}`
+            ].join('\n')
+        );
+    });
+};
 
-$(".random-word .integral-product").change(function() {
-    $('.random-word .scoring').attr(
-        'title',
-        [
-            'for default settings:',
-            '> 1 possibility: 1 * 10^-3',
-            '> 100 possibilities:  1 * 10^-8',
-            '> 10000 possibilities: 1 * 10^-15',
-            '> 1000000 possibilities: 1 * 10^-22'
-        ].join('\n')
-    )
-});
+const altText = function(method, significands, powers) {
+    ['random-word', 'words'].forEach(function(mode) {
+        addListener(mode, method, significands, powers);
+    });
+};
 
-$(".random-word .integral-sum").change(function() {
-    $('.random-word .scoring').attr(
-        'title',
-        [
-            'for default settings:',
-            '> 1 possibility: 2 * 10^-1',
-            '> 100 possibilities: 1 * 10^-1',
-            '> 10000 possibilities: 6 * 10^-2',
-            '> 1000000 possibilities: 4 * 10^-2'
-        ].join('\n')
-    )
-});
-
-$(".random-word .mean-geometric").change(function() {
-    $('.random-word .scoring').attr(
-        'title',
-        [
-            'for default settings:',
-            '> 1 possibility: 1 * 10^-2',
-            '> 100 possibilities: 1 * 10^-3',
-            '> 10000 possibilities: 3 * 10^-4',
-            '> 1000000 possibilities: 1 * 10^-4'
-        ].join('\n')
-    )
-});
-
-$(".random-word .mean-arithmetic").change(function() {
-    $('.random-word .scoring').attr(
-        'title',
-        [
-            'for default settings:',
-            '> 1 possibility: 4.25 * 10^-1',
-            '> 100 possibilities: 3.1 * 10^-1',
-            '> 10000 possibilities: 2.95 * 10^-1',
-            '> 1000000 possibilities: 2.415 * 10^-1'
-        ].join('\n')
-    )
-});
-
-// words
-
-$(".words .integral-product").change(function() {
-    $('.words .scoring').attr(
-        'title',
-        [
-            'for default settings:',
-            '> 1 possibility: 1 * 10^-3',
-            '> 100 possibilities:  1 * 10^-8',
-            '> 10000 possibilities: 1 * 10^-15',
-            '> 1000000 possibilities: 1 * 10^-22'
-        ].join('\n')
-    )
-});
-
-$(".words .integral-sum").change(function() {
-    $('.words .scoring').attr(
-        'title',
-        [
-            'for default settings:',
-            '> 1 possibility: 2 * 10^-1',
-            '> 100 possibilities: 1 * 10^-1',
-            '> 10000 possibilities: 6 * 10^-2',
-            '> 1000000 possibilities: 4 * 10^-2'
-        ].join('\n')
-    )
-});
-
-$(".words .mean-geometric").change(function() {
-    $('.words .scoring').attr(
-        'title',
-        [
-            'for default settings:',
-            '> 1 possibility: 1 * 10^-2',
-            '> 100 possibilities: 1 * 10^-3',
-            '> 10000 possibilities: 3 * 10^-4',
-            '> 1000000 possibilities: 1 * 10^-4'
-        ].join('\n')
-    )
-});
-
-$(".words .mean-arithmetic").change(function() {
-    $('.words .scoring').attr(
-        'title',
-        [
-            'for default settings:',
-            '> 1 possibility: 4.25 * 10^-1',
-            '> 100 possibilities: 3.1 * 10^-1',
-            '> 10000 possibilities: 2.95 * 10^-1',
-            '> 1000000 possibilities: 2.415 * 10^-1'
-        ].join('\n')
-    )
-});
+altText('integral-product', [ 1,    1,   1,   1   ], [ 3,  8,  15, 22 ]);
+altText('integral-sum',     [ 2,    1,   6,   4   ], [ 1,  1,  2,  2  ]);
+altText('mean-geometric',   [ 1,    1,   3,   1   ], [ 2,  3,  4,  4  ]);
+altText('mean-arithmetic',  [ 4.25, 3.1, 2.9, 2.4 ], [ 1,  1,  1,  1  ]);

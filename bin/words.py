@@ -7,6 +7,7 @@ from lib.case_conversion import kebab_to_snake
 parser = argparse.ArgumentParser(
 	description='Get the most likely yet missing English words.'
 )
+
 parser.add_argument(
 	'--return-count', '-c', 
 	type=int, default=45, 

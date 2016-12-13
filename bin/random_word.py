@@ -1,4 +1,4 @@
-import random, time, os, sys, argparse
+import os, sys, argparse
 sys.path.insert(1, os.path.join(sys.path[0], '..'))
 
 from lib.random_word import RandomWord
