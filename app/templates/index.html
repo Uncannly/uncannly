@@ -9,42 +9,16 @@
 	</head>
 
 	<body>
-		<label>
+		<label display="inline">
 			<input type="radio" name="mode" value="random-word" checked>Random Word
+		</label>
+		<label display="inline">
 			<input type="radio" name="mode" value="words">Words
 		</label>
 
-		<div class="random-word">
-			{{ modes('random-word') }}
-		</div>
+		{{ modes('random-word') }}
 
-		<div class="words" style="display: none">
-			<label>
-				<input 
-					type="number" 
-					max="1000000" 
-					min="0" 
-					step="1" 
-					class="return-count" 
-					value="45"
-				>return count
-			</label>
-			<label>
-				<input 
-					type="checkbox" 
-					class="random-selection"
-				>random selection
-				<input 
-					type="number" 
-					max="1000000" 
-					min="0" 
-					step="1" 
-					class="random-selection-value" 
-					disabled
-				>
-			</label>
-			{{ modes('words') }}
-		</div>
+		{{ modes('words') }}
 
 		<script src="{{url_for('static', filename='jquery-3.1.1.min.js')}}"></script>
   	<script src="{{url_for('static', filename='clipboard.min.js')}}"></script>

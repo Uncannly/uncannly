@@ -1,4 +1,29 @@
 {% macro modes(mode) -%}
+<div class="{{ mode }}" style="{{ 'display: none' if mode == 'words' }}">
+	<label style="{{ 'visibility: hidden' if mode == 'random-word' }}">
+		<input 
+			type="number" 
+			max="1000000" 
+			min="0" 
+			step="1" 
+			class="return-count" 
+			value="45"
+		>return count
+	</label>
+	<label style="{{ 'visibility: hidden' if mode == 'random-word' }}">
+		<input 
+			type="checkbox" 
+			class="random-selection"
+		>random selection
+		<input 
+			type="number" 
+			max="1000000" 
+			min="0" 
+			step="1" 
+			class="random-selection-value" 
+			disabled
+		>
+	</label>
 	<div 
 		class="scoring" 
 		title="Choose a threshold and method to see suggested threshold ranges."
@@ -10,7 +35,7 @@
 					type="radio" 
 					name="{{ mode }}-scoring-method" 
 					class="integral-product" 
-					{{ 'checked' if mode == 'words' else 'disabled' }}
+					{{ 'disabled' if mode == 'random-word' else 'checked' }}
 				>
 				integral product
 			</label>
@@ -19,7 +44,7 @@
 					type="radio" 
 					name="{{ mode }}-scoring-method" 
 					class="integral-sum" 
-					{{ '' if mode == 'words' else 'disabled' }}
+					{{ 'disabled' if mode == 'random-word' }}
 				>
 				integral sum
 			</label>
@@ -28,7 +53,7 @@
 					type="radio" 
 					name="{{ mode }}-scoring-method" 
 					class="mean-geometric" 
-					{{ '' if mode == 'words' else 'disabled' }}
+					{{ 'disabled' if mode == 'random-word' }}
 				>
 				geometric mean
 			</label>
@@ -37,7 +62,7 @@
 					type="radio" 
 					name="{{ mode }}-scoring-method" 
 					class="mean-arithmetic" 
-					{{ '' if mode == 'words' else 'disabled' }}
+					{{ 'disabled' if mode == 'random-word' }}
 				>
 				arithmetic mean
 			</label>
@@ -66,4 +91,5 @@
 	<button class="refresh">Refresh</button>
 	<button id="copy-{{ mode }}" data-clipboard-target="#{{ mode }}">Copy</button>
 	<div id="{{ mode }}"></div>
+</div>
 {%- endmacro %}
