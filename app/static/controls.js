@@ -1,5 +1,57 @@
+const present = function(data, mode) {
+    return mode == 'words' ? JSON.parse(data).join('<br>') : data.slice(1, -1);
+};
+
+const checked = function(mode, option) {
+    return $(`.${mode} .${option}`).is(':checked');
+};
+
+const scoringMethods = [
+    'integral-product', 'integral-sum', 'mean-geometric', 'mean-arithmetic'
+];
+
+const modes = function(mode) {
+    $(`.${mode} button.refresh`).click(function() {
+        let url = `/${mode}`;
+        const data = [];
+
+        const returnCount = $(`.${mode} .return-count`).val();
+        if (returnCount) data.push(`return-count=${returnCount}`);
+
+        scoringMethods.forEach(function(method) {
+            if (checked(mode, method)) data.push(`scoring-method=${method}`);
+        });
+
+        const scoreThresholdPower = $(`.${mode} .score-threshold-power`).val();
+        const scorePower = Math.pow(10, parseInt(scoreThresholdPower));
+        const scoreThreshold = $(`.${mode} .score-threshold`).val() * scorePower;
+        scoreThreshold && data.push(`score-threshold=${scoreThreshold}`);
+
+        const randomSelectionValue = $(`.${mode} .random-selection-value`).val();
+        if (randomSelectionValue !== '' && checked(mode, 'random-selection')) {
+            data.push(`random-selection=${randomSelection}`);
+        }
+
+        if ($(`.${mode} .unweighted`).is(':checked')) data.push('unweighted');
+
+        if ($(`.${mode} .exclude-real`).is(':checked')) data.push('exclude-real');
+
+        if (data.length > 0) url += '?' + data.join('&');
+
+        $(`#${mode}`).html('Loading...');
+        $.ajax({
+            url: url,
+            success: function(data) { $(`#${mode}`).html(present(data, mode)); }
+        });
+    });
+
+    new Clipboard(`#copy-${mode}`);
+};
+
+['random-word', 'words'].forEach(function(mode) { modes(mode); });
+
 $(".random-word .score-threshold").change(function(e) {
-    $(".random-word .scoring-method input").prop("disabled", e.target.value == '')
+    $(".random-word .scoring-method input").prop("disabled", e.target.value == '');
 });
 
 $(".words .random-selection").change(function(e) {
@@ -12,70 +64,3 @@ $(".words .random-selection").change(function(e) {
         $(".random-selection-value").prop("disabled", true)
     }
 });
-
-$(".random-word button.refresh").click(function(e) {
-    let url = '/random-word'
-    const data = []
-    
-    if ($(".random-word .integral-product").is(':checked')) data.push("scoring-method=integral-product")
-    if ($(".random-word .integral-sum").is(':checked')) data.push("scoring-method=integral-sum")
-    if ($(".random-word .mean-geometric").is(':checked')) data.push("scoring-method=mean-geometric")
-    if ($(".random-word .mean-arithmetic").is(':checked')) data.push("scoring-method=mean-arithmetic")
-
-    const scorePower = Math.pow(10, parseInt($(".random-word .score-threshold-power").val()))
-    const scoreThreshold = $(".random-word .score-threshold").val() * scorePower
-    scoreThreshold && data.push(`score-threshold=${scoreThreshold}`)
-
-    if ($(".random-word .unweighted").is(':checked')) data.push('unweighted')
-
-    if ($(".random-word .exclude-real").is(':checked')) data.push('exclude-real')
-
-    if (data.length > 0) url += '?' + data.join('&')
-
-    $("#random-word").html('Loading...')
-    $.ajax({
-        url: url,
-        success: function(result) {
-            $("#random-word").html(result.slice(1, -1));
-        }
-    });
-});
-
-$(".words button.refresh").click(function(e) {
-    let url = '/words'
-    const data = []
-
-    const returnCount = $(".words .return-count").val()
-    if (returnCount) data.push(`return-count=${returnCount}`)
-
-    if ($(".words .integral-product").is(':checked')) data.push("scoring-method=integral-product")
-    if ($(".words .integral-sum").is(':checked')) data.push("scoring-method=integral-sum")
-    if ($(".words .mean-geometric").is(':checked')) data.push("scoring-method=mean-geometric")
-    if ($(".words .mean-arithmetic").is(':checked')) data.push("scoring-method=mean-arithmetic")
-
-    const scorePower = Math.pow(10, parseInt($(".words .score-threshold-power").val()))
-    const scoreThreshold = $(".words .score-threshold").val() * scorePower
-    scoreThreshold && data.push(`score-threshold=${scoreThreshold}`)
-
-    const randomSelection = $(".words .random-selection-value").val()
-    if (randomSelection !== '' && $(".words .random-selection").is(':checked')) {
-        data.push(`random-selection=${randomSelection}`)
-    }
-
-    if ($(".words .unweighted").is(':checked')) data.push('unweighted')
-
-    if ($(".words .exclude-real").is(':checked')) data.push('exclude-real')
-
-    if (data.length > 0) url += '?' + data.join('&')
-
-    $("#words").html('Loading...')
-    $.ajax({
-        url: url,
-        success: function(result) {
-            $("#words").html(JSON.parse(result).join('<br>'));
-        }
-    });
-});
-
-new Clipboard('#copy-random-word');
-new Clipboard('#copy-words');
