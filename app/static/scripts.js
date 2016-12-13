@@ -29,7 +29,7 @@ const modes = function(mode) {
 
         const randomSelectionValue = $(`.${mode} .random-selection-value`).val();
         if (randomSelectionValue !== '' && checked(mode, 'random-selection')) {
-            data.push(`random-selection=${randomSelection}`);
+            data.push(`random-selection=${randomSelectionValue}`);
         }
 
         if ($(`.${mode} .unweighted`).is(':checked')) data.push('unweighted');
