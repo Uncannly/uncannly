@@ -9,11 +9,16 @@
 	</head>
 
 	<body>
-		<div class="random-word">Random word:
+		<label>
+			<input type="radio" name="mode" value="random-word" checked>Random Word
+			<input type="radio" name="mode" value="words">Words
+		</label>
+
+		<div class="random-word">
 			{{ modes('random-word') }}
 		</div>
 
-		<div class="words">Words: 
+		<div class="words" style="display: none">
 			<label>
 				<input 
 					type="number" 

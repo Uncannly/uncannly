@@ -10,6 +10,16 @@ const scoringMethods = [
     'integral-product', 'integral-sum', 'mean-geometric', 'mean-arithmetic'
 ];
 
+$("input[name='mode']").change(function(e){
+    if($(this).val() == 'random-word') {
+        $('.random-word').css({display: 'block'});
+        $('.words').css({display: 'none'});
+    } else {
+        $('.words').css({display: 'block'});
+        $('.random-word').css({display: 'none'});
+    }
+});
+
 const modes = function(mode) {
     $(`.${mode} button.refresh`).click(function() {
         let url = `/${mode}`;
