@@ -57,6 +57,7 @@ def bin_select_random(words, return_count, exclude_real):
 def api_select_top(words, return_count, exclude_real):
 	output = []
 	i = 0
+	no_words_returned = True
 	while len(output) < return_count:
 		if i == len(words):
 			output.append('Fewer words met criteria than the specified return count.')
@@ -65,7 +66,12 @@ def api_select_top(words, return_count, exclude_real):
 		i += 1
 		result = Present.for_web(arrayified_word, exclude_real)
 		if result:
+			no_words_returned = False
 			output.append(result) 	
+
+	if no_words_returned:
+		output = ['No words met criteria.']
+
 	return output
 
 def api_select_random(words, return_count, exclude_real):
@@ -75,4 +81,8 @@ def api_select_random(words, return_count, exclude_real):
 		result = Present.for_web(arrayified_word, exclude_real)
 		if result:
 			output.append(result) 
+
+	if len(output) == 0:
+		output = ['No words met criteria.']
+
 	return output
