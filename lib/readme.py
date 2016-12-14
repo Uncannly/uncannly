@@ -14,5 +14,6 @@ readme = {
 	'score_threshold': 'When specified, will not return words with scores \
 		(according to the current scoring method) lower than this threshold.',
 	'unweighted': 'Do not weight probabilities by frequency of words in the corpus.',
+	'ignore_stress': 'Do not consider different stress levels of vowels separately.',
 	'exclude_real': 'Do not include words probable by pronunciation that do exist.'
 }

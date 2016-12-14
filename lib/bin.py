@@ -54,6 +54,11 @@ def bin(mode):
 		help=readme.get('unweighted')
 	)
 	parser.add_argument(
+		'--ignore-stress', '-i',
+		action='store_true',
+		help=readme.get('ignore_stress')
+	)
+	parser.add_argument(
 		'--exclude-real', '-x', 
 		action='store_true',
 		help=readme.get('exclude_real')

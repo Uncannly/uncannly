@@ -52,6 +52,10 @@ Words are currently limited to 20 letters regardless of any options.
 
 Do not weight probabilities by frequency of words in the corpus.
 
+* **ignore stress**
+
+Do not consider different stress levels of vowels separately.
+
 * **exclude real**
 
 Do not include words probable by pronunciation that do exist.

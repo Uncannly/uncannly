@@ -8,6 +8,8 @@ from lib.score import get_score
 
 next_phonemes_weighted = load('most_probable_next_phonemes')
 next_phonemes_unweighted = load('most_probable_next_phonemes_unweighted')
+next_phonemes_weighted_stressless = load('most_probable_next_phonemes_stressless')
+next_phonemes_unweighted_stressless = load('most_probable_next_phonemes_unweighted_stressless')
 
 class RandomWord:
 	@staticmethod
@@ -18,6 +20,7 @@ class RandomWord:
 		scoring_method, 
 		score_threshold, 
 		unweighted, 
+		ignore_stress,
 		exclude_real):
 
 		phoneme = 'START_WORD'
@@ -32,7 +35,8 @@ class RandomWord:
 				score, 
 				scoring_method, 
 				score_threshold, 
-				unweighted
+				unweighted,
+				ignore_stress
 			)
 
 			if phoneme_tuple == None:
@@ -53,14 +57,14 @@ class RandomWord:
 				if phoneme == 'END_WORD':
 					if interface == "bin":
 						stringified_word = array_to_string(word)
-						word_was_presented = Present.for_terminal(stringified_word, exclude_real)
+						word_was_presented = Present.for_terminal(stringified_word, ignore_stress, exclude_real)
 						if word_was_presented == True:
 							return
 						else:
 							phoneme = 'START_WORD'
 							word = []
 					elif interface == "api":
-						word_to_present = Present.for_web(word, exclude_real)
+						word_to_present = Present.for_web(word, ignore_stress, exclude_real)
 						if word_to_present != None:
 							return word_to_present
 						else:
@@ -76,8 +80,12 @@ def next_phoneme(
 	score, 
 	scoring_method, 
 	score_threshold, 
-	unweighted):
-	next_phonemes = next_phonemes_unweighted if unweighted else next_phonemes_weighted
+	unweighted,
+	ignore_stress):
+	if ignore_stress:
+		next_phonemes = next_phonemes_unweighted_stressless if unweighted else next_phonemes_weighted_stressless
+	else:
+		next_phonemes = next_phonemes_unweighted if unweighted else next_phonemes_weighted
 
 	accumulated_probability = 0
 	for (phoneme, probability) in next_phonemes[phoneme]:

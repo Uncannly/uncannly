@@ -14,11 +14,13 @@ class Words:
 		scoring_method, 
 		score_threshold,
 		unweighted, 
+		ignore_stress,
 		exclude_real
 	):
 		weighting = 'unweighted' if unweighted else 'weighted'
+		stress_consideration = '_stressless' if ignore_stress else ''
 		most_probable_words = load(
-			'most_probable_words_by_{}_{}'.format(scoring_method, weighting)
+			'most_probable_words_by_{}_{}{}'.format(scoring_method, weighting, stress_consideration)
 		)
 
 		if random_selection:
@@ -35,9 +37,9 @@ class Words:
 			else:
 				words.append(word)
 		
-		return selector(words, return_count, exclude_real)
+		return selector(words, return_count, ignore_stress, exclude_real)
 
-def bin_select_top(words, return_count, exclude_real):
+def bin_select_top(words, return_count, ignore_stress, exclude_real):
 	i = 0
 	for _ in xrange(return_count):
 		if i == len(words):
@@ -47,15 +49,15 @@ def bin_select_top(words, return_count, exclude_real):
 			break
 		presented = False
 		while presented == False:
-			presented = Present.for_terminal(words[i], exclude_real)
+			presented = Present.for_terminal(words[i], ignore_stressexclude_real)
 			i += 1
 
-def bin_select_random(words, return_count, exclude_real):
+def bin_select_random(words, return_count, ignore_stress, exclude_real):
 	for _ in xrange(return_count):
-		while Present.for_terminal(random.choice(words), exclude_real) == False:
+		while Present.for_terminal(random.choice(words), ignore_stress, exclude_real) == False:
 			pass
 
-def api_select_top(words, return_count, exclude_real):
+def api_select_top(words, return_count, ignore_stress, exclude_real):
 	output = []
 	i = 0
 	no_words_returned = True
@@ -65,7 +67,7 @@ def api_select_top(words, return_count, exclude_real):
 			break
 		arrayified_word = string_to_array(words[i])
 		i += 1
-		result = Present.for_web(arrayified_word, exclude_real)
+		result = Present.for_web(arrayified_word, ignore_stress, exclude_real)
 		if result:
 			no_words_returned = False
 			output.append(result) 	
@@ -75,11 +77,11 @@ def api_select_top(words, return_count, exclude_real):
 
 	return output
 
-def api_select_random(words, return_count, exclude_real):
+def api_select_random(words, return_count, ignore_stress, exclude_real):
 	output = []
 	while len(output) < return_count:
 		arrayified_word = string_to_array(random.choice(words))
-		result = Present.for_web(arrayified_word, exclude_real)
+		result = Present.for_web(arrayified_word, ignore_stress, exclude_real)
 		if result:
 			output.append(result) 
 
