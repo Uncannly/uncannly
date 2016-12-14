@@ -61,8 +61,14 @@ const modes = function(mode) {
 ['random-word', 'words'].forEach(function(mode) { modes(mode); });
 
 $(".random-word .score-threshold").change(function(e) {
-    const disable = e.target.value == '' || e.target.value == '0'
-    $(".random-word .scoring-method input").prop("disabled", disable);
+    const disable = e.target.value == '' || e.target.value == '0';
+    const inputs = $(".random-word .scoring-method input");
+    inputs.prop("disabled", disable);
+    if (disable) {
+        inputs.prop("checked", "");
+    } else if (!inputs.is(':checked')) {
+        $(".integral-product").prop("checked", "checked");
+    }
 });
 
 $(".words .random-selection").change(function(e) {
