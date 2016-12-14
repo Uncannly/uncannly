@@ -46,6 +46,8 @@ The value may be lower than the return count. You will just get more repeats tha
 
 The maximum and default are both 1000000.
 
+Words are currently limited to 20 letters regardless of any options.
+
 * **unweighted**
 
 Do not weight probabilities by frequency of words in the corpus.
