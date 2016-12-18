@@ -2,4 +2,3 @@
 applications:
 - name: uncannly
   memory: 2GB
-  buildpack: python_buildpack
