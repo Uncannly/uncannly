@@ -72,22 +72,4 @@ class MostProbableWords:
 
 		next_phoneme(['START_WORD'], 1.0)
 
-		connection = connect()
-		cur = connection.cursor()
-		sql_array = []
-		for word, score in most_probable_words.iteritems():
-			sql_array.append("('{}', '{}', '{}', '{}', '{}', '{}')".format(
-				word, 
-				score, 
-				stressless, 
-				unweighted, 
-				method_mean, 
-				method_addition
-			))
-
-		sql_string = "insert into scores \
-			(word, score, stressless, unweighted, method_mean, method_addition) values"
-		sql_string += ", ".join(sql_array)
-		cur.execute(sql_string)
-		cur.close()
-		disconnect(connection)
+		return most_probable_words

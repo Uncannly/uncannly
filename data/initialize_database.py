@@ -4,28 +4,11 @@ sys.path.insert(1, os.path.join(sys.path[0], '..'))
 from lib.parse.primary import frequency_list, pronouncing_dictionary
 from lib.parse.secondary.absolute_chain import AbsoluteChain
 from lib.parse.secondary.most_probable_words import MostProbableWords
-from data.database import connect, disconnect, do_the_words_table, do_a_phoneme_chain
+from data.database import do_the_schema, do_the_words_table, do_a_phoneme_chain, do_some_scores
 
 ########### PHASE ZERO ####################
 
-connection = connect()
-cur = connection.cursor()
-sql = ";".join([
-	"drop table if exists words",
-	"create table words (word varchar, \
-		pronunciation varchar, pronunciation_stressless varchar)",
-	"drop table if exists phonemes",
-	"create table phonemes (phoneme varchar, stressless boolean, \
-		next_phonemes varchar, next_phonemes_unweighted varchar)",
-	"drop table if exists scores",
-	"create table scores (word varchar, score float(25), \
-		stressless boolean, unweighted boolean, \
-		method_mean boolean, method_addition boolean)",
-	""
-])
-cur.execute(sql)
-cur.close()
-disconnect(connection)
+do_the_schema()
 
 ########### PHASE ONE ####################
 
@@ -65,10 +48,11 @@ for stressless in [False, True]:
 			for method_addition in [False, True]:
 				weighting = 'unweighted' if unweighted else 'weighted'
 				stress_consideration_key = 'stressless' if stressless else 'with_stress'				
-				MostProbableWords.get(
+				most_probable_words = MostProbableWords.get(
 					most_probable_next_phonemes[weighting][stress_consideration_key],
 					stressless, 
 					unweighted, 
 					method_mean, 
 					method_addition
 				)
+				do_some_scores(most_probable_words, stressless, unweighted, method_mean, method_addition)
