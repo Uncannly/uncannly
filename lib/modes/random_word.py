@@ -2,14 +2,14 @@ import random, os, sys
 sys.path.insert(1, os.path.join(sys.path[0], '..'))
 
 from lib.present import Present
-from lib.secondary_data_io import load
 from lib.type_conversion import array_to_string
 from lib.score import get_score
+from data.database import load_phonemes
 
-next_phonemes_weighted = load('most_probable_next_phonemes')
-next_phonemes_unweighted = load('most_probable_next_phonemes_unweighted')
-next_phonemes_weighted_stressless = load('most_probable_next_phonemes_stressless')
-next_phonemes_unweighted_stressless = load('most_probable_next_phonemes_unweighted_stressless')
+next_phonemes_weighted = load_phonemes(unweighted=False, stressless=False)
+next_phonemes_unweighted = load_phonemes(unweighted=True, stressless=False)
+next_phonemes_weighted_stressless = load_phonemes(unweighted=False, stressless=True)
+next_phonemes_unweighted_stressless = load_phonemes(unweighted=True, stressless=True)
 
 class RandomWord:
 	@staticmethod

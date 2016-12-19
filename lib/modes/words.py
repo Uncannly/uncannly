@@ -2,8 +2,8 @@ import random, os, sys
 sys.path.insert(1, os.path.join(sys.path[0], '..'))
 
 from lib.present import Present
-from lib.secondary_data_io import load
 from lib.type_conversion import string_to_array
+from data.database import load_scores
 
 class Words:
 	@staticmethod
@@ -17,17 +17,14 @@ class Words:
 		ignore_stress,
 		exclude_real
 	):
-		weighting = 'unweighted' if unweighted else 'weighted'
-		stress_consideration = '_stressless' if ignore_stress else ''
-		most_probable_words = load(
-			'most_probable_words_by_{}_{}{}'.format(scoring_method, weighting, stress_consideration)
-		)
+		most_probable_words = load_scores(ignore_stress, unweighted, scoring_method)
+		sorted_most_probable_words = sorted(most_probable_words, key=lambda x: -x[1])
 
 		if random_selection:
-			word_tuples = most_probable_words[0:int(random_selection)]
+			word_tuples = sorted_most_probable_words[0:int(random_selection)]
 			selector = api_select_random if interface == 'api' else bin_select_random
 		else:
-			word_tuples = most_probable_words
+			word_tuples = sorted_most_probable_words
 			selector = api_select_top if interface == 'api' else bin_select_top
 
 		words = []
@@ -49,7 +46,7 @@ def bin_select_top(words, return_count, ignore_stress, exclude_real):
 			break
 		presented = False
 		while presented == False:
-			presented = Present.for_terminal(words[i], ignore_stressexclude_real)
+			presented = Present.for_terminal(words[i], ignore_stress, exclude_real)
 			i += 1
 
 def bin_select_random(words, return_count, ignore_stress, exclude_real):

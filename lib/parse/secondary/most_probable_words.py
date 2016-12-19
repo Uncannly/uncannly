@@ -3,9 +3,10 @@ sys.path.insert(1, os.path.join(sys.path[0], '..', '..'))
 
 from lib.type_conversion import array_to_string
 from lib.score import get_score
+from data.database import connect, disconnect
 
 default_limit_for_scoring_method = {
-'with_stress': {
+	'with_stress': {
 		'weighted': {
 			'integral_product': 8.1   * 10**-16, # 10079 
 			'integral_sum':     6.35  * 10**-2,  # 10831 
@@ -36,11 +37,19 @@ default_limit_for_scoring_method = {
 }
 
 class MostProbableWords:
-	@staticmethod
-	def get(most_probable_next_phonemes, stress_consideration, frequency_weighting, scoring_method):
-		most_probable_words = {}
 
+	@staticmethod
+	def get(most_probable_next_phonemes, stressless, unweighted, method_mean, method_addition):
+
+		stress_consideration = 'stressless' if stressless else 'with_stress'
+		frequency_weighting = 'unweighted' if unweighted else 'weighted'
+		if method_mean:
+			scoring_method = 'mean_arithmetic' if method_addition else 'mean_geometric'
+		else:
+			scoring_method = 'integral_sum' if method_addition else 'integral_product'
 		limit = default_limit_for_scoring_method[stress_consideration][frequency_weighting][scoring_method]
+
+		most_probable_words = {}
 
 		def next_phoneme(word, score):
 			word_length = len(word)
@@ -63,16 +72,22 @@ class MostProbableWords:
 
 		next_phoneme(['START_WORD'], 1.0)
 
-		sorted_most_probable_words = sorted(
-			most_probable_words,
-			key=most_probable_words.get,
-			reverse=True
-		)
+		connection = connect()
+		cur = connection.cursor()
+		sql_array = []
+		for word, score in most_probable_words.iteritems():
+			sql_array.append("('{}', '{}', '{}', '{}', '{}', '{}')".format(
+				word, 
+				score, 
+				stressless, 
+				unweighted, 
+				method_mean, 
+				method_addition
+			))
 
-		sorted_most_probable_words_with_score = []
-		for word in sorted_most_probable_words:
-			sorted_most_probable_words_with_score.append(
-				(word, most_probable_words[word])
-			)
-
-		return sorted_most_probable_words_with_score
+		sql_string = "insert into scores \
+			(word, score, stressless, unweighted, method_mean, method_addition) values"
+		sql_string += ", ".join(sql_array)
+		cur.execute(sql_string)
+		cur.close()
+		disconnect(connection)

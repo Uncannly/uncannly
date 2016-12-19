@@ -2,11 +2,9 @@ import sys
 
 from ipa import ipa
 from type_conversion import array_to_string
-from secondary_data_io import load
+from data.database import load_words
 
-words = load('words')
-word_pronunciations = load('word_pronunciations')
-word_pronunciations_stressless = load('word_pronunciations_stressless')
+words_and_pronunciations_and_stressless = load_words()
 
 class Present:
 	@staticmethod
@@ -35,7 +33,10 @@ def present_word(word, exclude_real, existing_word):
 		return word
 
 def already_in_dictionary(word, ignore_stress):
-	pronunciations = word_pronunciations_stressless if ignore_stress else word_pronunciations
-	if word in pronunciations:
-		index = pronunciations.index(word)
-		return words[index]
+	for (spelling, pronunciation, pronunciation_stressless) in words_and_pronunciations_and_stressless:
+		if ignore_stress:
+			if word == pronunciation_stressless:
+				return spelling
+		else:
+			if word == pronunciation:
+				return spelling

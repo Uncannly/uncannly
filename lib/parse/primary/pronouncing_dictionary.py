@@ -1,30 +1,34 @@
+import os
+
 def parse(word_frequencies):
-	words = []
-	word_pronunciations = []
-	word_pronunciations_stressless = []
+	words_for_db = []
+
 	phoneme_chain_absolute = {}
 	phoneme_chain_absolute_unweighted = {}
 	phoneme_chain_absolute_stressless = {}
 	phoneme_chain_absolute_unweighted_stressless = {}
 
-	file = open('data/primary_data/cmu_pronouncing_dictionary.txt', 'r')
+	pwd = os.path.dirname(__file__)
+	file = open(os.path.join(pwd, '..', '..', '..', 'data', 'primary_data', 'cmu_pronouncing_dictionary.txt'), 'r')
+
 	for line in file:
 		line_split_by_tabs = line.strip().split('\t')
 
 		# words
 		word = line_split_by_tabs[0]
-		words.append(word)
 
 		# word_pronunciations
 		word_pronunciation = line_split_by_tabs[1]
 
+		# word_pronunciations_stressless
 		phonemes = word_pronunciation.split()
 		phonemes_stressless = []
 		for phoneme in phonemes:
-			phonemes_stressless.append(phoneme.strip('012'))
+			phoneme_stressless = phoneme.strip('012')
+			phonemes_stressless.append(phoneme_stressless)
+		word_pronunciation_stressless = " ".join(phonemes_stressless)
 
-		word_pronunciations.append(" ".join(phonemes))
-		word_pronunciations_stressless.append(" ".join(phonemes_stressless))
+		words_for_db.append((word, word_pronunciation, word_pronunciation_stressless))
 
 		# phoneme_chain_absolute, phoneme_chain_absolute_unweighted
 		phonemes.insert(0, 'START_WORD')
@@ -52,9 +56,7 @@ def parse(word_frequencies):
 	file.close()
 
 	return {
-		'words': words,
-		'word_pronunciations': word_pronunciations,
-		'word_pronunciations_stressless': word_pronunciations_stressless,
+		'words_for_db': words_for_db,
 		'phoneme_chain_absolute': phoneme_chain_absolute,
 		'phoneme_chain_absolute_unweighted': phoneme_chain_absolute_unweighted,
 		'phoneme_chain_absolute_stressless': phoneme_chain_absolute_stressless,
