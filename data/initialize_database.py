@@ -1,9 +1,9 @@
 import os, sys
 sys.path.insert(1, os.path.join(sys.path[0], '..'))
 
-from lib.parse.primary import frequency_list, pronouncing_dictionary
-from lib.parse.secondary.absolute_chain import AbsoluteChain
-from lib.parse.secondary.most_probable_words import MostProbableWords
+from parse.primary import frequency_list, pronouncing_dictionary
+from parse.secondary.absolute_chain import AbsoluteChain
+from parse.secondary.most_probable_words import MostProbableWords
 from data.database import do_the_schema, do_the_words_table, do_a_phoneme_chain, do_some_scores
 
 ########### PHASE ZERO ####################
