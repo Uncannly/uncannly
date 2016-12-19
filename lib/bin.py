@@ -16,7 +16,7 @@ def bin(mode):
 	)
 	parser.add_argument(
 		'--random-selection', '-r',
-		nargs='?', const=1000000, type=int,
+		nargs='?', const=10000, type=int,
 		help=readme.get('random_selection')
 	)
 	parser.add_argument(

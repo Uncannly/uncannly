@@ -77,7 +77,7 @@ $(".words .random-selection").change(function(e) {
     if (this.checked) {
         $(".random-selection-value").prop("disabled", false)
         if ($(".random-selection-value").val() == '') {
-            $(".random-selection-value").val(1000000)
+            $(".random-selection-value").val(10000)
         }
     } else {
         $(".random-selection-value").prop("disabled", true)
@@ -92,8 +92,7 @@ const addListener = function(mode, method, significands, powers) {
                 'for default settings:',
                 `> 1 possibility: ${significands[0]} * 10^-${powers[0]}`,
                 `> 100 possibilities:  ${significands[1]} * 10^-${powers[1]}`,
-                `> 10000 possibilities: ${significands[2]} * 10^-${powers[2]}`,
-                `> 1000000 possibilities: ${significands[3]} * 10^-${powers[3]}`
+                `> 10000 possibilities: ${significands[2]} * 10^-${powers[2]}`
             ].join('\n')
         );
     });
@@ -105,7 +104,7 @@ const altText = function(method, significands, powers) {
     });
 };
 
-altText('integral-product', [ 1,    1,   1,   1   ], [ 3,  8,  15, 22 ]);
-altText('integral-sum',     [ 2,    1,   6,   4   ], [ 1,  1,  2,  2  ]);
-altText('mean-geometric',   [ 1,    1,   3,   1   ], [ 2,  3,  4,  4  ]);
-altText('mean-arithmetic',  [ 4.25, 3.1, 2.9, 2.4 ], [ 1,  1,  1,  1  ]);
+altText('integral-product', [ 1,    1,   1   ], [ 3,  8,  15 ]);
+altText('integral-sum',     [ 2,    1,   6   ], [ 1,  1,  2  ]);
+altText('mean-geometric',   [ 1,    1,   3   ], [ 2,  3,  4  ]);
+altText('mean-arithmetic',  [ 4.25, 3.1, 2.9 ], [ 1,  1,  1  ]);

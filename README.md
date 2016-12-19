@@ -14,6 +14,8 @@ How many words to return at once. Only used for `words` mode. Default: 45.
 
 Return a random set of words drawn from a pool at the top, rather than a ranked list from the top. Only used for `words` mode.
 
+If a value is supplied, that will be the number of words from the top from which to draw. The maximum and default are both 10000.
+
 * **scoring method**
 
 The method used to score words by, and filter out the lower scoring ones. Four methods exist in a 2×2 matrix relationship:
@@ -43,8 +45,6 @@ When specified, will not return words with scores (according to the current scor
 If you pass a value, it will be taken as the number of words to include in the pool. 
 
 The value may be lower than the return count. You will just get more repeats than you might normally.
-
-The maximum and default are both 1000000.
 
 Words are currently limited to 20 letters regardless of any options.
 
