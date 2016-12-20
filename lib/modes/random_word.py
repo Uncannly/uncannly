@@ -6,10 +6,10 @@ from lib.type_conversion import array_to_string
 from lib.score import get_score
 from data.load_data import load_phonemes
 
-next_phonemes_weighted = load_phonemes(unweighted=False, stressless=False)
-next_phonemes_unweighted = load_phonemes(unweighted=True, stressless=False)
-next_phonemes_weighted_stressless = load_phonemes(unweighted=False, stressless=True)
-next_phonemes_unweighted_stressless = load_phonemes(unweighted=True, stressless=True)
+next_phonemes_weighted = load_phonemes(unweighted=False, stress_ignored=False)
+next_phonemes_unweighted = load_phonemes(unweighted=True, stress_ignored=False)
+next_phonemes_weighted_stress_ignored = load_phonemes(unweighted=False, stress_ignored=True)
+next_phonemes_unweighted_stress_ignored = load_phonemes(unweighted=True, stress_ignored=True)
 
 class RandomWord:
 	@staticmethod
@@ -83,7 +83,7 @@ def next_phoneme(
 	unweighted,
 	ignore_stress):
 	if ignore_stress:
-		next_phonemes = next_phonemes_unweighted_stressless if unweighted else next_phonemes_weighted_stressless
+		next_phonemes = next_phonemes_unweighted_stress_ignored if unweighted else next_phonemes_weighted_stress_ignored
 	else:
 		next_phonemes = next_phonemes_unweighted if unweighted else next_phonemes_weighted
 
