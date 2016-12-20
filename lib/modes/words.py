@@ -3,7 +3,7 @@ sys.path.insert(1, os.path.join(sys.path[0], '..'))
 
 from lib.present import Present
 from lib.type_conversion import string_to_array
-from data.database import load_scores
+from data.load_data import load_scores
 
 class Words:
 	@staticmethod

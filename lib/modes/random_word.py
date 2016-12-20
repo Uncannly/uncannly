@@ -4,7 +4,7 @@ sys.path.insert(1, os.path.join(sys.path[0], '..'))
 from lib.present import Present
 from lib.type_conversion import array_to_string
 from lib.score import get_score
-from data.database import load_phonemes
+from data.load_data import load_phonemes
 
 next_phonemes_weighted = load_phonemes(unweighted=False, stressless=False)
 next_phonemes_unweighted = load_phonemes(unweighted=True, stressless=False)

@@ -4,17 +4,19 @@ sys.path.insert(1, os.path.join(sys.path[0], '..'))
 from parse.primary import frequency_list, pronouncing_dictionary
 from parse.secondary.absolute_chain import AbsoluteChain
 from parse.secondary.most_probable_words import MostProbableWords
-from data.database import do_the_schema, do_the_words_table, do_a_phoneme_chain, do_some_scores
+from database import connect, disconnect 
+from parse.schema import schema, words, phonemes, scores
 
 ########### PHASE ZERO ####################
 
-do_the_schema()
+connection = connect()
+schema(connection)
 
 ########### PHASE ONE ####################
 
 word_frequencies = frequency_list.parse()
 parsed_pronouncing_dictionary = pronouncing_dictionary.parse(word_frequencies)
-do_the_words_table(parsed_pronouncing_dictionary['words_for_db'])
+words(connection, parsed_pronouncing_dictionary['words_for_db'])
 
 ########### PHASE TWO ####################
 
@@ -34,7 +36,8 @@ for stressless in [False, True]:
 		)]
 	)
 
-	do_a_phoneme_chain(
+	phonemes(
+		connection,
 		most_probable_next_phonemes['weighted'][stress_consideration_key],
 		most_probable_next_phonemes['unweighted'][stress_consideration_key],
 		stressless
@@ -55,4 +58,13 @@ for stressless in [False, True]:
 					method_mean, 
 					method_addition
 				)
-				do_some_scores(most_probable_words, stressless, unweighted, method_mean, method_addition)
+				scores(
+					connection, 
+					most_probable_words, 
+					stressless, 
+					unweighted, 
+					method_mean, 
+					method_addition
+				)
+
+disconnect(connection)

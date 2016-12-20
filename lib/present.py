@@ -2,7 +2,7 @@ import sys
 
 from ipa import ipa
 from type_conversion import array_to_string
-from data.database import load_words
+from data.load_data import load_words
 
 words_and_pronunciations_and_stressless = load_words()
 
