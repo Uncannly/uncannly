@@ -2,8 +2,10 @@ import json
 
 from database import fetch
 
-def load_words():
-	return fetch("select * from words;")
+def load_words(stressless):
+	return fetch("select word, {} from words;".format(
+			'pronunciation_stressless' if stressless else 'pronunciation'
+		))
 
 def load_scores(stressless, unweighted, scoring_method):
 	if scoring_method == 'integral_product':
