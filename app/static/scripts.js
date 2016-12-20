@@ -1,5 +1,5 @@
-const present = function(data, mode) {
-	return mode == 'words' ? JSON.parse(data).join('<br>') : data.slice(1, -1);
+const present = function(data) {
+	return JSON.parse(data).join('<br>');
 };
 
 const checked = function(mode, option) {
@@ -51,7 +51,7 @@ const modes = function(mode) {
 			$(`#${mode}`).html('Loading...');
 			$.ajax({
 				url: url,
-				success: function(data) { $(`#${mode}`).html(present(data, mode)); }
+				success: function(data) { $(`#${mode}`).html(present(data)); }
 			});
 	});
 

@@ -1,7 +1,6 @@
 {% macro modes(mode, readme) -%}
 <div class="{{ mode }}" style="{{ 'display: none' if mode == 'words' }}">
 	<label 
-		style="{{ 'visibility: hidden' if mode == 'random-word' }}"
 		title="{{ readme.return_count }}"
 	>
 		<input 

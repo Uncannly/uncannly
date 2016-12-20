@@ -15,7 +15,7 @@ class RandomWord:
 	@staticmethod
 	def get(
 		interface, 
-		return_count, # thrown away
+		return_count,
 		random_selection, # thrown away
 		scoring_method, 
 		score_threshold, 
@@ -27,6 +27,8 @@ class RandomWord:
 		score = 1.0
 		word = []
 		misses = 0
+		count = 0
+		output = []
 		while True:
 			phoneme_tuple = next_phoneme(
 				phoneme, 
@@ -47,7 +49,7 @@ class RandomWord:
 						sys.stdout.write(message + '\n')
 						return
 					elif interface == "api":
-						return message
+						return [message]
 				phoneme = 'START_WORD'
 				word = []
 			else:
@@ -59,17 +61,20 @@ class RandomWord:
 						stringified_word = array_to_string(word)
 						word_was_presented = Present.for_terminal(stringified_word, unstressed, exclude_real)
 						if word_was_presented == True:
-							return
-						else:
-							phoneme = 'START_WORD'
-							word = []
+							count += 1
+							if count == return_count:
+								return
+						phoneme = 'START_WORD'
+						word = []
 					elif interface == "api":
 						word_to_present = Present.for_web(word, unstressed, exclude_real)
 						if word_to_present != None:
-							return word_to_present
-						else:
-							phoneme = 'START_WORD'
-							word = []
+							output.append(word_to_present)
+							count += 1
+							if count == return_count:
+								return output
+						phoneme = 'START_WORD'
+						word = []
 				else:
 					word.append(phoneme)
 
