@@ -1,12 +1,17 @@
 import os
 
 def parse(word_frequencies):
-	words_for_db = []
-
-	phoneme_chain_absolute = {}
-	phoneme_chain_absolute_unweighted = {}
-	phoneme_chain_absolute_unstressed = {}
-	phoneme_chain_absolute_unweighted_unstressed = {}
+	words = []
+	phoneme_chains = {
+		'weighted': {
+			'stressed': {},
+			'unstressed': {}
+		},
+		'unweighted': {
+			'stressed': {},
+			'unstressed': {}
+		}
+	}
 
 	pwd = os.path.dirname(__file__)
 	file = open(os.path.join(pwd, '..', '..', '..', 'data', 'primary_data', 'cmu_pronouncing_dictionary.txt'), 'r')
@@ -28,7 +33,7 @@ def parse(word_frequencies):
 			phonemes_unstressed.append(phoneme_unstressed)
 		word_pronunciation_unstressed = " ".join(phonemes_unstressed)
 
-		words_for_db.append((word, word_pronunciation, word_pronunciation_unstressed))
+		words.append((word, word_pronunciation, word_pronunciation_unstressed))
 
 		# phoneme_chain_absolute, phoneme_chain_absolute_unweighted
 		phonemes.insert(0, 'START_WORD')
@@ -41,24 +46,21 @@ def parse(word_frequencies):
 		for i in range(0, len(phonemes) - 1):
 			phoneme = phonemes[i]
 			next_phoneme = phonemes[i + 1]
-			phoneme_chain_absolute.setdefault(phoneme, {}).setdefault(next_phoneme, 0)
-			phoneme_chain_absolute[phoneme][next_phoneme] += frequency
-			phoneme_chain_absolute_unweighted.setdefault(phoneme, {}).setdefault(next_phoneme, 0)
-			phoneme_chain_absolute_unweighted[phoneme][next_phoneme] += 1
+			phoneme_chains['weighted']['stressed'].setdefault(phoneme, {}).setdefault(next_phoneme, 0)
+			phoneme_chains['weighted']['stressed'][phoneme][next_phoneme] += frequency
+			phoneme_chains['unweighted']['stressed'].setdefault(phoneme, {}).setdefault(next_phoneme, 0)
+			phoneme_chains['unweighted']['stressed'][phoneme][next_phoneme] += 1
 
 			phoneme_unstressed = phonemes_unstressed[i]
 			next_phoneme_unstressed = phonemes_unstressed[i + 1]
-			phoneme_chain_absolute_unstressed.setdefault(phoneme_unstressed, {}).setdefault(next_phoneme_unstressed, 0)
-			phoneme_chain_absolute_unstressed[phoneme_unstressed][next_phoneme_unstressed] += frequency
-			phoneme_chain_absolute_unweighted_unstressed.setdefault(phoneme_unstressed, {}).setdefault(next_phoneme_unstressed, 0)
-			phoneme_chain_absolute_unweighted_unstressed[phoneme_unstressed][next_phoneme_unstressed] += 1
+			phoneme_chains['weighted']['unstressed'].setdefault(phoneme_unstressed, {}).setdefault(next_phoneme_unstressed, 0)
+			phoneme_chains['weighted']['unstressed'][phoneme_unstressed][next_phoneme_unstressed] += frequency
+			phoneme_chains['unweighted']['unstressed'].setdefault(phoneme_unstressed, {}).setdefault(next_phoneme_unstressed, 0)
+			phoneme_chains['unweighted']['unstressed'][phoneme_unstressed][next_phoneme_unstressed] += 1
 
 	file.close()
 
 	return {
-		'words_for_db': words_for_db,
-		'phoneme_chain_absolute': phoneme_chain_absolute,
-		'phoneme_chain_absolute_unweighted': phoneme_chain_absolute_unweighted,
-		'phoneme_chain_absolute_unstressed': phoneme_chain_absolute_unstressed,
-		'phoneme_chain_absolute_unweighted_unstressed': phoneme_chain_absolute_unweighted_unstressed
+		'words': words,
+		'phoneme_chains': phoneme_chains
 	}

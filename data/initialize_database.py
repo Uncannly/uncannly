@@ -16,7 +16,7 @@ schema(connection)
 
 word_frequencies = frequency_list.parse()
 parsed_pronouncing_dictionary = pronouncing_dictionary.parse(word_frequencies)
-words(connection, parsed_pronouncing_dictionary['words_for_db'])
+words(connection, parsed_pronouncing_dictionary['words'])
 
 ########### PHASE TWO ####################
 
@@ -26,14 +26,10 @@ for unstressed in [False, True]:
 	stress_consideration_key = 'unstressed' if unstressed else 'stressed'
 
 	most_probable_next_phonemes['weighted'][stress_consideration_key] = AbsoluteChain.parse(
-		parsed_pronouncing_dictionary['phoneme_chain_absolute{}'.format(
-			stress_consideration
-		)]
+		parsed_pronouncing_dictionary['phoneme_chains']['weighted'][stress_consideration_key]
 	)
 	most_probable_next_phonemes['unweighted'][stress_consideration_key] = AbsoluteChain.parse(
-		parsed_pronouncing_dictionary['phoneme_chain_absolute_unweighted{}'.format(
-			stress_consideration
-		)]
+		parsed_pronouncing_dictionary['phoneme_chains']['unweighted'][stress_consideration_key]
 	)
 
 	phonemes(
