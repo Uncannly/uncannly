@@ -77,7 +77,7 @@ $(".words .random-selection").change(function(e) {
     if (this.checked) {
         $(".random-selection-value").prop("disabled", false)
         if ($(".random-selection-value").val() == '') {
-            $(".random-selection-value").val(10000)
+            $(".random-selection-value").val(1000)
         }
     } else {
         $(".random-selection-value").prop("disabled", true)

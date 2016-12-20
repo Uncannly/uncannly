@@ -18,13 +18,13 @@ class Words:
 		exclude_real
 	):
 		most_probable_words = load_scores(scoring_method, unweighted, unstressed)
-		sorted_most_probable_words = sorted(most_probable_words, key=lambda x: -x[1])
+		most_probable_words.sort(key=lambda x: -x[1])
 
 		if random_selection:
-			word_tuples = sorted_most_probable_words[0:int(random_selection)]
+			word_tuples = most_probable_words[0:int(random_selection)]
 			selector = api_select_random if interface == 'api' else bin_select_random
 		else:
-			word_tuples = sorted_most_probable_words
+			word_tuples = most_probable_words
 			selector = api_select_top if interface == 'api' else bin_select_top
 
 		words = []

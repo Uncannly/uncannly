@@ -29,7 +29,8 @@ class Schema:
 				word[1].replace("'", "''"), 
 				word[2].replace("'", "''")
 			))
-		sql_string = "insert into words (word, pronunciation, pronunciation_unstressed) values"
+		sql_string = "insert into words (word, \
+			pronunciation, pronunciation_unstressed) values"
 		sql_string += ", ".join(sql_array)
 		self.database.execute(sql_string)
 
@@ -42,13 +43,19 @@ class Schema:
 				json.dumps(sorted_list_of_next_phoneme_and_probability_tuples),
 				json.dumps(phonemes_unweighted[phoneme]),
 			))
-		sql_string = "insert into phonemes (phoneme, unstressed, next_phonemes, next_phonemes_unweighted) values"
+		sql_string = "insert into phonemes (phoneme, unstressed, \
+			next_phonemes, next_phonemes_unweighted) values"
 		sql_string += ", ".join(sql_array)
 		self.database.execute(sql_string)
 
-	def scores(self, most_probable_words, unstressed, unweighted, method_mean, method_addition):
+	def scores(self, 
+		most_probable_words, 
+		unstressed, 
+		unweighted, 
+		method_mean, 
+		method_addition):
 		sql_array = []
-		for word, score in most_probable_words.iteritems():
+		for (word, score) in most_probable_words:
 			sql_array.append("('{}', '{}', '{}', '{}', '{}', '{}')".format(
 				word, 
 				score, 

@@ -41,8 +41,8 @@ class RandomWord:
 
 			if phoneme_tuple == None:
 				misses += 1
-				if misses > 10000:
-					message = '10000 times consecutively failed to find a word above the score threshold. Please try lowering it.'
+				if misses > 1000000:
+					message = '1000000 times consecutively failed to find a word above the score threshold. Please try lowering it.'
 					if interface == "bin":
 						sys.stdout.write(message + '\n')
 						return

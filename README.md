@@ -14,7 +14,7 @@ How many words to return at once. Only used for `words` mode. Default: 45.
 
 Return a random set of words drawn from a pool at the top, rather than a ranked list from the top. Only used for `words` mode.
 
-If a value is supplied, that will be the number of words from the top from which to draw. The maximum and default are both 10000.
+If a value is supplied, that will be the number of words from the top from which to draw. The maximum and default are both 1000.
 
 * **scoring method**
 

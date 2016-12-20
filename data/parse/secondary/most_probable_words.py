@@ -48,7 +48,7 @@ class MostProbableWords:
 			scoring_method = 'integral_sum' if method_addition else 'integral_product'
 		limit = default_limit_for_scoring_method[stress_consideration][frequency_weighting][scoring_method]
 
-		most_probable_words = {}
+		most_probable_words = []
 
 		def next_phoneme(word, score):
 			word_length = len(word)
@@ -63,7 +63,7 @@ class MostProbableWords:
 						pass
 					elif phoneme == 'END_WORD':
 						stringified_word = array_to_string(word[1:len(word)])
-						most_probable_words[stringified_word] = score
+						most_probable_words.append((stringified_word, score))
 					else:	
 						grown_word = word[:]
 						grown_word.append(phoneme)
@@ -71,4 +71,6 @@ class MostProbableWords:
 
 		next_phoneme(['START_WORD'], 1.0)
 
-		return most_probable_words
+		most_probable_words.sort(key=lambda x: -x[1])
+
+		return most_probable_words[:1000]
