@@ -29,7 +29,7 @@ def get_by_mode(mode, interface, args):
 		args['score_threshold'] = None
 
 	args['unweighted'] = False if args['unweighted'] == None else True
-	args['ignore_stress'] = False if args['ignore_stress'] == None else True
+	args['unstressed'] = False if args['unstressed'] == None else True
 	args['exclude_real'] = False if args['exclude_real'] == None else True
 
 	getter = Words if mode == 'words' else RandomWord
@@ -40,6 +40,6 @@ def get_by_mode(mode, interface, args):
 		scoring_method=args['scoring_method'],
 		score_threshold=args['score_threshold'],
 		unweighted=args['unweighted'],
-		ignore_stress=args['ignore_stress'],
+		unstressed=args['unstressed'],
 		exclude_real=args['exclude_real']
 	)

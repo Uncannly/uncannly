@@ -26,7 +26,7 @@ def route(mode, request):
         'score_by_mean_arithmetic': request.args.get('score-by-mean-arithmetic'), 
         'score_threshold': request.args.get('score-threshold'),
         'unweighted': request.args.get('unweighted'), 
-        'ignore_stress': request.args.get('ignore-stress'),
+        'unstressed': request.args.get('unstressed'),
         'exclude_real': request.args.get('exclude-real')
     }
     response = get_by_mode(mode=mode, interface='api', args=args)

@@ -44,7 +44,7 @@ const modes = function(mode) {
 
         if ($(`.${mode} .unweighted`).is(':checked')) data.push('unweighted');
 
-        if ($(`.${mode} .ignore-stress`).is(':checked')) data.push('ignore-stress');
+        if ($(`.${mode} .unstressed`).is(':checked')) data.push('unstressed');
 
         if ($(`.${mode} .exclude-real`).is(':checked')) data.push('exclude-real');
 

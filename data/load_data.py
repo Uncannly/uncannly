@@ -2,12 +2,12 @@ import json
 
 from database import fetch
 
-def load_words(stress_ignored):
+def load_words(unstressed):
 	return fetch("select word, {} from words;".format(
-			'pronunciation_stress_ignored' if stress_ignored else 'pronunciation'
+			'pronunciation_unstressed' if unstressed else 'pronunciation'
 		))
 
-def load_scores(stress_ignored, unweighted, scoring_method):
+def load_scores(unstressed, unweighted, scoring_method):
 	if scoring_method == 'integral_product':
 		method_mean = False
 		method_addition = False
@@ -23,17 +23,17 @@ def load_scores(stress_ignored, unweighted, scoring_method):
 
 	
 	sql = "select word, score from scores where \
-		stress_ignored = {} and unweighted = {} \
+		unstressed = {} and unweighted = {} \
 		and method_mean = {} and method_addition = {};".format(
-			stress_ignored, unweighted, method_mean, method_addition
+			unstressed, unweighted, method_mean, method_addition
 		)
 	
 	return fetch(sql)
 
-def load_phonemes(stress_ignored, unweighted):
+def load_phonemes(unstressed, unweighted):
 	next_phonemes = 'next_phonemes_unweighted' if unweighted else 'next_phonemes'
-	sql = "select phoneme, {} from phonemes where stress_ignored = {};".format(
-		next_phonemes, stress_ignored
+	sql = "select phoneme, {} from phonemes where unstressed = {};".format(
+		next_phonemes, unstressed
 	)
 	results = fetch(sql)
 

@@ -6,10 +6,10 @@ from lib.type_conversion import array_to_string
 from lib.score import get_score
 from data.load_data import load_phonemes
 
-next_phonemes_weighted = load_phonemes(unweighted=False, stress_ignored=False)
-next_phonemes_unweighted = load_phonemes(unweighted=True, stress_ignored=False)
-next_phonemes_weighted_stress_ignored = load_phonemes(unweighted=False, stress_ignored=True)
-next_phonemes_unweighted_stress_ignored = load_phonemes(unweighted=True, stress_ignored=True)
+next_phonemes_weighted = load_phonemes(unweighted=False, unstressed=False)
+next_phonemes_unweighted = load_phonemes(unweighted=True, unstressed=False)
+next_phonemes_weighted_unstressed = load_phonemes(unweighted=False, unstressed=True)
+next_phonemes_unweighted_unstressed = load_phonemes(unweighted=True, unstressed=True)
 
 class RandomWord:
 	@staticmethod
@@ -20,7 +20,7 @@ class RandomWord:
 		scoring_method, 
 		score_threshold, 
 		unweighted, 
-		ignore_stress,
+		unstressed,
 		exclude_real):
 
 		phoneme = 'START_WORD'
@@ -36,7 +36,7 @@ class RandomWord:
 				scoring_method, 
 				score_threshold, 
 				unweighted,
-				ignore_stress
+				unstressed
 			)
 
 			if phoneme_tuple == None:
@@ -57,14 +57,14 @@ class RandomWord:
 				if phoneme == 'END_WORD':
 					if interface == "bin":
 						stringified_word = array_to_string(word)
-						word_was_presented = Present.for_terminal(stringified_word, ignore_stress, exclude_real)
+						word_was_presented = Present.for_terminal(stringified_word, unstressed, exclude_real)
 						if word_was_presented == True:
 							return
 						else:
 							phoneme = 'START_WORD'
 							word = []
 					elif interface == "api":
-						word_to_present = Present.for_web(word, ignore_stress, exclude_real)
+						word_to_present = Present.for_web(word, unstressed, exclude_real)
 						if word_to_present != None:
 							return word_to_present
 						else:
@@ -81,9 +81,9 @@ def next_phoneme(
 	scoring_method, 
 	score_threshold, 
 	unweighted,
-	ignore_stress):
-	if ignore_stress:
-		next_phonemes = next_phonemes_unweighted_stress_ignored if unweighted else next_phonemes_weighted_stress_ignored
+	unstressed):
+	if unstressed:
+		next_phonemes = next_phonemes_unweighted_unstressed if unweighted else next_phonemes_weighted_unstressed
 	else:
 		next_phonemes = next_phonemes_unweighted if unweighted else next_phonemes_weighted
 
