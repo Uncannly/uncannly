@@ -7,7 +7,7 @@ def load_words(unstressed):
 			'pronunciation_unstressed' if unstressed else 'pronunciation'
 		))
 
-def load_scores(unstressed, unweighted, scoring_method):
+def load_scores(scoring_method, unweighted, unstressed):
 	if scoring_method == 'integral_product':
 		method_mean = False
 		method_addition = False
@@ -23,14 +23,14 @@ def load_scores(unstressed, unweighted, scoring_method):
 
 	
 	sql = "select word, score from scores where \
-		unstressed = {} and unweighted = {} \
+		unweighted = {} and unstressed = {} \
 		and method_mean = {} and method_addition = {};".format(
-			unstressed, unweighted, method_mean, method_addition
+			unweighted, unstressed, method_mean, method_addition
 		)
 	
 	return fetch(sql)
 
-def load_phonemes(unstressed, unweighted):
+def load_phonemes(unweighted, unstressed):
 	next_phonemes = 'next_phonemes_unweighted' if unweighted else 'next_phonemes'
 	sql = "select phoneme, {} from phonemes where unstressed = {};".format(
 		next_phonemes, unstressed

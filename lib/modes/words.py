@@ -17,7 +17,7 @@ class Words:
 		unstressed,
 		exclude_real
 	):
-		most_probable_words = load_scores(unstressed, unweighted, scoring_method)
+		most_probable_words = load_scores(scoring_method, unweighted, unstressed)
 		sorted_most_probable_words = sorted(most_probable_words, key=lambda x: -x[1])
 
 		if random_selection:
