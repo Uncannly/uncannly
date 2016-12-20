@@ -20,10 +20,10 @@ If a value is supplied, that will be the number of words from the top from which
 
 The method used to score words by, and filter out the lower scoring ones. Four methods exist in a 2×2 matrix relationship:
 
-| operation \ value | total              | average           |
+| operation \ value | total							 | average					 |
 | ----------------- | ------------------ | ----------------- |
-| multiplication    | `integral-product` | `mean-geometric`  |
-| addition          | `integral-sum`     | `mean-arithmetic` |
+| multiplication		| `integral-product` | `mean-geometric`	 |
+| addition					| `integral-sum`		 | `mean-arithmetic` |
 
 1) `integral-product`: the probability from each phoneme to the next is continuously multiplied.
 2) `integral-sum`: the probability from each phoneme to the next is continuously added (except that it's actually 1 minus each probability which gets summed, and then the reciprocal of that number so that we can sort the same direction as the other three methods). 

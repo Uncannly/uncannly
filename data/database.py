@@ -1,4 +1,4 @@
-import os, json, urlparse
+import os, urlparse
 
 import psycopg2
 from cfenv import AppEnv
