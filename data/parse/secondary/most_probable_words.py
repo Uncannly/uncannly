@@ -3,7 +3,6 @@ sys.path.insert(1, os.path.join(sys.path[0], '..', '..'))
 
 from lib.type_conversion import array_to_string
 from lib.score import get_score
-from data.database import connect, disconnect
 
 default_limit_for_scoring_method = {
 	'with_stress': {

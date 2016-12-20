@@ -1,9 +1,9 @@
 import json
 
-from database import fetch
+from database import Database
 
 def load_words(unstressed):
-	return fetch("select word, {} from words;".format(
+	return Database.fetch("select word, {} from words;".format(
 			'pronunciation_unstressed' if unstressed else 'pronunciation'
 		))
 
@@ -28,14 +28,14 @@ def load_scores(scoring_method, unweighted, unstressed):
 			unweighted, unstressed, method_mean, method_addition
 		)
 	
-	return fetch(sql)
+	return Database.fetch(sql)
 
 def load_phonemes(unweighted, unstressed):
 	next_phonemes = 'next_phonemes_unweighted' if unweighted else 'next_phonemes'
 	sql = "select phoneme, {} from phonemes where unstressed = {};".format(
 		next_phonemes, unstressed
 	)
-	results = fetch(sql)
+	results = Database.fetch(sql)
 
 	output = {}
 	for phoneme, next_phonemes in results:

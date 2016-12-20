@@ -3,6 +3,30 @@ import os, json, urlparse
 import psycopg2
 from cfenv import AppEnv
 
+class Database:
+	def __init__(self):
+		self.connection = connect()
+
+	def disconnect(self):
+		self.connection.commit()
+		self.connection.close()
+
+	def execute(self, sql):
+		cursor = self.connection.cursor()
+		cursor.execute(sql)
+		cursor.close()
+
+	@staticmethod
+	def fetch(sql):
+		connection = connect()
+		cursor = connection.cursor()
+		cursor.execute(sql)
+		results = cursor.fetchall()
+		cursor.close()
+		connection.commit()
+		connection.close()
+		return results
+
 def connect():
 	if os.environ.get('VCAP_SERVICES') is None:
 		credentials = 'postgres://postgres:5554d58@localhost:5432/mydb'
@@ -16,21 +40,3 @@ def connect():
 		password=parsed_credentials.password,
 		host=parsed_credentials.hostname
 	)
-
-def disconnect(connection):
-	connection.commit()
-	connection.close()
-
-def execute(connection, sql):
-	cur = connection.cursor()
-	cur.execute(sql)
-	cur.close()
-
-def fetch(sql):
-	connection = connect()
-	cur = connection.cursor()
-	cur.execute(sql)
-	results = cur.fetchall()
-	cur.close()
-	disconnect(connection)
-	return results
