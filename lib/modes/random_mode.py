@@ -23,72 +23,41 @@ class RandomMode:
 		unstressed,
 		exclude_real):
 
-		phoneme = 'START_WORD'
-		score = 1.0
-		word = []
+		selector = api_selector if interface == 'api' else bin_selector
 
-		misses = 0
-		count = 0
-		output = []
+		word, phoneme, score = reset()
 
-		if selection:
-			selector = api_select_top if interface == 'api' else bin_select_top
-		else:
-			selector = api_select_random if interface == 'api' else bin_select_random
+		count_fails = 0
+		count_successes = 0
+		words = []
 
 		while True:
-			phoneme_tuple = next_phoneme(
-				phoneme, 
-				random.random(), 
-				len(word) + 1,
-				score, 
-				scoring_method, 
-				score_threshold, 
-				unweighted,
-				unstressed
+			phoneme, score = next_phoneme(
+				phoneme=phoneme, 
+				random_number=random.random(), 
+				word_length=len(word) + 1,
+				score=score, 
+				scoring_method=scoring_method, 
+				score_threshold=score_threshold, 
+				unweighted=unweighted,
+				unstressed=unstressed
 			)
 
-			if phoneme_tuple == None:
-				misses += 1
-				if misses > 1000000:
-					message = '1000000 times consecutively failed to find a word above the score threshold. Please try lowering it.'
-					if interface == "bin":
-						sys.stdout.write(message + '\n')
-						return
-					elif interface == "api":
-						return [message]
-				phoneme = 'START_WORD'
-				word = []
+			if phoneme == None:
+				count_fails += 1
+				if count_fails > 1000000:
+					return fail(interface)
+				word, phoneme, score = reset()
 			else:
-				misses = 0
-				phoneme = phoneme_tuple[0]
-				score = phoneme_tuple[1]
+				count_fails = 0
 				if phoneme == 'END_WORD':
 					selected_word = selector(word, unstressed, exclude_real)
 					if selected_word:
-						output.append((selected_word, score))
-						count += 1
-						if count == pool:
-							if selection is not None:
-								output.sort(key=lambda x: -x[1])
-								if selection < pool:
-									output = output[:selection]
-							
-							length = len(output)
-
-							if interface == 'api':
-								return [x[0] for x in output]
-							else:
-								for (out, put) in output:
-									sys.stdout.write(out + '\n')
-								if length < selection:
-									sys.stdout.write(
-										'Fewer words met criteria than the specified return count.\n'
-									)
-								return
-					phoneme = 'START_WORD'
-					word = []
-					score = 1.0
+						words.append((selected_word, score))
+						count_successes += 1
+						if count_successes == pool:
+							return succeed(words, interface, selection)
+					word, phoneme, score = reset()
 				else:
 					word.append(phoneme)
 
@@ -101,29 +70,52 @@ def next_phoneme(
 	score_threshold, 
 	unweighted,
 	unstressed):
+
 	if unstressed:
-		next_phonemes = next_phonemes_unweighted_unstressed if unweighted else next_phonemes_weighted_unstressed
+		if unweighted:
+			next_phonemes = next_phonemes_unweighted_unstressed
+		else:
+			next_phonemes = next_phonemes_weighted_unstressed
 	else:
-		next_phonemes = next_phonemes_unweighted if unweighted else next_phonemes_weighted
+		if unweighted:
+			next_phonemes = next_phonemes_unweighted
+		else:
+			next_phonemes = next_phonemes_weighted
 
 	accumulated_probability = 0
 	for (phoneme, probability) in next_phonemes[phoneme]:
 		accumulated_probability += probability
 		if accumulated_probability >= random_number:
 			score = get_score(score, scoring_method, probability, word_length)
-			return None if score < score_threshold else (phoneme, score)
+			return (None, score) if score < score_threshold else (phoneme, score)
 
-def bin_select_top(word, unstressed, exclude_real):
+def bin_selector(word, unstressed, exclude_real):
 	stringified_word = array_to_string(word)
 	return Present.for_terminal(stringified_word, unstressed, exclude_real, suppress_immediate=True)
 
-def bin_select_random(word, unstressed, exclude_real):
-	stringified_word = array_to_string(word)
-	return Present.for_terminal(stringified_word, unstressed, exclude_real, suppress_immediate=True)
-
-def api_select_top(word, unstressed, exclude_real):
+def api_selector(word, unstressed, exclude_real):
 	return Present.for_web(word, unstressed, exclude_real)
+		
+def reset():
+	return ([], 'START_WORD', 1.0)
+
+def fail(interface):
+	message = '1000000 times consecutively failed to find a word \
+		above the score threshold. Please try lowering it.'
+	return sys.stdout.write(message + '\n') if interface == "bin" else [message]
+
+def succeed(words, interface, selection):
+	if selection:
+		words.sort(key=lambda x: -x[1])
+		words = words[:selection]
 	
-def api_select_random(word, unstressed, exclude_real):
-	return Present.for_web(word, unstressed, exclude_real)
+	if interface == 'bin':
+		for word, _ in words:
+			sys.stdout.write(word + '\n')
+		if len(words) < selection:
+			sys.stdout.write(
+				'Fewer words met criteria than the specified return count.\n'
+			)
+	else:
+		return [x[0] for x in words]
 		
