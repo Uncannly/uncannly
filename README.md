@@ -25,7 +25,9 @@ In top mode, you can add a selection value smaller or equal to the pool to lock 
 
 In random mode, take the same action to increase the proportion of *more* probable words within that selection count, by generating more and more random words that might be more probable than ones you'd already generated.
 
-Default: disabled.
+The selection cannot be larger than the pool.
+
+Default: disabled (when enabled, defaults to 10).
 
 * **scoring method**
 

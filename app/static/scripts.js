@@ -57,13 +57,30 @@ const modes = function(mode) {
 
 	$(`.${mode} .selection`).change(function(e) {
 		if (this.checked) {
-			$(`.${mode} .selection-value`).prop("disabled", false)
-			if ($(`.${mode} .selection-value`).val() == '') {
-				$(`.${mode} .selection-value`).val(10)
+			$(`.${mode} .selection-value`).prop("disabled", false);
+
+			const selectionValue = parseInt($(`.${mode} .selection-value`).val());
+			const pool = parseInt($(`.${mode} .pool`).val());
+			let value;
+			if (selectionValue > pool) {
+				value = pool;
+			} else if (selectionValue == '') {
+				value = pool < 10 ? pool : 10;
 			}
+
+			value && $(`.${mode} .selection-value`).val(value);
 		} else {
-			$(`.${mode} .selection-value`).prop("disabled", true)
+			$(`.${mode} .pool`).attr("min", 1)
+			$(`.${mode} .selection-value`).prop("disabled", true);
 		}
+	});
+
+	$(`.${mode} .selection-value`).change(function(e) {
+		$(`.${mode} .pool`).attr("min", e.target.value);
+	});
+
+	$(`.${mode} .pool`).change(function(e) {
+		$(`.${mode} .selection-value`).attr("max", e.target.value);
 	});
 
 	new Clipboard(`#copy-${mode}`);
