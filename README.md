@@ -177,3 +177,18 @@ W AA1 R
 IH1 Z (IS)
 ...
 ```
+
+## Development
+
+Requires python, pip, venv.
+
+Install postgres, create a database called `uncannly`, and set your local database credentials to `postgres:5554d58`.
+
+```
+git clone git@github.com:gkufera/phonetic_markov.git
+cd phonetic_markov
+source venv/bin/activate
+pip install -r requirements.txt
+python data/initialize_database.py
+python app/app.py
+```
