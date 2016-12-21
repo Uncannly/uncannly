@@ -62,3 +62,5 @@ for unstressed in [False, True]:
 				)
 
 schema.finish()
+
+sys.stdout.write('Database successfully initialized.\n')
