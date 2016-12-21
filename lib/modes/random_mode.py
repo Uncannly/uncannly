@@ -11,12 +11,12 @@ next_phonemes_unweighted = load_phonemes(unweighted=True, unstressed=False)
 next_phonemes_weighted_unstressed = load_phonemes(unweighted=False, unstressed=True)
 next_phonemes_unweighted_unstressed = load_phonemes(unweighted=True, unstressed=True)
 
-class RandomWord:
+class RandomMode:
 	@staticmethod
 	def get(
 		interface, 
-		return_count,
-		random_selection, # thrown away
+		pool,
+		selection,
 		scoring_method, 
 		score_threshold, 
 		unweighted, 
@@ -26,9 +26,16 @@ class RandomWord:
 		phoneme = 'START_WORD'
 		score = 1.0
 		word = []
+
 		misses = 0
 		count = 0
 		output = []
+
+		if selection:
+			selector = api_select_top if interface == 'api' else bin_select_top
+		else:
+			selector = api_select_random if interface == 'api' else bin_select_random
+
 		while True:
 			phoneme_tuple = next_phoneme(
 				phoneme, 
@@ -57,24 +64,31 @@ class RandomWord:
 				phoneme = phoneme_tuple[0]
 				score = phoneme_tuple[1]
 				if phoneme == 'END_WORD':
-					if interface == "bin":
-						stringified_word = array_to_string(word)
-						word_was_presented = Present.for_terminal(stringified_word, unstressed, exclude_real)
-						if word_was_presented == True:
-							count += 1
-							if count == return_count:
+					selected_word = selector(word, unstressed, exclude_real)
+					if selected_word:
+						output.append((selected_word, score))
+						count += 1
+						if count == pool:
+							if selection is not None:
+								output.sort(key=lambda x: -x[1])
+								if selection < pool:
+									output = output[:selection]
+							
+							length = len(output)
+
+							if interface == 'api':
+								return [x[0] for x in output]
+							else:
+								for (out, put) in output:
+									sys.stdout.write(out + '\n')
+								if length < selection:
+									sys.stdout.write(
+										'Fewer words met criteria than the specified return count.\n'
+									)
 								return
-						phoneme = 'START_WORD'
-						word = []
-					elif interface == "api":
-						word_to_present = Present.for_web(word, unstressed, exclude_real)
-						if word_to_present != None:
-							output.append(word_to_present)
-							count += 1
-							if count == return_count:
-								return output
-						phoneme = 'START_WORD'
-						word = []
+					phoneme = 'START_WORD'
+					word = []
+					score = 1.0
 				else:
 					word.append(phoneme)
 
@@ -98,3 +112,18 @@ def next_phoneme(
 		if accumulated_probability >= random_number:
 			score = get_score(score, scoring_method, probability, word_length)
 			return None if score < score_threshold else (phoneme, score)
+
+def bin_select_top(word, unstressed, exclude_real):
+	stringified_word = array_to_string(word)
+	return Present.for_terminal(stringified_word, unstressed, exclude_real, suppress_immediate=True)
+
+def bin_select_random(word, unstressed, exclude_real):
+	stringified_word = array_to_string(word)
+	return Present.for_terminal(stringified_word, unstressed, exclude_real, suppress_immediate=True)
+
+def api_select_top(word, unstressed, exclude_real):
+	return Present.for_web(word, unstressed, exclude_real)
+	
+def api_select_random(word, unstressed, exclude_real):
+	return Present.for_web(word, unstressed, exclude_real)
+		

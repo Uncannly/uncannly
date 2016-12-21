@@ -5,12 +5,12 @@ from lib.present import Present
 from lib.type_conversion import string_to_array
 from data.load_data import load_scores
 
-class Words:
+class TopMode:
 	@staticmethod
 	def get(
 		interface, 
-		return_count, 
-		random_selection, 
+		pool, 
+		selection, 
 		scoring_method, 
 		score_threshold,
 		unweighted, 
@@ -19,12 +19,12 @@ class Words:
 	):
 		most_probable_words = load_scores(scoring_method, unweighted, unstressed)
 		most_probable_words.sort(key=lambda x: -x[1])
+		word_tuples = most_probable_words[0:int(pool)]
 
-		if random_selection:
-			word_tuples = most_probable_words[0:int(random_selection)]
+		if selection:
 			selector = api_select_random if interface == 'api' else bin_select_random
 		else:
-			word_tuples = most_probable_words
+			selection = pool
 			selector = api_select_top if interface == 'api' else bin_select_top
 
 		words = []
@@ -34,31 +34,31 @@ class Words:
 			else:
 				words.append(word)
 		
-		return selector(words, return_count, unstressed, exclude_real)
+		return selector(words, selection, unstressed, exclude_real)
 
-def bin_select_top(words, return_count, unstressed, exclude_real):
+def bin_select_top(words, selection, unstressed, exclude_real):
 	i = 0
-	for _ in xrange(return_count):
-		if i == len(words):
-			sys.stdout.write(
-				'Fewer words met criteria than the specified return count.\n'
-			)
-			break
+	for _ in xrange(selection):
 		presented = False
 		while presented == False:
-			presented = Present.for_terminal(words[i], unstressed, exclude_real)
+			if i == len(words):
+				sys.stdout.write(
+					'Fewer words met criteria than the specified return count.\n'
+				)
+				return
+			presented = Present.for_terminal(words[i], unstressed, exclude_real, suppress_immediate=False)
 			i += 1
 
-def bin_select_random(words, return_count, unstressed, exclude_real):
-	for _ in xrange(return_count):
-		while Present.for_terminal(random.choice(words), unstressed, exclude_real) == False:
+def bin_select_random(words, selection, unstressed, exclude_real):
+	for _ in xrange(selection):
+		while Present.for_terminal(random.choice(words), unstressed, exclude_real, suppress_immediate=False) == False:
 			pass
 
-def api_select_top(words, return_count, unstressed, exclude_real):
+def api_select_top(words, selection, unstressed, exclude_real):
 	output = []
 	i = 0
 	no_words_returned = True
-	while len(output) < return_count:
+	while len(output) < selection:
 		if i == len(words):
 			output.append('Fewer words met criteria than the specified return count.')
 			break
@@ -74,9 +74,9 @@ def api_select_top(words, return_count, unstressed, exclude_real):
 
 	return output
 
-def api_select_random(words, return_count, unstressed, exclude_real):
+def api_select_random(words, selection, unstressed, exclude_real):
 	output = []
-	while len(output) < return_count:
+	while len(output) < selection:
 		arrayified_word = string_to_array(random.choice(words))
 		result = Present.for_web(arrayified_word, unstressed, exclude_real)
 		if result:

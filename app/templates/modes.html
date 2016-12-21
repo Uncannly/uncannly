@@ -1,32 +1,30 @@
 {% macro modes(mode, readme) -%}
-<div class="{{ mode }}" style="{{ 'display: none' if mode == 'words' }}">
+<div class="{{ mode }}" style="{{ 'display: none' if mode == 'top' }}">
 	<label 
-		title="{{ readme.return_count }}"
+		title="{{ readme.pool }}"
 	>
 		<input 
 			type="number" 
 			max="1000" 
 			min="0" 
 			step="1" 
-			class="return-count" 
+			class="pool" 
 			value="45"
-		>return count
+		>pool
 	</label>
 	<label 
-		style="{{ 'visibility: hidden' if mode == 'random-word' }}"
-		title="{{ readme.random_selection }}"
+		title="{{ readme.selection }}"
 		class="own-line"
 	>
 		<input 
 			type="checkbox" 
-			class="random-selection"
-		>random selection
+			class="selection"
+		>selection
 		<input 
 			type="number" 
-			max="1000" 
 			min="0" 
 			step="1" 
-			class="random-selection-value" 
+			class="selection-value" 
 			disabled
 		>
 	</label>
@@ -37,7 +35,7 @@
 				type="radio" 
 				name="{{ mode }}-scoring-method" 
 				class="integral-product" 
-				{{ 'disabled' if mode == 'random-word' else 'checked' }}
+				{{ 'disabled' if mode == 'random' else 'checked' }}
 			>
 			integral product
 		</label>
@@ -46,7 +44,7 @@
 				type="radio" 
 				name="{{ mode }}-scoring-method" 
 				class="integral-sum" 
-				{{ 'disabled' if mode == 'random-word' }}
+				{{ 'disabled' if mode == 'random' }}
 			>
 			integral sum
 		</label>
@@ -55,7 +53,7 @@
 				type="radio" 
 				name="{{ mode }}-scoring-method" 
 				class="mean-geometric" 
-				{{ 'disabled' if mode == 'random-word' }}
+				{{ 'disabled' if mode == 'random' }}
 			>
 			geometric mean
 		</label>
@@ -64,7 +62,7 @@
 				type="radio" 
 				name="{{ mode }}-scoring-method" 
 				class="mean-arithmetic" 
-				{{ 'disabled' if mode == 'random-word' }}
+				{{ 'disabled' if mode == 'random' }}
 			>
 			arithmetic mean
 		</label>
@@ -75,7 +73,7 @@
 			max="10" 
 			min="0" 
 			step="0.001" 
-			value="{{ -1 if mode == 'words' else 0}}"
+			value="{{ -1 if mode == 'top' else 0}}"
 			class="score-threshold"
 		>
 		score threshold * 10^
@@ -83,7 +81,7 @@
 			type="number" 
 			max="-1" 
 			step="1" 
-			value="{{ -22 if mode == 'words' else -1}}"
+			value="{{ -22 if mode == 'top' else -1}}"
 			class="score-threshold-power" 
 		>
 	</label>

@@ -10,26 +10,26 @@ def bin(mode):
 	)
 
 	parser.add_argument(
-		'--return-count', '-c', 
+		'--pool', '-p', 
 		type=int, default=45, 
-		help=readme.get('return_count')
+		help=readme.get('pool')
 	)
 	parser.add_argument(
-		'--random-selection', '-r',
-		nargs='?', const=10000, type=int,
-		help=readme.get('random_selection')
+		'--selection', '-s',
+		nargs='?', const=45, type=int,
+		help=readme.get('selection')
 	)
 	parser.add_argument(
-		'--scoring-method', '-m',
+		'--scoring-method', '-r',
 		help=readme.get('scoring_method')
 	)
 	parser.add_argument(
-		'--score-by-integral-product', '-p',
+		'--score-by-integral-product', '-m',
 		action='store_true',
 		help=readme.get('score_by_integral_product')
 	)
 	parser.add_argument(
-		'--score-by-integral-sum', '-s',
+		'--score-by-integral-sum', '-a',
 		action='store_true',
 		help=readme.get('score_by_integral_sum')
 	)
@@ -39,7 +39,7 @@ def bin(mode):
 		help=readme.get('score_by_mean_geometric')
 	)
 	parser.add_argument(
-		'--score-by-mean-arithmetic', '-a',
+		'--score-by-mean-arithmetic', '-v',
 		action='store_true',
 		help=readme.get('score_by_mean_arithmetic')
 	)

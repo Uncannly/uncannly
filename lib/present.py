@@ -18,18 +18,19 @@ class Present:
 		return present_word(ipa_word, exclude_real, existing_word)
 
 	@staticmethod
-	def for_terminal(word, unstressed, exclude_real):
+	def for_terminal(word, unstressed, exclude_real, suppress_immediate):
 		existing_word = already_in_dictionary(word, unstressed)
 		word = present_word(word, exclude_real, existing_word)
-		if word != None:
-			sys.stdout.write(word + '\n')
-			return True
-		else:
+		if word == False:
 			return False
+		else:
+			if not suppress_immediate:
+				sys.stdout.write(word + '\n')
+			return word
 
 def present_word(word, exclude_real, existing_word):
 	if existing_word:
-		return None if exclude_real else '{} ({})'.format(word, existing_word)
+		return False if exclude_real else '{} ({})'.format(word, existing_word)
 	else:
 		return word
 
@@ -38,4 +39,3 @@ def already_in_dictionary(word, unstressed):
 	for (spelling, pronunciation) in words:
 		if word == pronunciation:
 			return spelling
-		

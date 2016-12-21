@@ -10,15 +10,15 @@
 
 	<body>
 		<label display="inline">
-			<input type="radio" name="mode" value="random-word" checked>Random Word
+			<input type="radio" name="mode" value="random" checked>random
 		</label>
 		<label display="inline">
-			<input type="radio" name="mode" value="words">Words
+			<input type="radio" name="mode" value="top">top
 		</label>
 
-		{{ modes('random-word', readme) }}
+		{{ modes('random', readme) }}
 
-		{{ modes('words', readme) }}
+		{{ modes('top', readme) }}
 
 		<script src="{{url_for('static', filename='vendor/jquery-3.1.1.min.js')}}"></script>
 		<script src="{{url_for('static', filename='vendor/clipboard.min.js')}}"></script>

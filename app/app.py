@@ -17,8 +17,8 @@ def root():
 
 def route(mode, request):
 	args = {
-		'return_count': request.args.get('return-count'),
-		'random_selection': request.args.get('random-selection'), 
+		'pool': request.args.get('pool'),
+		'selection': request.args.get('selection'), 
 		'scoring_method': request.args.get('scoring-method'), 
 		'score_by_integral_product': request.args.get('score-by-integral-product'), 
 		'score_by_integral_sum': request.args.get('score-by-integral-sum'), 
@@ -32,13 +32,13 @@ def route(mode, request):
 	response = get_by_mode(mode=mode, interface='api', args=args)
 	return json.dumps(response, ensure_ascii=False)
 
-@app.route('/random-word')
-def random_word_route():
-	return route('random_word', request)
+@app.route('/random')
+def random_route():
+	return route('random', request)
 
-@app.route('/words')
-def words_route():
-	return route('words', request)
+@app.route('/top')
+def top_route():
+	return route('top', request)
 
 if __name__ == "__main__":
 	http_server = WSGIServer(('0.0.0.0', int(os.getenv("PORT", 5000))), app)

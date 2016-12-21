@@ -1,9 +1,16 @@
 readme = {
-	'return_count': 'How many words to return at once. \
-		(only applies in `words` mode)',
-	'random_selection': 'From this particularly specified set \
-		of most probable words, instead of the absolute topmost probable ones, \
-		return a random selection. (only applies in `words` mode)',
+	'pool': 'How many words to gather by the chosen mode.',
+	'selection': 'When enabled, use the other mode to select within the pool. \
+		When no value is provided, select all. For example, in top mode, enable \
+		selection with no value just to throw away the ordering of these top words. \
+		You can add a selection value smaller or equal to the pool to lock down \
+		how many of them are returned, then increase the pool to increase the \
+		proportion of less probable words within that selection count. \
+		In random mode, enable selection with no value to sort the randomly \
+		generated words by probability. You can add a selection value smaller or \
+		eqaul to the pool to lock down how many of them are returned, \
+		then increase the pool to increase the proportion of more probable words \
+		within that selection count.',
 	'scoring_method': 'The method used to score words by, and filter out \
 		the lower scoring ones. Four methods exist in a 2x2 matrix relationship: \
 		integral-product, integral-sum, mean-geometric, mean-arithmetic.',
@@ -17,3 +24,4 @@ readme = {
 	'unstressed': 'Ignore stress levels of vowels.',
 	'exclude_real': 'Do not include words probable by pronunciation that do exist.'
 }
+
