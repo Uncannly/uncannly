@@ -94,32 +94,55 @@ $(".random .score-threshold").change(function(e) {
 	inputs.prop("disabled", disable);
 	if (disable) {
 		inputs.prop("checked", "");
+		$(`.random .scoring`).attr('title', 
+			'Choose a threshold and method to see suggested threshold settings.'
+		)
 	} else if (!inputs.is(':checked')) {
-		$(".integral-product").prop("checked", "checked");
+		$(".random .integral-product").prop("checked", "checked");
+		updateHint('random', [ 1, 1, 1 ], [ 3, 8, 15 ]);
 	}
 });
 
-const addListener = function(mode, method, significands, powers) {
+const updateHint = function(mode, significands, powers) {
+	$(`.${mode} .scoring`).attr(
+		'title',
+		[
+			'for default settings:',
+			`> 1 possibility: ${significands[0]} * 10^-${powers[0]}`,
+			`> 100 possibilities:	${significands[1]} * 10^-${powers[1]}`,
+			`> 10000 possibilities: ${significands[2]} * 10^-${powers[2]}`
+		].join('\n')
+	);
+}
+
+const addHintListener = function(mode, method, significands, powers) {
 	$(`.${mode} .${method}`).change(function() {
-		$(`.${mode} .scoring`).attr(
-			'title',
-			[
-				'for default settings:',
-				`> 1 possibility: ${significands[0]} * 10^-${powers[0]}`,
-				`> 100 possibilities:	${significands[1]} * 10^-${powers[1]}`,
-				`> 10000 possibilities: ${significands[2]} * 10^-${powers[2]}`
-			].join('\n')
-		);
+		updateHint(mode, significands, powers)
 	});
 };
 
 const altText = function(method, significands, powers) {
 	['random', 'top'].forEach(function(mode) {
-		addListener(mode, method, significands, powers);
+		addHintListener(mode, method, significands, powers);
 	});
 };
 
-altText('integral-product', [ 1,		1,	 1	 ], [ 3,	8,	15	]);
-altText('integral-sum',			[ 2,		1,	 6	 ], [ 1,	1,	2		]);
-altText('mean-geometric',		[ 1,		1,	 3	 ], [ 2,	3,	4		]);
-altText('mean-arithmetic',	[ 4.25, 3.1, 2.9 ], [ 1,	1,	1		]);
+const significands = {
+	'integral-product': [ 1,		1,	 1	 ],
+	'integral-sum': 		[ 2,		1,	 6	 ],
+	'mean-geometric': 	[ 1,		1,	 3	 ],
+	'mean-arithmetic': 	[ 4.25, 3.1, 2.9 ]
+}
+
+const powers = {
+	'integral-product': [ 3,	8,	15	],
+	'integral-sum': 		[ 1,	1,	2		],
+	'mean-geometric': 	[ 2,	3,	4		],
+	'mean-arithmetic': 	[ 1,	1,	1		]
+}
+
+scoringMethods.forEach(function(method) { 
+	altText(method, significands[method], powers[method])
+})
+
+updateHint('top', [ 1, 1, 1 ], [ 3, 8, 15 ]);
