@@ -10,6 +10,8 @@ const scoringMethods = [
 	'integral-product', 'integral-sum', 'mean-geometric', 'mean-arithmetic'
 ];
 
+const selectionModes = ['random', 'top']
+
 $("input[name='mode']").change(function(e){
 	if($(this).val() == 'random') {
 		$('.random').css({display: 'block'});
@@ -86,7 +88,7 @@ const modes = function(mode) {
 	new Clipboard(`#copy-${mode}`);
 };
 
-['random', 'top'].forEach(function(mode) { modes(mode); });
+selectionModes.forEach(function(mode) { modes(mode); });
 
 $(".random .score-threshold").change(function(e) {
 	const disable = e.target.value == '' || e.target.value == '0';
@@ -99,50 +101,37 @@ $(".random .score-threshold").change(function(e) {
 		)
 	} else if (!inputs.is(':checked')) {
 		$(".random .integral-product").prop("checked", "checked");
-		updateHint('random', [ 1, 1, 1 ], [ 3, 8, 15 ]);
+		updateHint('random', scoreThresholds['integral-product']);
 	}
 });
 
-const updateHint = function(mode, significands, powers) {
-	$(`.${mode} .scoring`).attr(
-		'title',
-		[
-			'for default settings:',
-			`> 1 possibility: ${significands[0]} * 10^-${powers[0]}`,
-			`> 100 possibilities:	${significands[1]} * 10^-${powers[1]}`,
-			`> 10000 possibilities: ${significands[2]} * 10^-${powers[2]}`
-		].join('\n')
-	);
+const updateHint = function(mode, scoreThreshold) {
+	$(`.${mode} .scoring`).attr('title', 
+		`to return just over 45 words with default settings, set threshold to ${scoreThreshold}.`
+	)
 }
 
-const addHintListener = function(mode, method, significands, powers) {
-	$(`.${mode} .${method}`).change(function() {
-		updateHint(mode, significands, powers)
+const scoreThresholds = {
+	'integral-product': '2.0 * 10^-7',
+	'integral-sum': 		'1.2 * 10^-1',
+	'mean-geometric': 	'2.0 * 10^-3',
+	'mean-arithmetic': 	'3.4 * 10^-1'
+}
+	
+selectionModes.forEach(function(mode) {
+	scoringMethods.forEach(function(method) { 
+		$(`.${mode} .${method}`).change(function() {
+			updateHint(mode, scoreThresholds[method])
+		});
 	});
-};
-
-const altText = function(method, significands, powers) {
-	['random', 'top'].forEach(function(mode) {
-		addHintListener(mode, method, significands, powers);
-	});
-};
-
-const significands = {
-	'integral-product': [ 1,		1,	 1	 ],
-	'integral-sum': 		[ 2,		1,	 6	 ],
-	'mean-geometric': 	[ 1,		1,	 3	 ],
-	'mean-arithmetic': 	[ 4.25, 3.1, 2.9 ]
-}
-
-const powers = {
-	'integral-product': [ 3,	8,	15	],
-	'integral-sum': 		[ 1,	1,	2		],
-	'mean-geometric': 	[ 2,	3,	4		],
-	'mean-arithmetic': 	[ 1,	1,	1		]
-}
-
-scoringMethods.forEach(function(method) { 
-	altText(method, significands[method], powers[method])
 })
 
-updateHint('top', [ 1, 1, 1 ], [ 3, 8, 15 ]);
+updateHint('top', scoreThresholds['integral-product']);
+
+$("body").keyup(function(e){
+	if (e.keyCode == 13) {
+		const mode = $("input[name='mode']:checked").val()
+		console.log(mode)
+		$(`.${mode} button.refresh`).click();
+	}
+});

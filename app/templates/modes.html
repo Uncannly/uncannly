@@ -74,8 +74,8 @@
 			type="number" 
 			max="10" 
 			min="0" 
-			step="0.001" 
-			value="{{ -1 if mode == 'top' else 0}}"
+			step="0.1" 
+			value="{{ 2 if mode == 'top' else 0}}"
 			class="score-threshold"
 		>
 		score threshold * 10^
@@ -83,7 +83,7 @@
 			type="number" 
 			max="-1" 
 			step="1" 
-			value="{{ -22 if mode == 'top' else -1}}"
+			value="-7"
 			class="score-threshold-power" 
 		>
 	</label>

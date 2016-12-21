@@ -4,33 +4,35 @@ sys.path.insert(1, os.path.join(sys.path[0], '..', '..'))
 from lib.type_conversion import array_to_string
 from lib.score import get_score
 
+# these are all ~10000, which is more than the 1000 of each
+# which we are actually capable of fitting in our free plan cloud database
 default_limit_for_scoring_method = {
 	'with_stress': {
 		'weighted': {
-			'integral_product': 8.1   * 10**-16, # 10079 
-			'integral_sum':     6.35  * 10**-2,  # 10831 
-			'mean_geometric':   3.1   * 10**-4,  # 10173 
-			'mean_arithmetic':  2.69  * 10**-1   # 11105 
+			'integral_product': 8.1   * 10**-16,
+			'integral_sum':     6.35  * 10**-2,
+			'mean_geometric':   3.1   * 10**-4,
+			'mean_arithmetic':  2.69  * 10**-1 
 		},
 		'unweighted': {
-			'integral_product': 1.3   * 10**-17, # 10039
-			'integral_sum':     5.85  * 10**-2,  # 10208
-			'mean_geometric':   3.0   * 10**-5,  # 10504
-			'mean_arithmetic':  1.99  * 10**-1   # 12442
+			'integral_product': 1.3   * 10**-17,
+			'integral_sum':     5.85  * 10**-2,
+			'mean_geometric':   3.0   * 10**-5,
+			'mean_arithmetic':  1.99  * 10**-1
 		}
 	},
 	'stressless': {
 		'weighted': {
-			'integral_product': 9.97  * 10**-16, # 11339
-			'integral_sum':     6.4   * 10**-2,  # 10809
-			'mean_geometric':   3.1   * 10**-4,  # 10773
-			'mean_arithmetic':  2.69  * 10**-1   # 10506
+			'integral_product': 9.97  * 10**-16,
+			'integral_sum':     6.4   * 10**-2,
+			'mean_geometric':   3.1   * 10**-4,
+			'mean_arithmetic':  2.69  * 10**-1
 		},
 		'unweighted': {
-			'integral_product': 3.5   * 10**-17, # 10264
-			'integral_sum':     5.9   * 10**-2,  # 10284
-			'mean_geometric':   9.0   * 10**-5,  # 10849
-			'mean_arithmetic':  1.98  * 10**-1   # 12120
+			'integral_product': 3.5   * 10**-17,
+			'integral_sum':     5.9   * 10**-2,
+			'mean_geometric':   9.0   * 10**-5,
+			'mean_arithmetic':  1.98  * 10**-1
 		}
 	}
 }
