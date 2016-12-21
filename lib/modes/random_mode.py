@@ -51,7 +51,7 @@ class RandomMode:
 			else:
 				count_fails = 0
 				if phoneme == 'END_WORD':
-					selected_word = selector(word, unstressed, exclude_real)
+					selected_word = selector(word, selection, unstressed, exclude_real)
 					if selected_word:
 						words.append((selected_word, score))
 						count_successes += 1
@@ -89,11 +89,16 @@ def next_phoneme(
 			score = get_score(score, scoring_method, probability, word_length)
 			return (None, score) if score < score_threshold else (phoneme, score)
 
-def bin_selector(word, unstressed, exclude_real):
+def bin_selector(word, selection, unstressed, exclude_real):
 	stringified_word = array_to_string(word)
-	return Present.for_terminal(stringified_word, unstressed, exclude_real, suppress_immediate=True)
+	return Present.for_terminal(
+		word=stringified_word, 
+		unstressed=unstressed, 
+		exclude_real=exclude_real, 
+		suppress_immediate=selection
+	)
 
-def api_selector(word, unstressed, exclude_real):
+def api_selector(word, selection, unstressed, exclude_real):
 	return Present.for_web(word, unstressed, exclude_real)
 		
 def reset():
@@ -110,12 +115,9 @@ def succeed(words, interface, selection):
 		words = words[:selection]
 	
 	if interface == 'bin':
-		for word, _ in words:
-			sys.stdout.write(word + '\n')
-		if len(words) < selection:
-			sys.stdout.write(
-				'Fewer words met criteria than the specified return count.\n'
-			)
+		if selection:
+			for word, _ in words:
+				sys.stdout.write(word + '\n')
 	else:
 		return [x[0] for x in words]
 		
