@@ -37,22 +37,38 @@ class TopMode:
 		return selector(words, selection, unstressed, exclude_real)
 
 def bin_select_top(words, selection, unstressed, exclude_real):
-	i = 0
-	for _ in xrange(selection):
-		presented = False
-		while presented == False:
-			if i == len(words):
-				sys.stdout.write(
-					'Fewer words met criteria than the specified return count.\n'
+	if len(words) > 0:
+		i = 0
+		for _ in xrange(selection):
+			presented = False
+			while presented == False:
+				if i == len(words):
+					sys.stdout.write(
+						'Fewer words met criteria than the specified return count.\n'
+					)
+					return
+				presented = Present.for_terminal(
+					word=words[i], 
+					unstressed=unstressed, 
+					exclude_real=exclude_real, 
+					suppress_immediate=False
 				)
-				return
-			presented = Present.for_terminal(words[i], unstressed, exclude_real, suppress_immediate=False)
-			i += 1
+				i += 1
+	else:
+		sys.stdout.write('No words met criteria.\n')
 
 def bin_select_random(words, selection, unstressed, exclude_real):
-	for _ in xrange(selection):
-		while Present.for_terminal(random.choice(words), unstressed, exclude_real, suppress_immediate=False) == False:
-			pass
+	if len(words) > 0:
+		for _ in xrange(selection):
+			while Present.for_terminal(
+				word=random.choice(words), 
+				unstressed=unstressed, 
+				exclude_real=exclude_real,
+				suppress_immediate=False
+			) == False:
+				pass
+	else:
+		sys.stdout.write('No words met criteria.\n')
 
 def api_select_top(words, selection, unstressed, exclude_real):
 	output = []
