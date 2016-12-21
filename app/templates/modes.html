@@ -13,7 +13,7 @@
 		>pool
 	</label>
 	<label 
-		title="{{ readme.selection }}"
+		title="{{ readme.random_selection if mode == 'top' else readme.top_selection }}"
 		class="own-line"
 	>
 		<input 

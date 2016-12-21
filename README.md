@@ -19,11 +19,11 @@ How many words to gather by the chosen mode. Default: 45.
 * **selection**
 
 When enabled, use the other mode to select within the pool.
-When enabled, no value is provided, use the other mode, but select all (read: in `top` mode, scramble and introduce repeats; in `random` mode, sort). 
 
-In top mode, you can add a selection value smaller or equal to the pool to lock down how many of them are returned, then increase the pool to increase the proportion of less probable words within that selection count. 
+In top mode, randomly selects within the top pool. When enabled but no value is provided, the effect is to scramble and likely lose some to repetition.
+Add a selection value to lock down a return count, then increase the pool to increase the proportion of less probable words. 
 
-In random mode, take the same action to increase the proportion of *more* probable words within that selection count, by generating more and more random words that might be more probable than ones you'd already generated.
+In random mode, takes the same action to increase the proportion of *more* probable words within that selection count, by generating more and more random words that might be more probable than ones you'd already generated.
 
 The selection cannot be larger than the pool.
 

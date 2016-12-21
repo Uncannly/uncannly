@@ -1,16 +1,31 @@
 readme = {
 	'pool': 'How many words to gather by the chosen mode.',
 	'selection': 'When enabled, use the other mode to select within the pool. \
-		When no value is provided, select all. For example, in top mode, enable \
-		selection with no value just to throw away the ordering of these top words. \
-		You can add a selection value smaller or equal to the pool to lock down \
-		how many of them are returned, then increase the pool to increase the \
-		proportion of less probable words within that selection count. \
-		In random mode, enable selection with no value to sort the randomly \
-		generated words by probability. You can add a selection value smaller or \
-		eqaul to the pool to lock down how many of them are returned, \
-		then increase the pool to increase the proportion of more probable words \
-		within that selection count.',
+		When enabled and no value is provided, use the other mode, but select all \
+		(read: in `top` mode, scramble and introduce repeats; in `random` mode, sort). \
+		In top mode, you can add a selection value smaller or equal to the pool to \
+		lock down how many of them are returned, then increase the pool to increase \
+		the proportion of less probable words within that selection count. \
+		In random mode, take the same action to increase the proportion of *more* \
+		probable words within that selection count, by generating more and more \
+		random words that might be more probable than ones you\'d already generated. \
+		The selection count cannot be larger than the pool. \
+		Default: disabled (when enabled, defaults to 10).',
+	'random_selection': 'Randomly select within the top pool. \
+		When enabled but no value is provided, the effect is to scramble and \
+		likely lose some to repetition. \
+		Add a selection value to \
+		lock down a return count, then increase the pool to increase \
+		the proportion of less probable words. \
+		The selection count cannot be larger than the pool. \
+		Default: disabled (when enabled, defaults to 10).',
+	'top_selection': 'Select the topmost likely words from the randomly generated pool. \
+		When enabled but no value is provided, select all (i.e. sort them). \
+		Add a selection value to \
+		lock down a return count, then increase the pool to increase \
+		the proportion of more probable words. \
+		The selection count cannot be larger than the pool. \
+		Default: disabled (when enabled, defaults to 10).',
 	'scoring_method': 'The method used to score words by, and filter out \
 		the lower scoring ones. Four methods exist in a 2x2 matrix relationship: \
 		integral-product, integral-sum, mean-geometric, mean-arithmetic.',
