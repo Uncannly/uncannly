@@ -9,8 +9,11 @@ def get_by_mode(mode, interface, args):
 	else:
 		args['pool'] = 45
 
-	if args['selection']:
-		args['selection'] = int(args['selection'])
+	if args['selection'] is not None:
+		if args['selection'] == '':
+			args['selection'] = args['pool']
+		else:
+			args['selection'] = int(args['selection'])
 
 	if args.get('score_by_mean_arithmetic'):
 		args['scoring_method'] = 'mean_arithmetic'
