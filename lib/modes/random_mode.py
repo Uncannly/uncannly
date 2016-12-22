@@ -6,10 +6,18 @@ from lib.type_conversion import array_to_string
 from lib.score import get_score
 from data.load_data import load_phonemes
 
-next_phonemes_weighted = load_phonemes(unweighted=False, unstressed=False)
-next_phonemes_unweighted = load_phonemes(unweighted=True, unstressed=False)
-next_phonemes_weighted_unstressed = load_phonemes(unweighted=False, unstressed=True)
-next_phonemes_unweighted_unstressed = load_phonemes(unweighted=True, unstressed=True)
+def boolean_options_to_strings(unstressed, unweighted):
+	stressing = 'unstressed' if unstressed else 'stressed'
+	weighting = 'unweighted' if unweighted else 'weighted'
+	return stressing, weighting
+
+next_phonemes_options = {}
+for unstressed in [False, True]:
+	for unweighted in [False, True]:
+		stressing, weighting = boolean_options_to_strings(unstressed, unweighted)
+		next_phonemes_options.setdefault(stressing, {}).setdefault(
+			weighting, load_phonemes(unweighted, unstressed)
+		)
 
 class RandomMode:
 	@staticmethod
@@ -71,16 +79,8 @@ def next_phoneme(
 	unweighted,
 	unstressed):
 
-	if unstressed:
-		if unweighted:
-			next_phonemes = next_phonemes_unweighted_unstressed
-		else:
-			next_phonemes = next_phonemes_weighted_unstressed
-	else:
-		if unweighted:
-			next_phonemes = next_phonemes_unweighted
-		else:
-			next_phonemes = next_phonemes_weighted
+	stressing, weighting = boolean_options_to_strings(unstressed, unweighted)
+	next_phonemes = next_phonemes_options[stressing][weighting]
 
 	accumulated_probability = 0
 	for (phoneme, probability) in next_phonemes[phoneme]:
@@ -119,4 +119,3 @@ def succeed(words, interface, selection):
 				sys.stdout.write(word + '\n')
 	else:
 		return [x[0] for x in words]
-		
