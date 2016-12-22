@@ -12,7 +12,7 @@ class Schema:
 			"create table phonemes (phoneme varchar, unstressed boolean, \
 				next_phonemes varchar, next_phonemes_unweighted varchar)",
 			"drop table if exists scores",
-			"create table scores (word varchar, score float(25), \
+			"create table scores (word varchar, score real, \
 				unstressed boolean, unweighted boolean, \
 				method_mean boolean, method_addition boolean)",
 			""
