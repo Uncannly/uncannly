@@ -20,6 +20,16 @@ def bin(mode):
 		help=readme.get('selection')
 	)
 	parser.add_argument(
+		'--top-selection', '-t',
+		nargs='?', const=45, type=int,
+		help='Alias for `selection` when in random mode.'
+	)
+	parser.add_argument(
+		'--random-selection', '-w',
+		nargs='?', const=45, type=int,
+		help='Alias for `selection` when in top mode.'
+	)
+	parser.add_argument(
 		'--scoring-method', '-r',
 		help=readme.get('scoring_method')
 	)
@@ -44,7 +54,7 @@ def bin(mode):
 		help=readme.get('score_by_mean_arithmetic')
 	)
 	parser.add_argument(
-		'--score-threshold', '-t',
+		'--score-threshold', '-c',
 		type=float,
 		help=readme.get('score_threshold')
 	)

@@ -19,6 +19,8 @@ def route(mode, request):
 	args = {
 		'pool': request.args.get('pool'),
 		'selection': request.args.get('selection'), 
+		'top_selection': request.args.get('top_selection'),
+		'random_selection': request.args.get('random_selection'),  
 		'scoring_method': request.args.get('scoring-method'), 
 		'score_by_integral_product': request.args.get('score-by-integral-product'), 
 		'score_by_integral_sum': request.args.get('score-by-integral-sum'), 

@@ -15,6 +15,11 @@ def get_by_mode(mode, interface, args):
 		else:
 			args['selection'] = int(args['selection'])
 
+	if args['top_selection'] and mode == 'random':
+		args['selection'] = int(args['top_selection'])
+	if args['random_selection'] and mode == 'top':
+		args['selection'] = int(args['random_selection'])
+
 	if args.get('score_by_mean_arithmetic'):
 		args['scoring_method'] = 'mean_arithmetic'
 	if args.get('score_by_mean_geometric'):

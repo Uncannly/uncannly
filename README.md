@@ -68,7 +68,9 @@ Conversely, in **random** mode, take the same action to cause the opposite effec
 
 The selection can be larger than the [**pool**](#pool), though there's not much point. In fact there is no effect at all when in **top** mode, and when in **random** mode it just increases the repetition in the returned words of the words from the pool (and the chances that each of those words get returned at all). Given how unuseful this situation is, the web interface prevents it (but it is still possible using either the API or the CLI).
 
-`top-selection` aliases `selection` when in random mode; `random-selection` aliases `selection` when in top mode.
+`top-selection` (CLI shortcut `-t`) aliases `selection` when in random mode.
+
+`random-selection` (CLI shortcut `-w`) aliases `selection` when in top mode.
 
 *Default: disabled (when enabled, defaults to 10).*
 
@@ -121,7 +123,7 @@ When specified, will not return words with scores lower than this threshold (acc
 
 *Default: 1^10-7, which is the threshold which still lets 45 words through for the default scoring method, integral product. All other scoring methods need higher thresholds to filter out more words than that.*
 
-CLI shortcut: `-t`
+CLI shortcut: `-c`
 
 ### unweighted
 
@@ -157,7 +159,7 @@ AE1 S IY1 D IH0 SH IH0 T R D
 https://uncannly.cfapps.io/random?pool=5&selection=3&scoring-method=mean-geometric&score-threshold=0.0000000000001&unweighted&unstressed&exclude-real
 
 ```
-$ python bin/random_mode.py -p 5 -s 3 -g -t 0.0000000000001 -u -i -x
+$ python bin/random_mode.py -p 5 -s 3 -g -c 0.0000000000001 -u -i -x
 S IH NG G ER
 S T AY P ER
 K AA R EY D AY T S AH L AH S
@@ -176,7 +178,7 @@ W AA1 R
 
 https://uncannly.cfapps.io/top?pool=500&selection=3&scoring-method=integral-sum&score-threshold=0.01&unweighted&unstressed&exclude-real
 ```
-$ python bin/top_mode.py -p 500 -s 3 -a -t 0.1 -u -i -x
+$ python bin/top_mode.py -p 500 -s 3 -a -c 0.1 -u -i -x
 K AA N T
 M AH
 B ER Z AH N
