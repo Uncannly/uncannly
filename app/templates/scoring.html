@@ -1,0 +1,30 @@
+{% macro scoring(mode, readme) -%}
+
+<label title="{{ readme.score_threshold }}">
+	<input 
+		type="number" 
+		max="10" 
+		min="0" 
+		step="0.1" 
+		value="{{ 2 if mode == 'top' else 0}}"
+		class="score-threshold"
+	>
+	score threshold * 10^
+	<input 
+		type="number" 
+		max="-1" 
+		step="1" 
+		value="-7"
+		class="score-threshold-power" 
+	>
+</label>
+
+<div 
+	class="scoring" 
+	style="display: inline"
+	title="Choose a threshold and method to see suggested threshold settings."
+>
+	[threshold hint]
+</div>
+
+{%- endmacro %}
