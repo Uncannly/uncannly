@@ -43,5 +43,7 @@ def top_route():
 	return route('top', request)
 
 if __name__ == "__main__":
+	if os.getenv("PORT") == None:
+		app.debug = True
 	http_server = WSGIServer(('0.0.0.0', int(os.getenv("PORT", 5000))), app)
 	http_server.serve_forever()
