@@ -98,7 +98,7 @@ The **total** methods give a measure of "out of all the possible words, what is 
 
 The **average** methods do allow for new phonemes to actually increase the score of a word. For example, the word "jyɑtɚdʌnd" gets off to a really rough start, but the rest of the word consists of very common phoneme transitions. Average methods allow for weirder phoneme transitions to occur up front without nixing the pathway to generating words, and allow for longer words.
 
-Filtering will not occur unless a [**score threshold**](#score-threshold) is specified as well; only ranking will occur ()
+Filtering will not occur unless a [**score threshold**](#score-threshold) is specified as well; only ranking will occur.
 
 Scoring is required when filtering (one must filter by something). Filtering is optional for the **random** mode, but it is required for this most probable **top** mode, because the possibility space is too large to traverse without some filter.
 
@@ -148,7 +148,7 @@ CLI shortcut: `-x`
 https://uncannly.cfapps.io/random
 
 ```
-$ python bin/random_mode.py
+$ chiry@munscalune:~/workspace/uncannly: python bin/random_mode.py
 M AH0 P R IY0 W ER0
 DH EH1 R (THEIR)
 R IH0 S AH1 M B IY1 ZH AH0 L AY1 L IY0 TH AW1
@@ -159,7 +159,7 @@ AE1 S IY1 D IH0 SH IH0 T R D
 https://uncannly.cfapps.io/random?pool=5&selection=3&scoring-method=mean-geometric&score-threshold=0.0000000000001&unweighted&unstressed&exclude-real
 
 ```
-$ python bin/random_mode.py -p 5 -s 3 -g -c 0.0000000000001 -u -i -x
+$ chiry@munscalune:~/workspace/uncannly: python bin/random_mode.py -p 5 -s 3 -g -c 0.0000000000001 -u -i -x
 S IH NG G ER
 S T AY P ER
 K AA R EY D AY T S AH L AH S
@@ -168,7 +168,7 @@ K AA R EY D AY T S AH L AH S
 https://uncannly.cfapps.io/top
 
 ```
-$ python bin/top_mode.py
+$ chiry@munscalune:~/workspace/uncannly: python bin/top_mode.py
 W AA1 Z (WAAS)
 W ER0 (WERE)
 S T
@@ -178,7 +178,7 @@ W AA1 R
 
 https://uncannly.cfapps.io/top?pool=500&selection=3&scoring-method=integral-sum&score-threshold=0.01&unweighted&unstressed&exclude-real
 ```
-$ python bin/top_mode.py -p 500 -s 3 -a -c 0.1 -u -i -x
+$ chiry@munscalune:~/workspace/uncannly: python bin/top_mode.py -p 500 -s 3 -a -c 0.1 -u -i -x
 K AA N T
 M AH
 B ER Z AH N
@@ -195,13 +195,13 @@ Also, get `postgres`, create a database called `uncannly`, and set your local da
 Please fork and clone this repo.
 
 ```
-$ cd uncannly
-$ source venv/bin/activate
-$ pip install -r requirements.tx
+$ chiry@munscalune:~/workspace: cd uncannly
+$ chiry@munscalune:~/workspace/uncannly: source venv/bin/activate
+$ chiry@munscalune:~/workspace/uncannly: pip install -r requirements.txt
 ...
-$ python data/initialize_database.py
+$ chiry@munscalune:~/workspace/uncannly: python data/initialize_database.py
 Database successfully initialized.
-$ python app/app.py
+$ chiry@munscalune:~/workspace/uncannly: python app/app.py
 
 ```
 Now you can visit a local version of the app at `localhost:5000`.
