@@ -2,23 +2,19 @@ import json
 
 from database import Database
 
+scoring_method_breakdown = {
+	'integral_product': (False, False),
+	'integral_sum': (False, True),
+	'mean_geometric': (True, False),
+	'mean_arithmetic': (True, True),
+}
+
 def load_words():
 	return Database.fetch("select * from words;")
 
 def load_scores(scoring_method, unweighted, unstressed):
-	if scoring_method == 'integral_product':
-		method_mean = False
-		method_addition = False
-	elif scoring_method == 'integral_sum':
-		method_mean = False
-		method_addition = True
-	elif scoring_method == 'mean_geometric':
-		method_mean = True
-		method_addition = False
-	elif scoring_method == 'mean_arithmetic':
-		method_mean = True
-		method_addition = True
-	
+	method_mean, method_addition = scoring_method_breakdown[scoring_method]
+
 	sql = "select word, score from scores where \
 		unweighted = {} and unstressed = {} \
 		and method_mean = {} and method_addition = {};".format(
