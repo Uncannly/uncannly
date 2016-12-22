@@ -7,6 +7,7 @@ from gevent.wsgi import WSGIServer
 
 from lib.mode import get_by_mode
 from lib.readme import readme
+from lib.case_conversion import kebab_to_snake
 
 app = Flask(__name__)
 CORS(app)
@@ -16,21 +17,15 @@ def root():
 	return render_template('index.html', readme=readme)
 
 def route(mode, request):
-	args = {
-		'pool': request.args.get('pool'),
-		'selection': request.args.get('selection'), 
-		'top_selection': request.args.get('top_selection'),
-		'random_selection': request.args.get('random_selection'),  
-		'scoring_method': request.args.get('scoring-method'), 
-		'score_by_integral_product': request.args.get('score-by-integral-product'), 
-		'score_by_integral_sum': request.args.get('score-by-integral-sum'), 
-		'score_by_mean_geometric': request.args.get('score-by-mean-geometric'), 
-		'score_by_mean_arithmetic': request.args.get('score-by-mean-arithmetic'), 
-		'score_threshold': request.args.get('score-threshold'),
-		'unweighted': request.args.get('unweighted'), 
-		'unstressed': request.args.get('unstressed'),
-		'exclude_real': request.args.get('exclude-real')
-	}
+	args = {}
+	options = [
+		'pool', 'selection', 'top_selection', 'random_selection', 'scoring_method',
+		'score_by_integral_product', 'score_by_integral_sum', 
+		'score_by_mean_geometric', 'score_by_mean_arithmetic', 'score_threshold',
+		'unweighted', 'unstressed', 'exclude_real'
+	]
+	for option in options:
+		args[kebab_to_snake(option)] = request.args.get(option)
 	response = get_by_mode(mode=mode, interface='api', args=args)
 	return json.dumps(response, ensure_ascii=False)
 

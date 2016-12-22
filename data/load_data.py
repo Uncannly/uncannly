@@ -18,7 +18,6 @@ def load_scores(scoring_method, unweighted, unstressed):
 	elif scoring_method == 'mean_arithmetic':
 		method_mean = True
 		method_addition = True
-
 	
 	sql = "select word, score from scores where \
 		unweighted = {} and unstressed = {} \
