@@ -29,7 +29,7 @@ class Database:
 
 def connect():
 	if os.environ.get('VCAP_SERVICES') is None:
-		credentials = 'postgres://postgres:5554d58@localhost:5432/mydb'
+		credentials = 'postgres://postgres:5554d58@localhost:5432/uncannly'
 	else:
 		credentials = AppEnv().get_service(label='elephantsql').credentials['uri']
 
