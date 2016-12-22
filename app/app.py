@@ -7,7 +7,7 @@ from gevent.wsgi import WSGIServer
 
 from lib.mode import get_by_mode
 from lib.readme import readme
-from lib.case_conversion import kebab_to_snake
+from lib.case_conversion import snake_to_kebab
 
 app = Flask(__name__)
 CORS(app)
@@ -25,7 +25,7 @@ def route(mode, request):
 		'unweighted', 'unstressed', 'exclude_real'
 	]
 	for option in options:
-		args[kebab_to_snake(option)] = request.args.get(option)
+		args[option] = request.args.get(snake_to_kebab(option))
 	response = get_by_mode(mode=mode, interface='api', args=args)
 	return json.dumps(response, ensure_ascii=False)
 

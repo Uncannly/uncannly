@@ -41,12 +41,18 @@ def get_by_mode(mode, interface, args):
 
 	if args['unweighted'] == None:
 		args['unweighted'] = False
+	else:
+		args['unweighted'] = True
 
 	if args['unstressed'] == None:
 		args['unstressed'] = False
-	
+	else:
+		args['unstressed'] = True
+
 	if args['exclude_real'] == None:
 		args['exclude_real'] = False
+	else:
+		args['exclude_real'] = True
 
 	getter = TopMode if mode == 'top' else RandomMode
 	return getter.get(
