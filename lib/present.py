@@ -36,6 +36,12 @@ def present_word(word, exclude_real, existing_word):
 def already_in_dictionary(word, unstressed):
 	for (spelling, pronunciation) in words:
 		if unstressed:
-			pronunciation = pronunciation.replace('0', '').replace('1', '').replace('2', '')
+			pronunciation = replace_multiple(pronunciation, '012')
 		if word == pronunciation:
 			return spelling
+
+def replace_multiple(string, characters):
+	characters = "012"
+	for character in characters:
+		if character in string:
+			string = string.replace(character, "\\" + character)
