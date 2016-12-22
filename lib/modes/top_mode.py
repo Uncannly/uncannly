@@ -19,7 +19,7 @@ class TopMode:
 	):
 		most_probable_words = load_scores(scoring_method, unweighted, unstressed)
 		most_probable_words.sort(key=lambda x: -x[1])
-		word_tuples = most_probable_words[0:int(pool)]
+		most_probable_words = most_probable_words[0:int(pool)]
 
 		if selection:
 			selector = api_select_random if interface == 'api' else bin_select_random
@@ -28,7 +28,7 @@ class TopMode:
 			selector = api_select_top if interface == 'api' else bin_select_top
 
 		words = []
-		for index, (word, score) in enumerate(word_tuples):
+		for index, (word, score) in enumerate(most_probable_words):
 			if score < score_threshold:
 				break
 			else:
