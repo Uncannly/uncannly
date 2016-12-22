@@ -90,11 +90,36 @@ const modes = function(mode) {
 
 selectionModes.forEach(function(mode) { modes(mode); });
 
-$(".random .score-threshold").change(function(e) {
-	const disable = e.target.value == '' || e.target.value == '0';
+$(".random .selection").change(function(e) {
+	const scoreThreshold = $(".random .score-threshold").val();
+	const scoreThresholdIsOff = scoreThreshold == '' || scoreThreshold == '0'
+	const selectionIsOff = !this.checked
+	const disableScoringMethodInputs = scoreThresholdIsOff && selectionIsOff
+
 	const inputs = $(".random .scoring-method input");
-	inputs.prop("disabled", disable);
-	if (disable) {
+	inputs.prop("disabled", disableScoringMethodInputs);
+
+	if (disableScoringMethodInputs) {
+		inputs.prop("checked", "");
+		$(`.random .scoring`).attr('title', 
+			'Choose a threshold and method to see suggested threshold settings.'
+		)
+	} else if (!inputs.is(':checked')) {
+		$(".random .integral-product").prop("checked", "checked");
+		updateHint('random', scoreThresholds['integral-product']);
+	}
+});
+
+$(".random .score-threshold").change(function(e) {
+	const scoreThreshold = e.target.value;
+	const scoreThresholdIsOff = scoreThreshold == '' || scoreThreshold == '0'
+	const selectionIsOff = !$(".random .selection").is(':checked')
+	const disableScoringMethodInputs = scoreThresholdIsOff && selectionIsOff
+
+	const inputs = $(".random .scoring-method input");
+	inputs.prop("disabled", disableScoringMethodInputs);
+
+	if (disableScoringMethodInputs) {
 		inputs.prop("checked", "");
 		$(`.random .scoring`).attr('title', 
 			'Choose a threshold and method to see suggested threshold settings.'
