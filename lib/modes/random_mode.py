@@ -45,7 +45,7 @@ class RandomMode:
 
 			if phoneme == None:
 				count_fails += 1
-				if count_fails > 1000000:
+				if count_fails > 10000:
 					return fail(interface)
 				word, phoneme, score = reset()
 			else:
@@ -105,8 +105,7 @@ def reset():
 	return ([], 'START_WORD', 1.0)
 
 def fail(interface):
-	message = '1000000 times consecutively failed to find a word \
-		above the score threshold. Please try lowering it.'
+	message = '10000 times consecutively failed to find a word above the score threshold. Please try lowering it.'
 	return sys.stdout.write(message + '\n') if interface == "bin" else [message]
 
 def succeed(words, interface, selection):
