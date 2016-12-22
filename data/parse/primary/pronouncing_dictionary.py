@@ -29,11 +29,9 @@ def parse(word_frequencies):
 		phonemes = word_pronunciation.split()
 		phonemes_unstressed = []
 		for phoneme in phonemes:
-			phoneme_unstressed = phoneme.strip('012')
-			phonemes_unstressed.append(phoneme_unstressed)
-		word_pronunciation_unstressed = " ".join(phonemes_unstressed)
+			phonemes_unstressed.append(phoneme.strip('012'))
 
-		words.append((word, word_pronunciation, word_pronunciation_unstressed))
+		words.append((word, word_pronunciation))
 
 		# phoneme_chain_absolute, phoneme_chain_absolute_unweighted
 		phonemes.insert(0, 'START_WORD')
