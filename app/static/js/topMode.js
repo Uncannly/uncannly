@@ -1,0 +1,1 @@
+updateHint('top', scoreThresholds['integral-product']);
