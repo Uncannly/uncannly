@@ -91,29 +91,22 @@ const modes = function(mode) {
 selectionModes.forEach(function(mode) { modes(mode); });
 
 $(".random .selection").change(function(e) {
-	const scoreThreshold = $(".random .score-threshold").val();
-	const scoreThresholdIsOff = scoreThreshold == '' || scoreThreshold == '0'
-	const selectionIsOff = !this.checked
-	const disableScoringMethodInputs = scoreThresholdIsOff && selectionIsOff
-
-	const inputs = $(".random .scoring-method input");
-	inputs.prop("disabled", disableScoringMethodInputs);
-
-	if (disableScoringMethodInputs) {
-		inputs.prop("checked", "");
-		$(`.random .scoring`).attr('title', 
-			'Choose a threshold and method to see suggested threshold settings.'
-		)
-	} else if (!inputs.is(':checked')) {
-		$(".random .integral-product").prop("checked", "checked");
-		updateHint('random', scoreThresholds['integral-product']);
-	}
+	updateScoringMethodInputs({
+		scoreThreshold: $(".random .score-threshold").val(),
+		selection: this.checked
+	})
 });
 
 $(".random .score-threshold").change(function(e) {
-	const scoreThreshold = e.target.value;
-	const scoreThresholdIsOff = scoreThreshold == '' || scoreThreshold == '0'
-	const selectionIsOff = !$(".random .selection").is(':checked')
+	updateScoringMethodInputs({
+		scoreThreshold: e.target.value, 
+		selection: $(".random .selection").is(':checked')
+	})
+});
+
+const updateScoringMethodInputs = function(options) {
+	const scoreThresholdIsOff = options.scoreThreshold == '' || options.scoreThreshold == '0'
+	const selectionIsOff = !options.selection
 	const disableScoringMethodInputs = scoreThresholdIsOff && selectionIsOff
 
 	const inputs = $(".random .scoring-method input");
@@ -128,7 +121,8 @@ $(".random .score-threshold").change(function(e) {
 		$(".random .integral-product").prop("checked", "checked");
 		updateHint('random', scoreThresholds['integral-product']);
 	}
-});
+
+}
 
 const updateHint = function(mode, scoreThreshold) {
 	$(`.${mode} .scoring`).attr('title', 
