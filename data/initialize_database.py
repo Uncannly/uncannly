@@ -1,5 +1,4 @@
-import os, sys
-sys.path.insert(1, os.path.join(sys.path[0], '..'))
+import sys
 
 from data.parse.primary import frequency_list, pronouncing_dictionary
 from data.parse.secondary.absolute_chain import AbsoluteChain
