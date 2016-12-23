@@ -84,10 +84,10 @@ The method used to score words by, for ranking them and filtering out the lower 
 
 Four scoring methods exist in a 2×2 matrix relationship:
 
-| operation \ value | total							 | average					 |
+| operation \ value | total               | average           |
 | ----------------- | ------------------ | ----------------- |
-| **multiplication**		| **integral product** | **mean geometric**	 |
-| **addition**					| **integral sum**		 | **mean arithmetic** |
+| **multiplication**    | **integral product** | **mean geometric**   |
+| **addition**          | **integral sum**     | **mean arithmetic** |
 
 1) **integral product**: the probability from each phoneme to the next is continuously multiplied.
 2) **integral sum**: the probability from each phoneme to the next is continuously added (except that it's actually 1 minus each probability which gets summed, and then the reciprocal of that number so that we can sort the same direction as the other three methods). 

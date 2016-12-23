@@ -23,34 +23,34 @@ schema.words(words)
 
 most_probable_next_phonemes = {'weighted': {}, 'unweighted': {}}
 for unstressed in [False, True]:
-	stressing = 'unstressed' if unstressed else 'stressed'
+  stressing = 'unstressed' if unstressed else 'stressed'
 
-	most_probable_next_phonemes['weighted'][stressing] = \
-		AbsoluteChain.parse(phoneme_chains['weighted'][stressing])
-	most_probable_next_phonemes['unweighted'][stressing] = \
-		AbsoluteChain.parse(phoneme_chains['unweighted'][stressing])
+  most_probable_next_phonemes['weighted'][stressing] = \
+    AbsoluteChain.parse(phoneme_chains['weighted'][stressing])
+  most_probable_next_phonemes['unweighted'][stressing] = \
+    AbsoluteChain.parse(phoneme_chains['unweighted'][stressing])
 
-	schema.phonemes(
-		most_probable_next_phonemes['weighted'][stressing],
-		most_probable_next_phonemes['unweighted'][stressing],
-		unstressed
-	)
+  schema.phonemes(
+    most_probable_next_phonemes['weighted'][stressing],
+    most_probable_next_phonemes['unweighted'][stressing],
+    unstressed
+  )
 
 ########### PHASE THREE ####################
 
 for unstressed in [False, True]:
-	for unweighted in [False, True]:
-		for method_mean in [False, True]:
-			for method_addition in [False, True]:
-				options = unstressed, unweighted, method_mean, method_addition
-				stressing, weighting = booleans_to_strings(unstressed, unweighted)
-				schema.scores(
-					MostProbableWords.get(
-						most_probable_next_phonemes[weighting][stressing],
-						options
-					),
-					options
-				)
+  for unweighted in [False, True]:
+    for method_mean in [False, True]:
+      for method_addition in [False, True]:
+        options = unstressed, unweighted, method_mean, method_addition
+        stressing, weighting = booleans_to_strings(unstressed, unweighted)
+        schema.scores(
+          MostProbableWords.get(
+            most_probable_next_phonemes[weighting][stressing],
+            options
+          ),
+          options
+        )
 
 schema.finish()
 

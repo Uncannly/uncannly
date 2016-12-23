@@ -6,15 +6,15 @@
 
 <div class="{{ mode }}" style="{{ 'display: none' if mode == 'top' }}">
 
-	{{ selection(mode, readme, pool_default, pool_max) }}
-	{{ scoring(mode, readme) }}
-	{{ otherOptions(mode, readme) }}
+  {{ selection(mode, readme, pool_default, pool_max) }}
+  {{ scoring(mode, readme) }}
+  {{ otherOptions(mode, readme) }}
 
-	<button class="refresh">Refresh</button>
+  <button class="refresh">Refresh</button>
 
-	<button id="copy-{{ mode }}" data-clipboard-target="#{{ mode }}">Copy</button>
+  <button id="copy-{{ mode }}" data-clipboard-target="#{{ mode }}">Copy</button>
 
-	<div id="{{ mode }}"></div>
+  <div id="{{ mode }}"></div>
 
 </div>
 

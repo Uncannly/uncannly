@@ -15,33 +15,33 @@ CORS(app)
 
 @app.route('/')
 def root():
-	return render_template('index.html',
-		readme=readme, pool_default=pool_default, pool_max=pool_max
-	)
+  return render_template('index.html',
+    readme=readme, pool_default=pool_default, pool_max=pool_max
+  )
 
 def route(mode, request):
-	args = {}
-	options = [
-		'pool', 'selection', 'top_selection', 'random_selection', 'scoring_method',
-		'score_by_integral_product', 'score_by_integral_sum', 
-		'score_by_mean_geometric', 'score_by_mean_arithmetic', 'score_threshold',
-		'unweighted', 'unstressed', 'exclude_real'
-	]
-	for option in options:
-		args[option] = request.args.get(snake_to_kebab(option))
-	response = get_by_mode(mode=mode, interface='api', args=args)
-	return json.dumps(response, ensure_ascii=False)
+  args = {}
+  options = [
+    'pool', 'selection', 'top_selection', 'random_selection', 'scoring_method',
+    'score_by_integral_product', 'score_by_integral_sum', 
+    'score_by_mean_geometric', 'score_by_mean_arithmetic', 'score_threshold',
+    'unweighted', 'unstressed', 'exclude_real'
+  ]
+  for option in options:
+    args[option] = request.args.get(snake_to_kebab(option))
+  response = get_by_mode(mode=mode, interface='api', args=args)
+  return json.dumps(response, ensure_ascii=False)
 
 @app.route('/random')
 def random_route():
-	return route('random', request)
+  return route('random', request)
 
 @app.route('/top')
 def top_route():
-	return route('top', request)
+  return route('top', request)
 
 if __name__ == "__main__":
-	if os.getenv("PORT") == None:
-		app.debug = True
-	http_server = WSGIServer(('0.0.0.0', int(os.getenv("PORT", 5000))), app)
-	http_server.serve_forever()
+  if os.getenv("PORT") == None:
+    app.debug = True
+  http_server = WSGIServer(('0.0.0.0', int(os.getenv("PORT", 5000))), app)
+  http_server.serve_forever()

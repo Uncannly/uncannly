@@ -1,73 +1,73 @@
 {% macro selection(mode, readme, pool_default, pool_max) -%}
 
 <label 
-	title="{{ readme.pool }}"
+  title="{{ readme.pool }}"
 >
-	<input 
-		type="number" 
-		max="{{ pool_max }}" 
-		min="1" 
-		step="1" 
-		class="pool" 
-		value="{{ pool_default }}"
-	>pool
+  <input 
+    type="number" 
+    max="{{ pool_max }}" 
+    min="1" 
+    step="1" 
+    class="pool" 
+    value="{{ pool_default }}"
+  >pool
 </label>
 <label 
-	title="{{ readme.random_selection if mode == 'top' else readme.top_selection }}"
-	class="own-line"
+  title="{{ readme.random_selection if mode == 'top' else readme.top_selection }}"
+  class="own-line"
 >
-	<input 
-		type="checkbox" 
-		class="selection"
-	>{{ 'random' if mode == 'top' else 'top' }} selection
-	<input 
-		type="number" 
-		min="1" 
-		max="{{ pool_default }}"
-		step="1" 
-		class="selection-value" 
-		value="10"
-		disabled
-	>
+  <input 
+    type="checkbox" 
+    class="selection"
+  >{{ 'random' if mode == 'top' else 'top' }} selection
+  <input 
+    type="number" 
+    min="1" 
+    max="{{ pool_default }}"
+    step="1" 
+    class="selection-value" 
+    value="10"
+    disabled
+  >
 </label>
 <div class="scoring-method" title="{{ readme.scoring_method }}">
-	scoring by
-	<label>
-		<input 
-			type="radio" 
-			name="{{ mode }}-scoring-method" 
-			class="integral-product" 
-			{{ 'disabled' if mode == 'random' else 'checked' }}
-		>
-		integral product
-	</label>
-	<label>
-		<input 
-			type="radio" 
-			name="{{ mode }}-scoring-method" 
-			class="integral-sum" 
-			{{ 'disabled' if mode == 'random' }}
-		>
-		integral sum
-	</label>
-	<label>
-		<input 
-			type="radio" 
-			name="{{ mode }}-scoring-method" 
-			class="mean-geometric" 
-			{{ 'disabled' if mode == 'random' }}
-		>
-		geometric mean
-	</label>
-	<label>
-		<input 
-			type="radio" 
-			name="{{ mode }}-scoring-method" 
-			class="mean-arithmetic" 
-			{{ 'disabled' if mode == 'random' }}
-		>
-		arithmetic mean
-	</label>
+  scoring by
+  <label>
+    <input 
+      type="radio" 
+      name="{{ mode }}-scoring-method" 
+      class="integral-product" 
+      {{ 'disabled' if mode == 'random' else 'checked' }}
+    >
+    integral product
+  </label>
+  <label>
+    <input 
+      type="radio" 
+      name="{{ mode }}-scoring-method" 
+      class="integral-sum" 
+      {{ 'disabled' if mode == 'random' }}
+    >
+    integral sum
+  </label>
+  <label>
+    <input 
+      type="radio" 
+      name="{{ mode }}-scoring-method" 
+      class="mean-geometric" 
+      {{ 'disabled' if mode == 'random' }}
+    >
+    geometric mean
+  </label>
+  <label>
+    <input 
+      type="radio" 
+      name="{{ mode }}-scoring-method" 
+      class="mean-arithmetic" 
+      {{ 'disabled' if mode == 'random' }}
+    >
+    arithmetic mean
+  </label>
 </div>
 
 {%- endmacro %}

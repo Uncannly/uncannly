@@ -2,31 +2,31 @@
 
 <!doctype html>
 <html lang="en">
-	<head>
-		<meta charset="utf-8">
-		<title>Uncann.ly</title>
-		<link rel="stylesheet" href="{{url_for('static', filename='styles.css')}}">
-	</head>
+  <head>
+    <meta charset="utf-8">
+    <title>Uncann.ly</title>
+    <link rel="stylesheet" href="{{url_for('static', filename='styles.css')}}">
+  </head>
 
-	<body>
-		<label display="inline">
-			<input type="radio" name="mode" value="random" checked>random
-		</label>
-		<label display="inline">
-			<input type="radio" name="mode" value="top">top
-		</label>
+  <body>
+    <label display="inline">
+      <input type="radio" name="mode" value="random" checked>random
+    </label>
+    <label display="inline">
+      <input type="radio" name="mode" value="top">top
+    </label>
 
-		{{ modes('random', readme, pool_default, pool_max) }}
+    {{ modes('random', readme, pool_default, pool_max) }}
 
-		{{ modes('top', readme, pool_default, pool_max) }}
+    {{ modes('top', readme, pool_default, pool_max) }}
 
-		<script src={{url_for('static', filename='vendor/jquery-3.1.1.min.js')}}></script>
-		<script src={{url_for('static', filename='vendor/clipboard.min.js')}}></script>
+    <script src={{url_for('static', filename='vendor/jquery-3.1.1.min.js')}}></script>
+    <script src={{url_for('static', filename='vendor/clipboard.min.js')}}></script>
 
-		<script src={{url_for('static', filename='js/helpers.js')}}></script>
-		<script src={{url_for('static', filename='js/controls.js')}}></script>
-		<script src={{url_for('static', filename='js/randomMode.js')}}></script>
-		<script src={{url_for('static', filename='js/topMode.js')}}></script>
-		<script src={{url_for('static', filename='js/bothModes.js')}}></script>
-	</body>
+    <script src={{url_for('static', filename='js/helpers.js')}}></script>
+    <script src={{url_for('static', filename='js/controls.js')}}></script>
+    <script src={{url_for('static', filename='js/randomMode.js')}}></script>
+    <script src={{url_for('static', filename='js/topMode.js')}}></script>
+    <script src={{url_for('static', filename='js/bothModes.js')}}></script>
+  </body>
 </html>
