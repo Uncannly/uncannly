@@ -1,11 +1,11 @@
-{% macro selection(mode, readme, pool_default) -%}
+{% macro selection(mode, readme, pool_default, pool_max) -%}
 
 <label 
 	title="{{ readme.pool }}"
 >
 	<input 
 		type="number" 
-		max="1000" 
+		max="{{ pool_max }}" 
 		min="1" 
 		step="1" 
 		class="pool" 

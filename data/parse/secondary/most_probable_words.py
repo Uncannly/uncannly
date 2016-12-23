@@ -3,7 +3,7 @@ sys.path.insert(1, os.path.join(sys.path[0], '..', '..'))
 
 from lib.type_conversion import array_to_string
 from lib.score import get_score
-from lib.options import booleans_to_strings, scoring_methods, default_limits
+from lib.options import booleans_to_strings, scoring_methods, default_limits, pool_max
 
 class MostProbableWords:
 
@@ -44,4 +44,4 @@ class MostProbableWords:
 
 		most_probable_words.sort(key=lambda x: -x[1])
 
-		return most_probable_words[:1000]
+		return most_probable_words[:pool_max]

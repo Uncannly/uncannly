@@ -2,11 +2,11 @@
 {% from 'scoring.html' import scoring as scoring %}
 {% from 'otherOptions.html' import otherOptions as otherOptions %}
 
-{% macro modes(mode, readme, pool_default) -%}
+{% macro modes(mode, readme, pool_default, pool_max) -%}
 
 <div class="{{ mode }}" style="{{ 'display: none' if mode == 'top' }}">
 
-	{{ selection(mode, readme, pool_default) }}
+	{{ selection(mode, readme, pool_default, pool_max) }}
 	{{ scoring(mode, readme) }}
 	{{ otherOptions(mode, readme) }}
 

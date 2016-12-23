@@ -44,3 +44,4 @@ default_limits = {
 }
 
 pool_default = 45
+pool_max = 1000
