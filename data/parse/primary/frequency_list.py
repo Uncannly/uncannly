@@ -10,5 +10,5 @@ def parse():
 		word = line_split_by_spaces[1].upper()
 		word_frequencies[word] = int(frequency)
 	file.close()
-	
+
 	return word_frequencies

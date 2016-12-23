@@ -10,10 +10,10 @@ class Present:
 	@staticmethod
 	def for_web(word, unstressed, exclude_real):
 		ipa_word = ipa(word)
-		
+
 		stringified_word = array_to_string(word)
 		existing_word = already_in_dictionary(stringified_word, unstressed)
-		
+
 		return present_word(ipa_word, exclude_real, existing_word)
 
 	@staticmethod

@@ -18,7 +18,7 @@ default_limits = {
 			'integral_product': 8.1   * 10**-16,
 			'integral_sum':     6.35  * 10**-2,
 			'mean_geometric':   3.1   * 10**-4,
-			'mean_arithmetic':  2.69  * 10**-1 
+			'mean_arithmetic':  2.69  * 10**-1
 		},
 		'unweighted': {
 			'integral_product': 1.3   * 10**-17,

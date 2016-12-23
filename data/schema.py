@@ -34,8 +34,8 @@ class Schema:
 		sql_array = []
 		for phoneme, next_phonemes_for_this_phoneme in phonemes.iteritems():
 			sql_array.append("('{}', '{}', '{}', '{}')".format(
-				phoneme, 
-				unstressed, 
+				phoneme,
+				unstressed,
 				json.dumps(next_phonemes_for_this_phoneme),
 				json.dumps(next_phonemes_unweighted[phoneme]),
 			))

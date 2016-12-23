@@ -5,7 +5,7 @@ from parse.primary import frequency_list, pronouncing_dictionary
 from parse.secondary.absolute_chain import AbsoluteChain
 from parse.secondary.most_probable_words import MostProbableWords
 from lib.options import booleans_to_strings
-from database import Database 
+from database import Database
 from schema import Schema
 
 ########### PHASE ZERO ####################
@@ -43,7 +43,7 @@ for unstressed in [False, True]:
 		for method_mean in [False, True]:
 			for method_addition in [False, True]:
 				options = unstressed, unweighted, method_mean, method_addition
-				stressing, weighting = booleans_to_strings(unstressed, unweighted)			
+				stressing, weighting = booleans_to_strings(unstressed, unweighted)
 				schema.scores(
 					MostProbableWords.get(
 						most_probable_next_phonemes[weighting][stressing],

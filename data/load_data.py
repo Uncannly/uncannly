@@ -14,7 +14,7 @@ def load_scores(scoring_method, unweighted, unstressed):
 		and method_mean = {} and method_addition = {};".format(
 			unweighted, unstressed, method_mean, method_addition
 		)
-	
+
 	return Database.fetch(sql)
 
 def load_phonemes(unweighted, unstressed):

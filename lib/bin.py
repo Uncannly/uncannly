@@ -11,8 +11,8 @@ def bin(mode):
 	)
 
 	parser.add_argument(
-		'--pool', '-p', 
-		type=int, default=pool_default, 
+		'--pool', '-p',
+		type=int, default=pool_default,
 		help=readme.get('pool')
 	)
 	parser.add_argument(
@@ -70,7 +70,7 @@ def bin(mode):
 		help=readme.get('unstressed')
 	)
 	parser.add_argument(
-		'--exclude-real', '-x', 
+		'--exclude-real', '-x',
 		action='store_true',
 		help=readme.get('exclude_real')
 	)

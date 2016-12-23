@@ -10,7 +10,7 @@ class MostProbableWords:
 	@staticmethod
 	def get(next_phonemes, options):
 		unstressed, unweighted, method_mean, method_addition = options
-		
+
 		stressing, weighting = booleans_to_strings(unstressed, unweighted)
 
 		scoring_method = scoring_methods.keys()[
@@ -29,13 +29,13 @@ class MostProbableWords:
 				pass
 			else:
 				for (phoneme, probability) in next_phonemes[current_phoneme]:
-					score = get_score(score, scoring_method, probability, word_length)		
+					score = get_score(score, scoring_method, probability, word_length)
 					if score < limit:
 						pass
 					elif phoneme == 'END_WORD':
 						stringified_word = array_to_string(word[1:len(word)])
 						most_probable_words.append((stringified_word, score))
-					else:	
+					else:
 						grown_word = word[:]
 						grown_word.append(phoneme)
 						next_phoneme(grown_word, score)

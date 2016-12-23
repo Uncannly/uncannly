@@ -8,12 +8,12 @@ from data.load_data import load_scores
 class TopMode:
 	@staticmethod
 	def get(
-		interface, 
-		pool, 
-		selection, 
-		scoring_method, 
+		interface,
+		pool,
+		selection,
+		scoring_method,
 		score_threshold,
-		unweighted, 
+		unweighted,
 		unstressed,
 		exclude_real
 	):
@@ -33,7 +33,7 @@ class TopMode:
 				break
 			else:
 				words.append(word)
-		
+
 		return selector(words, selection, unstressed, exclude_real)
 
 def bin_select_top(words, selection, unstressed, exclude_real):
@@ -48,9 +48,9 @@ def bin_select_top(words, selection, unstressed, exclude_real):
 					)
 					return
 				presented = Present.for_terminal(
-					word=words[i], 
-					unstressed=unstressed, 
-					exclude_real=exclude_real, 
+					word=words[i],
+					unstressed=unstressed,
+					exclude_real=exclude_real,
 					suppress_immediate=False
 				)
 				i += 1
@@ -61,8 +61,8 @@ def bin_select_random(words, selection, unstressed, exclude_real):
 	if len(words) > 0:
 		for _ in xrange(selection):
 			while Present.for_terminal(
-				word=random.choice(words), 
-				unstressed=unstressed, 
+				word=random.choice(words),
+				unstressed=unstressed,
 				exclude_real=exclude_real,
 				suppress_immediate=False
 			) == False:
@@ -83,7 +83,7 @@ def api_select_top(words, selection, unstressed, exclude_real):
 		result = Present.for_web(arrayified_word, unstressed, exclude_real)
 		if result:
 			no_words_returned = False
-			output.append(result) 	
+			output.append(result)
 
 	if no_words_returned:
 		output = ['No words met criteria.']
@@ -96,7 +96,7 @@ def api_select_random(words, selection, unstressed, exclude_real):
 		arrayified_word = string_to_array(random.choice(words))
 		result = Present.for_web(arrayified_word, unstressed, exclude_real)
 		if result:
-			output.append(result) 
+			output.append(result)
 
 	if len(output) == 0:
 		output = ['No words met criteria.']

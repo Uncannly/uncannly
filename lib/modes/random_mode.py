@@ -18,12 +18,12 @@ for unstressed in [False, True]:
 class RandomMode:
 	@staticmethod
 	def get(
-		interface, 
+		interface,
 		pool,
 		selection,
-		scoring_method, 
-		score_threshold, 
-		unweighted, 
+		scoring_method,
+		score_threshold,
+		unweighted,
 		unstressed,
 		exclude_real):
 
@@ -37,12 +37,12 @@ class RandomMode:
 
 		while True:
 			phoneme, score = next_phoneme(
-				phoneme=phoneme, 
-				random_number=random.random(), 
+				phoneme=phoneme,
+				random_number=random.random(),
 				word_length=len(word) + 1,
-				score=score, 
-				scoring_method=scoring_method, 
-				score_threshold=score_threshold, 
+				score=score,
+				scoring_method=scoring_method,
+				score_threshold=score_threshold,
 				unweighted=unweighted,
 				unstressed=unstressed
 			)
@@ -65,12 +65,12 @@ class RandomMode:
 					word.append(phoneme)
 
 def next_phoneme(
-	phoneme, 
-	random_number, 
+	phoneme,
+	random_number,
 	word_length,
-	score, 
-	scoring_method, 
-	score_threshold, 
+	score,
+	scoring_method,
+	score_threshold,
 	unweighted,
 	unstressed):
 
@@ -87,21 +87,21 @@ def next_phoneme(
 def bin_selector(word, selection, unstressed, exclude_real):
 	stringified_word = array_to_string(word)
 	return Present.for_terminal(
-		word=stringified_word, 
-		unstressed=unstressed, 
-		exclude_real=exclude_real, 
+		word=stringified_word,
+		unstressed=unstressed,
+		exclude_real=exclude_real,
 		suppress_immediate=selection
 	)
 
 def api_selector(word, selection, unstressed, exclude_real):
 	return Present.for_web(word, unstressed, exclude_real)
-		
+
 def reset():
 	return ([], 'START_WORD', 1.0)
 
 def fail(interface):
 	message = (
-		'1000000 times consecutively failed to find a word above the score ' 
+		'1000000 times consecutively failed to find a word above the score '
 		'threshold. Please try lowering it.'
 	)
 	return sys.stdout.write(message + '\n') if interface == "bin" else [message]
@@ -110,7 +110,7 @@ def succeed(words, interface, selection):
 	if selection:
 		words.sort(key=lambda x: -x[1])
 		words = words[:selection]
-	
+
 	if interface == 'bin':
 		if selection:
 			for word, _ in words:
