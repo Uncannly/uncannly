@@ -1,5 +1,4 @@
 def get_score(score, scoring_method, probability, word_length):
-  # print 'uhhhh and the scoring method isssssss', scoring_method
   if scoring_method == 'integral_product':
     score = score * probability
 

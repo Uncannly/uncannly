@@ -34,7 +34,7 @@ def present_word(word, exclude_real, existing_word):
     return word
 
 def already_in_dictionary(word, unstressed):
-  for (spelling, pronunciation) in WORDS:
+  for spelling, pronunciation in WORDS:
     if unstressed:
       pronunciation = replace_multiple(pronunciation, '012')
     if word == pronunciation:
