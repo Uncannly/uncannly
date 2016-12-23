@@ -1,10 +1,9 @@
-import os
+from open_helper import open_primary_data_file
 
 def parse():
 	word_frequencies = {}
 
-	pwd = os.path.dirname(__file__)
-	file = open(os.path.join(pwd, '..', '..', '..', 'data', 'primary_data', 'unlemmatized_frequency_list.txt'), 'r')
+	file = open_primary_data_file('unlemmatized_frequency_list')
 	for line in file:
 		line_split_by_spaces = line.strip().split(' ')
 		frequency = line_split_by_spaces[0]

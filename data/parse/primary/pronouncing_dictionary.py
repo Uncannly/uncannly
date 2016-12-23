@@ -1,4 +1,4 @@
-import os
+from open_helper import open_primary_data_file
 
 def parse(word_frequencies):
 	words = []
@@ -13,8 +13,7 @@ def parse(word_frequencies):
 		}
 	}
 
-	pwd = os.path.dirname(__file__)
-	file = open(os.path.join(pwd, '..', '..', '..', 'data', 'primary_data', 'cmu_pronouncing_dictionary.txt'), 'r')
+	file = open_primary_data_file('cmu_pronouncing_dictionary')
 
 	for line in file:
 		line_split_by_tabs = line.strip().split('\t')
