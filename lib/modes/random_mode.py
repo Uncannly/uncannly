@@ -8,11 +8,11 @@ from lib.options import booleans_to_strings
 from data.load_data import load_phonemes
 
 NEXT_PHONEMES_OPTIONS = {}
-for unstressed in [False, True]:
-  for unweighted in [False, True]:
-    stressing, weighting = booleans_to_strings(unstressed, unweighted)
-    NEXT_PHONEMES_OPTIONS.setdefault(stressing, {}).setdefault(
-        weighting, load_phonemes(unweighted, unstressed)
+for UNSTRESSED in [False, True]:
+  for UNWEIGHTED in [False, True]:
+    STRESSING, WEIGHTING = booleans_to_strings(UNSTRESSED, UNWEIGHTED)
+    NEXT_PHONEMES_OPTIONS.setdefault(STRESSING, {}).setdefault(
+        WEIGHTING, load_phonemes(UNWEIGHTED, UNSTRESSED)
     )
 
 class RandomMode:

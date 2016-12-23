@@ -3,25 +3,21 @@ class AbsoluteChain:
   def parse(phoneme_chain_absolute):
     this_phonemes_next_phonemes = {}
 
-    for phoneme, next_phoneme_occurrences in phoneme_chain_absolute.iteritems():
-      this_phonemes_next_phonemes[phoneme] = \
-        most_probable_next_phonemes(next_phoneme_occurrences)
+    for phoneme, next_phoneme_counts in phoneme_chain_absolute.iteritems():
+      this_phonemes_next_phonemes[phoneme] = next_phonemes(next_phoneme_counts)
 
     return this_phonemes_next_phonemes
 
-def most_probable_next_phonemes(next_phoneme_occurrences):
-  sorted_keys = sorted(
-      next_phoneme_occurrences,
-      key = next_phoneme_occurrences.get,
-      reverse = True
+def next_phonemes(next_phoneme_counts):
+  phonemes = sorted(
+      next_phoneme_counts,
+      key=next_phoneme_counts.get,
+      reverse=True
   )
 
-  total_next_phonemes = sum(next_phoneme_occurrences.itervalues())
-  most_probable_next_phonemes = []
-  for key in sorted_keys:
-    most_probable_next_phonemes.append((
-        key,
-        float(next_phoneme_occurrences[key]) / \
-          float(total_next_phonemes)
-    ))
-  return most_probable_next_phonemes
+  total_next_phonemes = sum(next_phoneme_counts.itervalues())
+  results = []
+  for phoneme in phonemes:
+    next_counts = next_phoneme_counts[phoneme]
+    results.append((phoneme, float(next_counts) / float(total_next_phonemes)))
+  return results
