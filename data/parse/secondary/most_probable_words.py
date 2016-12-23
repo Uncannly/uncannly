@@ -3,7 +3,7 @@ sys.path.insert(1, os.path.join(sys.path[0], '..', '..'))
 
 from lib.type_conversion import array_to_string
 from lib.score import get_score
-from lib.options import booleans_to_strings, scoring_methods, default_limits, pool_max
+from lib.options import booleans_to_strings, SCORING_METHODS, DEFAULT_LIMITS, POOL_MAX
 
 class MostProbableWords:
 
@@ -13,11 +13,11 @@ class MostProbableWords:
 
     stressing, weighting = booleans_to_strings(unstressed, unweighted)
 
-    scoring_method = scoring_methods.keys()[
-        scoring_methods.values().index((method_mean, method_addition))
+    scoring_method = SCORING_METHODS.keys()[
+        SCORING_METHODS.values().index((method_mean, method_addition))
     ]
 
-    limit = default_limits[stressing][weighting][scoring_method]
+    limit = DEFAULT_LIMITS[stressing][weighting][scoring_method]
 
     most_probable_words = []
 
@@ -44,4 +44,4 @@ class MostProbableWords:
 
     most_probable_words.sort(key=lambda x: -x[1])
 
-    return most_probable_words[:pool_max]
+    return most_probable_words[:POOL_MAX]

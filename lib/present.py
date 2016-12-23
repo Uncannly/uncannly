@@ -4,7 +4,7 @@ from lib.ipa import ipa
 from lib.type_conversion import array_to_string
 from data.load_data import load_words
 
-words = load_words()
+WORDS = load_words()
 
 class Present:
   @staticmethod
@@ -34,7 +34,7 @@ def present_word(word, exclude_real, existing_word):
     return word
 
 def already_in_dictionary(word, unstressed):
-  for (spelling, pronunciation) in words:
+  for (spelling, pronunciation) in WORDS:
     if unstressed:
       pronunciation = replace_multiple(pronunciation, '012')
     if word == pronunciation:

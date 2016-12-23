@@ -7,11 +7,11 @@ from lib.score import get_score
 from lib.options import booleans_to_strings
 from data.load_data import load_phonemes
 
-next_phonemes_options = {}
+NEXT_PHONEMES_OPTIONS = {}
 for unstressed in [False, True]:
   for unweighted in [False, True]:
     stressing, weighting = booleans_to_strings(unstressed, unweighted)
-    next_phonemes_options.setdefault(stressing, {}).setdefault(
+    NEXT_PHONEMES_OPTIONS.setdefault(stressing, {}).setdefault(
         weighting, load_phonemes(unweighted, unstressed)
     )
 
@@ -71,7 +71,7 @@ def next_phoneme(phoneme,
                  unstressed):
 
   stressing, weighting = booleans_to_strings(unstressed, unweighted)
-  next_phonemes = next_phonemes_options[stressing][weighting]
+  next_phonemes = NEXT_PHONEMES_OPTIONS[stressing][weighting]
 
   accumulated_probability = 0
   for (phoneme, probability) in next_phonemes[phoneme]:

@@ -1,12 +1,12 @@
 from lib.modes.top_mode import TopMode
 from lib.modes.random_mode import RandomMode
 from lib.case_conversion import kebab_to_snake
-from lib.options import scoring_methods, pool_default
+from lib.options import SCORING_METHODS, POOL_DEFAULT
 
 def get_by_mode(mode, interface, args):
   get_args = {'selection': None, 'scoring_method': 'integral_product'}
 
-  get_args['pool'] = int(args['pool']) if args['pool'] else pool_default
+  get_args['pool'] = int(args['pool']) if args['pool'] else POOL_DEFAULT
 
   if args['selection'] is not None:
     get_args['selection'] = args['pool'] if args['selection'] == '' \
@@ -20,7 +20,7 @@ def get_by_mode(mode, interface, args):
   if args['scoring_method']:
     get_args['scoring_method'] = kebab_to_snake(args['scoring_method'])
   else:
-    for method in scoring_methods.keys():
+    for method in SCORING_METHODS.keys():
       if args.get('score_by_{}'.format(method)):
         get_args['scoring_method'] = method
 

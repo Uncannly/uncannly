@@ -3,10 +3,10 @@
 def ipa(word):
   output = []
   for phoneme in word:
-    output.append(ipa_map[phoneme])
+    output.append(IPA[phoneme])
   return ''.join(output)
 
-ipa_map = {
+IPA = {
     'AA': 'ɑ', 'AA1': 'ɑː', 'AA2':  'ɑ', 'AA0':  'ə',
     'AE':  'æ', 'AE1':  'æ', 'AE2':  'æ', 'AE0':  'ə',
     'AH':  'ʌ', 'AH1':  'ʌ', 'AH2':  'ʌ', 'AH0':  'ə',

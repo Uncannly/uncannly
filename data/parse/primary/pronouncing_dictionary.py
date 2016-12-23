@@ -1,4 +1,4 @@
-from primary.open_helper import open_primary_data_file
+from parse.primary.open_helper import open_primary_data_file
 
 def parse(word_frequencies):
   words = []
