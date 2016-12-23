@@ -39,8 +39,10 @@ class Schema:
 				json.dumps(next_phonemes_for_this_phoneme),
 				json.dumps(next_phonemes_unweighted[phoneme]),
 			))
-		sql_string = "insert into phonemes (phoneme, unstressed, \
-			next_phonemes, next_phonemes_unweighted) values"
+		sql_string = (
+			"insert into phonemes (phoneme, unstressed, "
+				"next_phonemes, next_phonemes_unweighted) values"
+		)
 		sql_string += ", ".join(sql_array)
 		self.database.execute(sql_string)
 
@@ -50,8 +52,11 @@ class Schema:
 			sql_array.append(
 				"('{}', '{}', '{}', '{}', '{}', '{}')".format(word, score, *options)
 			)
-		sql_string = "insert into scores \
-			(word, score, unstressed, unweighted, method_mean, method_addition) values"
+		sql_string = (
+			"insert into scores "
+			"(word, score, unstressed, unweighted, method_mean, method_addition)"
+			"values"
+		)
 		sql_string += ", ".join(sql_array)
 		self.database.execute(sql_string)
 
