@@ -7,6 +7,9 @@ from lib.present import Present
 from lib.type_conversion import string_to_array
 from data.load_data import load_scores
 
+TOO_FEW_MESSAGE = 'Fewer words met criteria than the specified return count.\n'
+NO_WORDS_MESSAGE = 'No words met criteria.\n'
+
 class TopMode(object):
   @staticmethod
   def get(interface,
@@ -44,10 +47,7 @@ def cli_select_top(words, selection, unstressed, exclude_real):
       presented = False
       while not presented:
         if i == len(words):
-          sys.stdout.write(
-              'Fewer words met criteria than the specified return count.\n'
-          )
-          return
+          return sys.stdout.write(TOO_FEW_MESSAGE)
         presented = Present.for_terminal(word=words[i],
                                          unstressed=unstressed,
                                          exclude_real=exclude_real,
@@ -55,7 +55,7 @@ def cli_select_top(words, selection, unstressed, exclude_real):
 
         i += 1
   else:
-    sys.stdout.write('No words met criteria.\n')
+    sys.stdout.write(NO_WORDS_MESSAGE)
 
 def cli_select_random(words, selection, unstressed, exclude_real):
   if len(words) > 0:
@@ -66,7 +66,7 @@ def cli_select_random(words, selection, unstressed, exclude_real):
                                      suppress_immediate=False):
         pass
   else:
-    sys.stdout.write('No words met criteria.\n')
+    sys.stdout.write(NO_WORDS_MESSAGE)
 
 def api_select_top(words, selection, unstressed, exclude_real):
   output = []
@@ -74,7 +74,7 @@ def api_select_top(words, selection, unstressed, exclude_real):
   no_words_returned = True
   while len(output) < selection:
     if i == len(words):
-      output.append('Fewer words met criteria than the specified return count.')
+      output.append(TOO_FEW_MESSAGE)
       break
     arrayified_word = string_to_array(words[i])
     i += 1
@@ -84,7 +84,7 @@ def api_select_top(words, selection, unstressed, exclude_real):
       output.append(result)
 
   if no_words_returned:
-    output = ['No words met criteria.']
+    output = [NO_WORDS_MESSAGE]
 
   return output
 
@@ -97,6 +97,6 @@ def api_select_random(words, selection, unstressed, exclude_real):
       output.append(result)
 
   if len(output) == 0:
-    output = ['No words met criteria.']
+    output = [NO_WORDS_MESSAGE]
 
   return output
