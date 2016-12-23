@@ -1,6 +1,6 @@
 import sys
 
-from lib.ipa import ipa
+from lib.ipa import ipa, destress
 from lib.type_conversion import array_to_string
 from data.load_data import load_words
 
@@ -36,12 +36,7 @@ def present_word(word, exclude_real, existing_word):
 def already_in_dictionary(word, unstressed):
   for spelling, pronunciation in WORDS:
     if unstressed:
-      pronunciation = replace_multiple(pronunciation, '012')
+      pronunciation = destress(pronunciation)
     if word == pronunciation:
       return spelling
 
-def replace_multiple(string, characters):
-  characters = "012"
-  for character in characters:
-    if character in string:
-      string = string.replace(character, "\\" + character)

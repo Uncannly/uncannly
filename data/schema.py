@@ -54,7 +54,7 @@ class Schema(object):
       )
     sql_string = (
         "insert into scores "
-        "(word, score, unstressed, unweighted, method_mean, method_addition)"
+        "(word, score, unstressed, unweighted, method_mean, method_addition) "
         "values"
     )
     sql_string += ", ".join(sql_array)
