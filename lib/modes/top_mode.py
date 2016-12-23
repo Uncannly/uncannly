@@ -1,4 +1,6 @@
-import random, os, sys
+import random
+import os
+import sys
 sys.path.insert(1, os.path.join(sys.path[0], '..'))
 
 from lib.present import Present

@@ -1,4 +1,6 @@
-import argparse, os, sys
+import argparse
+import os
+import sys
 sys.path.insert(1, os.path.join(sys.path[0], '..', '..'))
 
 from lib.mode import get_by_mode

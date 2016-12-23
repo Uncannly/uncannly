@@ -1,4 +1,5 @@
-import os, sys
+import os
+import sys
 sys.path.insert(1, os.path.join(sys.path[0], '..', '..'))
 
 from lib.type_conversion import array_to_string
