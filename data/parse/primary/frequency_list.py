@@ -1,4 +1,4 @@
-from open_helper import open_primary_data_file
+from primary.open_helper import open_primary_data_file
 
 def parse():
   word_frequencies = {}

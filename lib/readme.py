@@ -1,4 +1,4 @@
-from options import pool_default
+from lib.options import pool_default
 
 readme = {
     'pool': 'How many words to gather by the chosen mode. Default: {}'.format(

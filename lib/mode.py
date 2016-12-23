@@ -1,7 +1,7 @@
-from modes.top_mode import TopMode
-from modes.random_mode import RandomMode
-from case_conversion import kebab_to_snake
-from options import scoring_methods, pool_default
+from lib.modes.top_mode import TopMode
+from lib.modes.random_mode import RandomMode
+from lib.case_conversion import kebab_to_snake
+from lib.options import scoring_methods, pool_default
 
 def get_by_mode(mode, interface, args):
   get_args = {'selection': None, 'scoring_method': 'integral_product'}

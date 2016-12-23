@@ -1,12 +1,12 @@
 import os, sys
 sys.path.insert(1, os.path.join(sys.path[0], '..'))
 
-from parse.primary import frequency_list, pronouncing_dictionary
-from parse.secondary.absolute_chain import AbsoluteChain
-from parse.secondary.most_probable_words import MostProbableWords
+from data.parse.primary import frequency_list, pronouncing_dictionary
+from data.parse.secondary.absolute_chain import AbsoluteChain
+from data.parse.secondary.most_probable_words import MostProbableWords
+from data.database import Database
+from data.schema import Schema
 from lib.options import booleans_to_strings
-from database import Database
-from schema import Schema
 
 ########### PHASE ZERO ####################
 

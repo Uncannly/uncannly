@@ -1,9 +1,9 @@
 import argparse, os, sys
 sys.path.insert(1, os.path.join(sys.path[0], '..', '..'))
 
-from mode import get_by_mode
-from readme import readme
-from options import pool_default
+from lib.mode import get_by_mode
+from lib.readme import readme
+from lib.options import pool_default
 
 def bin(mode):
   parser = argparse.ArgumentParser(

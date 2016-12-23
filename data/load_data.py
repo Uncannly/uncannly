@@ -1,6 +1,6 @@
 import json
 
-from database import Database
+from data.database import Database
 from lib.options import scoring_methods
 
 def load_words():
