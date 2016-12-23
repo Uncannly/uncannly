@@ -1,4 +1,5 @@
 from data.parse.primary.open_helper import open_primary_data_file
+from lib.ipa import destress
 
 def parse(word_frequencies):
   words = []
@@ -28,7 +29,7 @@ def parse(word_frequencies):
     phonemes = word_pronunciation.split()
     phonemes_unstressed = []
     for phoneme in phonemes:
-      phonemes_unstressed.append(phoneme.strip('012'))
+      phonemes_unstressed.append(destress(phoneme))
 
     words.append((word, word_pronunciation))
 
