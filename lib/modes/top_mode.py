@@ -5,7 +5,7 @@ from lib.present import Present
 from lib.type_conversion import string_to_array
 from data.load_data import load_scores
 
-class TopMode:
+class TopMode(object):
   @staticmethod
   def get(interface,
           pool,

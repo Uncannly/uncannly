@@ -5,7 +5,7 @@ from lib.type_conversion import array_to_string
 from lib.score import get_score
 from lib.options import booleans_to_strings, SCORING_METHODS, DEFAULT_LIMITS, POOL_MAX
 
-class MostProbableWords:
+class MostProbableWords(object):
 
   @staticmethod
   def get(next_phonemes, options):

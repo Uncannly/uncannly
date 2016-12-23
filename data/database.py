@@ -3,7 +3,7 @@ import os, urlparse
 import psycopg2
 from cfenv import AppEnv
 
-class Database:
+class Database(object):
   def __init__(self):
     self.connection = connect()
 

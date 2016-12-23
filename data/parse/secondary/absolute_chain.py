@@ -1,4 +1,4 @@
-class AbsoluteChain:
+class AbsoluteChain(object):
   @staticmethod
   def parse(phoneme_chain_absolute):
     this_phonemes_next_phonemes = {}

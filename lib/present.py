@@ -6,7 +6,7 @@ from data.load_data import load_words
 
 WORDS = load_words()
 
-class Present:
+class Present(object):
   @staticmethod
   def for_web(word, unstressed, exclude_real):
     ipa_word = ipa(word)

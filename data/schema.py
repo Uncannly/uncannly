@@ -1,6 +1,6 @@
 import json
 
-class Schema:
+class Schema(object):
   def __init__(self, database):
     self.database = database
 

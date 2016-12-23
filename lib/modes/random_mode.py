@@ -15,7 +15,7 @@ for UNSTRESSED in [False, True]:
         WEIGHTING, load_phonemes(UNWEIGHTED, UNSTRESSED)
     )
 
-class RandomMode:
+class RandomMode(object):
   @staticmethod
   def get(interface,
           pool,
