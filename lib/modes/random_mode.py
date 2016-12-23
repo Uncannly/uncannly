@@ -12,20 +12,19 @@ for unstressed in [False, True]:
   for unweighted in [False, True]:
     stressing, weighting = booleans_to_strings(unstressed, unweighted)
     next_phonemes_options.setdefault(stressing, {}).setdefault(
-      weighting, load_phonemes(unweighted, unstressed)
+        weighting, load_phonemes(unweighted, unstressed)
     )
 
 class RandomMode:
   @staticmethod
-  def get(
-    interface,
-    pool,
-    selection,
-    scoring_method,
-    score_threshold,
-    unweighted,
-    unstressed,
-    exclude_real):
+  def get(interface,
+          pool,
+          selection,
+          scoring_method,
+          score_threshold,
+          unweighted,
+          unstressed,
+          exclude_real):
 
     selector = api_selector if interface == 'api' else bin_selector
 
@@ -36,16 +35,14 @@ class RandomMode:
     words = []
 
     while True:
-      phoneme, score = next_phoneme(
-        phoneme=phoneme,
-        random_number=random.random(),
-        word_length=len(word) + 1,
-        score=score,
-        scoring_method=scoring_method,
-        score_threshold=score_threshold,
-        unweighted=unweighted,
-        unstressed=unstressed
-      )
+      phoneme, score = next_phoneme(phoneme=phoneme,
+                                    random_number=random.random(),
+                                    word_length=len(word) + 1,
+                                    score=score,
+                                    scoring_method=scoring_method,
+                                    score_threshold=score_threshold,
+                                    unweighted=unweighted,
+                                    unstressed=unstressed)
 
       if phoneme == None:
         count_fails += 1
@@ -64,15 +61,14 @@ class RandomMode:
         else:
           word.append(phoneme)
 
-def next_phoneme(
-  phoneme,
-  random_number,
-  word_length,
-  score,
-  scoring_method,
-  score_threshold,
-  unweighted,
-  unstressed):
+def next_phoneme(phoneme,
+                 random_number,
+                 word_length,
+                 score,
+                 scoring_method,
+                 score_threshold,
+                 unweighted,
+                 unstressed):
 
   stressing, weighting = booleans_to_strings(unstressed, unweighted)
   next_phonemes = next_phonemes_options[stressing][weighting]
@@ -86,12 +82,10 @@ def next_phoneme(
 
 def bin_selector(word, selection, unstressed, exclude_real):
   stringified_word = array_to_string(word)
-  return Present.for_terminal(
-    word=stringified_word,
-    unstressed=unstressed,
-    exclude_real=exclude_real,
-    suppress_immediate=selection
-  )
+  return Present.for_terminal(word=stringified_word,
+                              unstressed=unstressed,
+                              exclude_real=exclude_real,
+                              suppress_immediate=selection)
 
 def api_selector(word, selection, unstressed, exclude_real):
   return Present.for_web(word, unstressed, exclude_real)
@@ -101,8 +95,8 @@ def reset():
 
 def fail(interface):
   message = (
-    '1000000 times consecutively failed to find a word above the score '
-    'threshold. Please try lowering it.'
+      '1000000 times consecutively failed to find a word above the score '
+      'threshold. Please try lowering it.'
   )
   return sys.stdout.write(message + '\n') if interface == "bin" else [message]
 

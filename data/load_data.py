@@ -12,7 +12,7 @@ def load_scores(scoring_method, unweighted, unstressed):
   sql = "select word, score from scores where \
     unweighted = {} and unstressed = {} \
     and method_mean = {} and method_addition = {};".format(
-      unweighted, unstressed, method_mean, method_addition
+        unweighted, unstressed, method_mean, method_addition
     )
 
   return Database.fetch(sql)
@@ -20,7 +20,7 @@ def load_scores(scoring_method, unweighted, unstressed):
 def load_phonemes(unweighted, unstressed):
   next_phonemes = 'next_phonemes_unweighted' if unweighted else 'next_phonemes'
   sql = "select phoneme, {} from phonemes where unstressed = {};".format(
-    next_phonemes, unstressed
+      next_phonemes, unstressed
   )
   results = Database.fetch(sql)
 

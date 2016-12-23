@@ -35,8 +35,8 @@ def connect():
 
   parsed_credentials = urlparse.urlparse(credentials)
   return psycopg2.connect(
-    database=parsed_credentials.path[1:],
-    user=parsed_credentials.username,
-    password=parsed_credentials.password,
-    host=parsed_credentials.hostname
+      database=parsed_credentials.path[1:],
+      user=parsed_credentials.username,
+      password=parsed_credentials.password,
+      host=parsed_credentials.hostname
   )

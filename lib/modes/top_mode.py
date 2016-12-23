@@ -7,16 +7,15 @@ from data.load_data import load_scores
 
 class TopMode:
   @staticmethod
-  def get(
-    interface,
-    pool,
-    selection,
-    scoring_method,
-    score_threshold,
-    unweighted,
-    unstressed,
-    exclude_real
-  ):
+  def get(interface,
+          pool,
+          selection,
+          scoring_method,
+          score_threshold,
+          unweighted,
+          unstressed,
+          exclude_real):
+
     most_probable_words = load_scores(scoring_method, unweighted, unstressed)
     most_probable_words.sort(key=lambda x: -x[1])
     most_probable_words = most_probable_words[0:int(pool)]
@@ -44,15 +43,14 @@ def bin_select_top(words, selection, unstressed, exclude_real):
       while presented == False:
         if i == len(words):
           sys.stdout.write(
-            'Fewer words met criteria than the specified return count.\n'
+              'Fewer words met criteria than the specified return count.\n'
           )
           return
-        presented = Present.for_terminal(
-          word=words[i],
-          unstressed=unstressed,
-          exclude_real=exclude_real,
-          suppress_immediate=False
-        )
+        presented = Present.for_terminal(word=words[i],
+                                         unstressed=unstressed,
+                                         exclude_real=exclude_real,
+                                         suppress_immediate=False)
+
         i += 1
   else:
     sys.stdout.write('No words met criteria.\n')
@@ -60,12 +58,10 @@ def bin_select_top(words, selection, unstressed, exclude_real):
 def bin_select_random(words, selection, unstressed, exclude_real):
   if len(words) > 0:
     for _ in xrange(selection):
-      while Present.for_terminal(
-        word=random.choice(words),
-        unstressed=unstressed,
-        exclude_real=exclude_real,
-        suppress_immediate=False
-      ) == False:
+      while Present.for_terminal(word=random.choice(words),
+                                 unstressed=unstressed,
+                                 exclude_real=exclude_real,
+                                 suppress_immediate=False) == False:
         pass
   else:
     sys.stdout.write('No words met criteria.\n')

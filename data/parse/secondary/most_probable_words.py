@@ -14,7 +14,7 @@ class MostProbableWords:
     stressing, weighting = booleans_to_strings(unstressed, unweighted)
 
     scoring_method = scoring_methods.keys()[
-      scoring_methods.values().index((method_mean, method_addition))
+        scoring_methods.values().index((method_mean, method_addition))
     ]
 
     limit = default_limits[stressing][weighting][scoring_method]

@@ -3,14 +3,14 @@ from open_helper import open_primary_data_file
 def parse(word_frequencies):
   words = []
   phoneme_chains = {
-    'weighted': {
-      'stressed': {},
-      'unstressed': {}
-    },
-    'unweighted': {
-      'stressed': {},
-      'unstressed': {}
-    }
+      'weighted': {
+          'stressed': {},
+          'unstressed': {}
+      },
+      'unweighted': {
+          'stressed': {},
+          'unstressed': {}
+      }
   }
 
   file = open_primary_data_file('cmu_pronouncing_dictionary')

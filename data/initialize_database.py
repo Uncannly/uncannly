@@ -31,9 +31,9 @@ for unstressed in [False, True]:
     AbsoluteChain.parse(phoneme_chains['unweighted'][stressing])
 
   schema.phonemes(
-    most_probable_next_phonemes['weighted'][stressing],
-    most_probable_next_phonemes['unweighted'][stressing],
-    unstressed
+      most_probable_next_phonemes['weighted'][stressing],
+      most_probable_next_phonemes['unweighted'][stressing],
+      unstressed
   )
 
 ########### PHASE THREE ####################
@@ -45,11 +45,11 @@ for unstressed in [False, True]:
         options = unstressed, unweighted, method_mean, method_addition
         stressing, weighting = booleans_to_strings(unstressed, unweighted)
         schema.scores(
-          MostProbableWords.get(
-            most_probable_next_phonemes[weighting][stressing],
+            MostProbableWords.get(
+                most_probable_next_phonemes[weighting][stressing],
+                options
+            ),
             options
-          ),
-          options
         )
 
 schema.finish()
