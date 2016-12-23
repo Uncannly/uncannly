@@ -29,7 +29,7 @@ class TopMode(object):
       selector = api_select_top if interface == 'api' else cli_select_top
 
     words = []
-    for index, (word, score) in enumerate(most_probable_words):
+    for word, score in most_probable_words:
       if score < score_threshold:
         break
       else:
