@@ -46,7 +46,7 @@ class RandomMode(object):
                                     unweighted=unweighted,
                                     unstressed=unstressed)
 
-      if phoneme == None:
+      if phoneme is None:
         count_fails += 1
         if count_fails > 1000000:
           return fail(interface)

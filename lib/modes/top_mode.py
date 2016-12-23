@@ -42,7 +42,7 @@ def bin_select_top(words, selection, unstressed, exclude_real):
     i = 0
     for _ in xrange(selection):
       presented = False
-      while presented == False:
+      while not presented:
         if i == len(words):
           sys.stdout.write(
               'Fewer words met criteria than the specified return count.\n'
@@ -60,10 +60,10 @@ def bin_select_top(words, selection, unstressed, exclude_real):
 def bin_select_random(words, selection, unstressed, exclude_real):
   if len(words) > 0:
     for _ in xrange(selection):
-      while Present.for_terminal(word=random.choice(words),
-                                 unstressed=unstressed,
-                                 exclude_real=exclude_real,
-                                 suppress_immediate=False) == False:
+      while not Present.for_terminal(word=random.choice(words),
+                                     unstressed=unstressed,
+                                     exclude_real=exclude_real,
+                                     suppress_immediate=False):
         pass
   else:
     sys.stdout.write('No words met criteria.\n')

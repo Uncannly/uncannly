@@ -20,7 +20,7 @@ class Present(object):
   def for_terminal(word, unstressed, exclude_real, suppress_immediate):
     existing_word = already_in_dictionary(word, unstressed)
     word = present_word(word, exclude_real, existing_word)
-    if word == False:
+    if not word:
       return False
     else:
       if not suppress_immediate:
