@@ -43,17 +43,25 @@ def parse(word_frequencies):
     for i in range(0, len(phonemes) - 1):
       phoneme = phonemes[i]
       next_phoneme = phonemes[i + 1]
-      phoneme_chains['weighted']['stressed'].setdefault(phoneme, {}).setdefault(next_phoneme, 0)
-      phoneme_chains['weighted']['stressed'][phoneme][next_phoneme] += frequency
-      phoneme_chains['unweighted']['stressed'].setdefault(phoneme, {}).setdefault(next_phoneme, 0)
-      phoneme_chains['unweighted']['stressed'][phoneme][next_phoneme] += 1
+      phoneme_chains['weighted']['stressed'].\
+        setdefault(phoneme, {}).setdefault(next_phoneme, 0)
+      phoneme_chains['weighted']['stressed']\
+        [phoneme][next_phoneme] += frequency
+      phoneme_chains['unweighted']['stressed']\
+        .setdefault(phoneme, {}).setdefault(next_phoneme, 0)
+      phoneme_chains['unweighted']['stressed']\
+        [phoneme][next_phoneme] += 1
 
       phoneme_unstressed = phonemes_unstressed[i]
       next_phoneme_unstressed = phonemes_unstressed[i + 1]
-      phoneme_chains['weighted']['unstressed'].setdefault(phoneme_unstressed, {}).setdefault(next_phoneme_unstressed, 0)
-      phoneme_chains['weighted']['unstressed'][phoneme_unstressed][next_phoneme_unstressed] += frequency
-      phoneme_chains['unweighted']['unstressed'].setdefault(phoneme_unstressed, {}).setdefault(next_phoneme_unstressed, 0)
-      phoneme_chains['unweighted']['unstressed'][phoneme_unstressed][next_phoneme_unstressed] += 1
+      phoneme_chains['weighted']['unstressed']\
+        .setdefault(phoneme_unstressed, {}).setdefault(next_phoneme_unstressed, 0)
+      phoneme_chains['weighted']['unstressed']\
+        [phoneme_unstressed][next_phoneme_unstressed] += frequency
+      phoneme_chains['unweighted']['unstressed']\
+        .setdefault(phoneme_unstressed, {}).setdefault(next_phoneme_unstressed, 0)
+      phoneme_chains['unweighted']['unstressed']\
+        [phoneme_unstressed][next_phoneme_unstressed] += 1
 
   pronouncing_dictionary.close()
 
