@@ -195,6 +195,7 @@ Also, get `postgres`, create a database called `uncannly`, and set your local da
 Please fork and clone this repo.
 
 ```
+$ chiry@munscalune:~/workspace: export PYTHONPATH=$PYTHONPATH:/path/to/workspace/uncannly
 $ chiry@munscalune:~/workspace: cd uncannly
 $ chiry@munscalune:~/workspace/uncannly: source venv/bin/activate
 $ chiry@munscalune:~/workspace/uncannly: pip install -r requirements.txt
