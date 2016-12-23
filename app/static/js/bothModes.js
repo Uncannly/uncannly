@@ -27,8 +27,8 @@ const addRefreshListener = function(mode) {
 		scoreThreshold && data.push(`score-threshold=${scoreThreshold}`);
 
 		const selectionValue = $(`.${mode} .selection-value`).val();
-		if (selectionValue !== '' && checked(mode, 'selection')) {
-			data.push(`selection=${selectionValue}`);
+		if (checked(mode, 'selection')) {
+			data.push(`selection=${selectionValue == '' ? pool : selectionValue}`);
 		}
 
 		['unweighted', 'unstressed', 'exclude-real'].forEach(function(option) {
