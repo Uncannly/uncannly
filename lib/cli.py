@@ -7,7 +7,7 @@ from lib.mode import get_by_mode
 from lib.readme import README
 from lib.options import POOL_DEFAULT
 
-def bin(mode):
+def cli(mode):
   parser = argparse.ArgumentParser(
       description='Get the most likely yet missing English words.'
   )
@@ -78,4 +78,4 @@ def bin(mode):
   )
 
   args = parser.parse_args()
-  get_by_mode(mode=mode, interface='bin', args=vars(args))
+  get_by_mode(mode=mode, interface='cli', args=vars(args))

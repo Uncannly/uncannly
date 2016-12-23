@@ -23,10 +23,10 @@ class TopMode(object):
     most_probable_words = most_probable_words[0:int(pool)]
 
     if selection:
-      selector = api_select_random if interface == 'api' else bin_select_random
+      selector = api_select_random if interface == 'api' else cli_select_random
     else:
       selection = pool
-      selector = api_select_top if interface == 'api' else bin_select_top
+      selector = api_select_top if interface == 'api' else cli_select_top
 
     words = []
     for index, (word, score) in enumerate(most_probable_words):
@@ -37,7 +37,7 @@ class TopMode(object):
 
     return selector(words, selection, unstressed, exclude_real)
 
-def bin_select_top(words, selection, unstressed, exclude_real):
+def cli_select_top(words, selection, unstressed, exclude_real):
   if len(words) > 0:
     i = 0
     for _ in xrange(selection):
@@ -57,7 +57,7 @@ def bin_select_top(words, selection, unstressed, exclude_real):
   else:
     sys.stdout.write('No words met criteria.\n')
 
-def bin_select_random(words, selection, unstressed, exclude_real):
+def cli_select_random(words, selection, unstressed, exclude_real):
   if len(words) > 0:
     for _ in xrange(selection):
       while not Present.for_terminal(word=random.choice(words),

@@ -28,7 +28,7 @@ class RandomMode(object):
           unstressed,
           exclude_real):
 
-    selector = api_selector if interface == 'api' else bin_selector
+    selector = api_selector if interface == 'api' else cli_selector
 
     word, phoneme, score = reset()
 
@@ -82,7 +82,7 @@ def next_phoneme(phoneme,
       score = get_score(score, scoring_method, probability, word_length)
       return (None, score) if score < score_threshold else (phoneme, score)
 
-def bin_selector(word, selection, unstressed, exclude_real):
+def cli_selector(word, selection, unstressed, exclude_real):
   stringified_word = array_to_string(word)
   return Present.for_terminal(word=stringified_word,
                               unstressed=unstressed,
@@ -100,14 +100,14 @@ def fail(interface):
       '1000000 times consecutively failed to find a word above the score '
       'threshold. Please try lowering it.'
   )
-  return sys.stdout.write(message + '\n') if interface == "bin" else [message]
+  return sys.stdout.write(message + '\n') if interface == "cli" else [message]
 
 def succeed(words, interface, selection):
   if selection:
     words.sort(key=lambda x: -x[1])
     words = words[:selection]
 
-  if interface == 'bin':
+  if interface == 'cli':
     if selection:
       for word, _ in words:
         sys.stdout.write(word + '\n')

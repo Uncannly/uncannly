@@ -13,9 +13,9 @@ def parse(word_frequencies):
       }
   }
 
-  file = open_primary_data_file('cmu_pronouncing_dictionary')
+  pronouncing_dictionary = open_primary_data_file('cmu_pronouncing_dictionary')
 
-  for line in file:
+  for line in pronouncing_dictionary:
     line_split_by_tabs = line.strip().split('\t')
 
     # words
@@ -55,6 +55,6 @@ def parse(word_frequencies):
       phoneme_chains['unweighted']['unstressed'].setdefault(phoneme_unstressed, {}).setdefault(next_phoneme_unstressed, 0)
       phoneme_chains['unweighted']['unstressed'][phoneme_unstressed][next_phoneme_unstressed] += 1
 
-  file.close()
+  pronouncing_dictionary.close()
 
   return words, phoneme_chains
