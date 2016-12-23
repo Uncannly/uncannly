@@ -58,7 +58,4 @@ def parse(word_frequencies):
 
 	file.close()
 
-	return {
-		'words': words,
-		'phoneme_chains': phoneme_chains
-	}
+	return words, phoneme_chains

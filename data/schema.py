@@ -44,22 +44,12 @@ class Schema:
 		sql_string += ", ".join(sql_array)
 		self.database.execute(sql_string)
 
-	def scores(self, 
-		most_probable_words, 
-		unstressed, 
-		unweighted, 
-		method_mean, 
-		method_addition):
+	def scores(self, most_probable_words, options):
 		sql_array = []
-		for (word, score) in most_probable_words:
-			sql_array.append("('{}', '{}', '{}', '{}', '{}', '{}')".format(
-				word, 
-				score, 
-				unstressed, 
-				unweighted, 
-				method_mean, 
-				method_addition
-			))
+		for word, score in most_probable_words:
+			sql_array.append(
+				"('{}', '{}', '{}', '{}', '{}', '{}')".format(word, score, *options)
+			)
 		sql_string = "insert into scores \
 			(word, score, unstressed, unweighted, method_mean, method_addition) values"
 		sql_string += ", ".join(sql_array)

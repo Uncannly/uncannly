@@ -4,17 +4,13 @@ sys.path.insert(1, os.path.join(sys.path[0], '..'))
 from lib.present import Present
 from lib.type_conversion import array_to_string
 from lib.score import get_score
+from lib.options import booleans_to_strings
 from data.load_data import load_phonemes
-
-def boolean_options_to_strings(unstressed, unweighted):
-	stressing = 'unstressed' if unstressed else 'stressed'
-	weighting = 'unweighted' if unweighted else 'weighted'
-	return stressing, weighting
 
 next_phonemes_options = {}
 for unstressed in [False, True]:
 	for unweighted in [False, True]:
-		stressing, weighting = boolean_options_to_strings(unstressed, unweighted)
+		stressing, weighting = booleans_to_strings(unstressed, unweighted)
 		next_phonemes_options.setdefault(stressing, {}).setdefault(
 			weighting, load_phonemes(unweighted, unstressed)
 		)
@@ -79,7 +75,7 @@ def next_phoneme(
 	unweighted,
 	unstressed):
 
-	stressing, weighting = boolean_options_to_strings(unstressed, unweighted)
+	stressing, weighting = booleans_to_strings(unstressed, unweighted)
 	next_phonemes = next_phonemes_options[stressing][weighting]
 
 	accumulated_probability = 0
@@ -105,7 +101,10 @@ def reset():
 	return ([], 'START_WORD', 1.0)
 
 def fail(interface):
-	message = '10000 times consecutively failed to find a word above the score threshold. Please try lowering it.'
+	message = (
+		'10000 times consecutively failed to find a word above the score threshold.' 
+		'Please try lowering it.'
+	)
 	return sys.stdout.write(message + '\n') if interface == "bin" else [message]
 
 def succeed(words, interface, selection):

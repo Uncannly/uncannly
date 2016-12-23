@@ -1,13 +1,7 @@
 import json
 
 from database import Database
-
-scoring_method_breakdown = {
-	'integral_product': (False, False),
-	'integral_sum': (False, True),
-	'mean_geometric': (True, False),
-	'mean_arithmetic': (True, True),
-}
+from lib.options import scoring_method_breakdown
 
 def load_words():
 	return Database.fetch("select * from words;")

@@ -3,52 +3,22 @@ sys.path.insert(1, os.path.join(sys.path[0], '..', '..'))
 
 from lib.type_conversion import array_to_string
 from lib.score import get_score
-
-# these are all ~10000, which is more than the 1000 of each
-# which we are actually capable of fitting in our free plan cloud database
-default_limit_for_scoring_method = {
-	'with_stress': {
-		'weighted': {
-			'integral_product': 8.1   * 10**-16,
-			'integral_sum':     6.35  * 10**-2,
-			'mean_geometric':   3.1   * 10**-4,
-			'mean_arithmetic':  2.69  * 10**-1 
-		},
-		'unweighted': {
-			'integral_product': 1.3   * 10**-17,
-			'integral_sum':     5.85  * 10**-2,
-			'mean_geometric':   3.0   * 10**-5,
-			'mean_arithmetic':  1.99  * 10**-1
-		}
-	},
-	'stressless': {
-		'weighted': {
-			'integral_product': 9.97  * 10**-16,
-			'integral_sum':     6.4   * 10**-2,
-			'mean_geometric':   3.1   * 10**-4,
-			'mean_arithmetic':  2.69  * 10**-1
-		},
-		'unweighted': {
-			'integral_product': 3.5   * 10**-17,
-			'integral_sum':     5.9   * 10**-2,
-			'mean_geometric':   9.0   * 10**-5,
-			'mean_arithmetic':  1.98  * 10**-1
-		}
-	}
-}
+from lib.options import booleans_to_strings, scoring_method_breakdown, \
+	scoring_method_default_limits
 
 class MostProbableWords:
 
 	@staticmethod
-	def get(most_probable_next_phonemes, stressless, unweighted, method_mean, method_addition):
+	def get(next_phonemes, options):
+		unstressed, unweighted, method_mean, method_addition = options
+		
+		stressing, weighting = booleans_to_strings(unstressed, unweighted)
 
-		stress_consideration = 'stressless' if stressless else 'with_stress'
-		frequency_weighting = 'unweighted' if unweighted else 'weighted'
-		if method_mean:
-			scoring_method = 'mean_arithmetic' if method_addition else 'mean_geometric'
-		else:
-			scoring_method = 'integral_sum' if method_addition else 'integral_product'
-		limit = default_limit_for_scoring_method[stress_consideration][frequency_weighting][scoring_method]
+		scoring_method = scoring_method_breakdown.keys()[
+			scoring_method_breakdown.values().index((method_mean, method_addition))
+		]
+
+		limit = scoring_method_default_limits[stressing][weighting][scoring_method]
 
 		most_probable_words = []
 
@@ -59,7 +29,7 @@ class MostProbableWords:
 			if word_length > 20:
 				pass
 			else:
-				for (phoneme, probability) in most_probable_next_phonemes[current_phoneme]:
+				for (phoneme, probability) in next_phonemes[current_phoneme]:
 					score = get_score(score, scoring_method, probability, word_length)		
 					if score < limit:
 						pass
