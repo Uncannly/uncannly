@@ -45,13 +45,11 @@ def initialize_database():
         for method_addition in [False, True]:
           options = unstressed, unweighted, method_mean, method_addition
           stressing, weighting = booleans_to_strings(unstressed, unweighted)
-          schema.scores(
-              MostProbableWords.get(
+          word_scores = MostProbableWords(
                   most_probable_next_phonemes[weighting][stressing],
                   options
-              ),
-              options
-          )
+              )
+          schema.scores(word_scores.get(), options)
 
   schema.finish()
 
