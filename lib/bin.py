@@ -3,6 +3,7 @@ sys.path.insert(1, os.path.join(sys.path[0], '..', '..'))
 
 from mode import get_by_mode
 from readme import readme
+from options import pool_default
 
 def bin(mode):
 	parser = argparse.ArgumentParser(
@@ -11,22 +12,22 @@ def bin(mode):
 
 	parser.add_argument(
 		'--pool', '-p', 
-		type=int, default=45, 
+		type=int, default=pool_default, 
 		help=readme.get('pool')
 	)
 	parser.add_argument(
 		'--selection', '-s',
-		nargs='?', const=45, type=int,
+		nargs='?', const=pool_default, type=int,
 		help=readme.get('selection')
 	)
 	parser.add_argument(
 		'--top-selection', '-t',
-		nargs='?', const=45, type=int,
+		nargs='?', const=pool_default, type=int,
 		help='Alias for `selection` when in random mode.'
 	)
 	parser.add_argument(
 		'--random-selection', '-w',
-		nargs='?', const=45, type=int,
+		nargs='?', const=pool_default, type=int,
 		help='Alias for `selection` when in top mode.'
 	)
 	parser.add_argument(

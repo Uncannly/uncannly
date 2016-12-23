@@ -1,13 +1,13 @@
 import json
 
 from database import Database
-from lib.options import scoring_method_breakdown
+from lib.options import scoring_methods
 
 def load_words():
 	return Database.fetch("select * from words;")
 
 def load_scores(scoring_method, unweighted, unstressed):
-	method_mean, method_addition = scoring_method_breakdown[scoring_method]
+	method_mean, method_addition = scoring_methods[scoring_method]
 
 	sql = "select word, score from scores where \
 		unweighted = {} and unstressed = {} \

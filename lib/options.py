@@ -3,7 +3,7 @@ def booleans_to_strings(unstressed, unweighted):
 	weighting = 'unweighted' if unweighted else 'weighted'
 	return stressing, weighting
 
-scoring_method_breakdown = {
+scoring_methods = {
 	'integral_product': (False, False),
 	'integral_sum': (False, True),
 	'mean_geometric': (True, False),
@@ -12,7 +12,7 @@ scoring_method_breakdown = {
 
 # these are all ~10000, which is more than the 1000 of each
 # which we are actually capable of fitting in our free plan cloud database
-scoring_method_default_limits = {
+default_limits = {
 	'stressed': {
 		'weighted': {
 			'integral_product': 8.1   * 10**-16,
@@ -42,3 +42,5 @@ scoring_method_default_limits = {
 		}
 	}
 }
+
+pool_default = 45

@@ -16,9 +16,9 @@
 			<input type="radio" name="mode" value="top">top
 		</label>
 
-		{{ modes('random', readme) }}
+		{{ modes('random', readme, pool_default) }}
 
-		{{ modes('top', readme) }}
+		{{ modes('top', readme, pool_default) }}
 
 		<script src={{url_for('static', filename='vendor/jquery-3.1.1.min.js')}}></script>
 		<script src={{url_for('static', filename='vendor/clipboard.min.js')}}></script>

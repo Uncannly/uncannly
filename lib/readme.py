@@ -1,5 +1,9 @@
+from options import pool_default
+
 readme = {
-	'pool': 'How many words to gather by the chosen mode.',
+	'pool': 'How many words to gather by the chosen mode. Default: {}'.format(
+		pool_default
+	),
 
 	'selection': (
 		'When enabled, use the other mode to select within the pool. \n\n'

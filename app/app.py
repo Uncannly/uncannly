@@ -8,13 +8,14 @@ from gevent.wsgi import WSGIServer
 from lib.mode import get_by_mode
 from lib.readme import readme
 from lib.case_conversion import snake_to_kebab
+from lib.options import pool_default
 
 app = Flask(__name__)
 CORS(app)
 
 @app.route('/')
 def root():
-	return render_template('index.html', readme=readme)
+	return render_template('index.html', readme=readme, pool_default=pool_default)
 
 def route(mode, request):
 	args = {}
