@@ -26,7 +26,7 @@ class Schema(object):
       sql_array.append("('{}', '{}')".format(
           word.replace("'", "''"), pronunciation
       ))
-    sql_string = "insert into words (word, pronunciation) values"
+    sql_string = "insert into words (word, pronunciation) values "
     sql_string += ", ".join(sql_array)
     self.database.execute(sql_string)
 
@@ -41,7 +41,7 @@ class Schema(object):
       ))
     sql_string = (
         "insert into phonemes (phoneme, unstressed, "
-        "next_phonemes, next_phonemes_unweighted) values"
+        "next_phonemes, next_phonemes_unweighted) values "
     )
     sql_string += ", ".join(sql_array)
     self.database.execute(sql_string)
@@ -55,7 +55,7 @@ class Schema(object):
     sql_string = (
         "insert into scores "
         "(word, score, unstressed, unweighted, method_mean, method_addition) "
-        "values"
+        "values "
     )
     sql_string += ", ".join(sql_array)
     self.database.execute(sql_string)

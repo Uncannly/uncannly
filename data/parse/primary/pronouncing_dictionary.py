@@ -1,69 +1,48 @@
 from data.parse.primary.open_helper import open_primary_data_file
 from lib.ipa import destress
 
-def parse(word_frequencies):
-  words = []
-  phoneme_chains = {
-      'weighted': {
-          'stressed': {},
-          'unstressed': {}
-      },
-      'unweighted': {
-          'stressed': {},
-          'unstressed': {}
-      }
-  }
+class PronouncingDictionary(object):
+  def __init__(self, word_frequencies):
+    self.words = []
+    self.phoneme_chains = {}
+    self.pronouncing_dictionary = open_primary_data_file('cmu_pronouncing_dictionary')
+    self.word_frequencies = word_frequencies
 
-  pronouncing_dictionary = open_primary_data_file('cmu_pronouncing_dictionary')
+  def parse(self):
+    for line in self.pronouncing_dictionary:
+      self.parse_phoneme_chains(self.parse_words(line))
 
-  for line in pronouncing_dictionary:
-    line_split_by_tabs = line.strip().split('\t')
+    self.pronouncing_dictionary.close()
 
-    # words
-    word = line_split_by_tabs[0]
+    return self.words, self.phoneme_chains
 
-    # word_pronunciations
-    word_pronunciation = line_split_by_tabs[1]
+  def parse_words(self, line):
+    [word, word_pronunciation] = line.strip().split('\t')
 
-    # word_pronunciations_unstressed
-    phonemes = word_pronunciation.split()
-    phonemes_unstressed = []
-    for phoneme in phonemes:
-      phonemes_unstressed.append(destress(phoneme))
+    phonemes = {}
+    phonemes['stressed'] = word_pronunciation.split()
+    phonemes['unstressed'] = [destress(phoneme) for phoneme in phonemes['stressed']]
 
-    words.append((word, word_pronunciation))
+    self.words.append((word, word_pronunciation))
 
-    # phoneme_chain_absolute, phoneme_chain_absolute_unweighted
-    phonemes.insert(0, 'START_WORD')
-    phonemes.append('END_WORD')
-    phonemes_unstressed.insert(0, 'START_WORD')
-    phonemes_unstressed.append('END_WORD')
+    for stressing in ['stressed', 'unstressed']:
+      phonemes[stressing] = ['START_WORD'] + phonemes[stressing] + ['END_WORD']
 
-    frequency = word_frequencies[word] if word in word_frequencies else 1
+    frequency = self.word_frequencies[word] if word in self.word_frequencies else 1 
 
-    for i in range(0, len(phonemes) - 1):
-      phoneme = phonemes[i]
-      next_phoneme = phonemes[i + 1]
-      phoneme_chains['weighted']['stressed'].\
-        setdefault(phoneme, {}).setdefault(next_phoneme, 0)
-      phoneme_chains['weighted']['stressed']\
-        [phoneme][next_phoneme] += frequency
-      phoneme_chains['unweighted']['stressed']\
-        .setdefault(phoneme, {}).setdefault(next_phoneme, 0)
-      phoneme_chains['unweighted']['stressed']\
-        [phoneme][next_phoneme] += 1
+    return phonemes, frequency
 
-      phoneme_unstressed = phonemes_unstressed[i]
-      next_phoneme_unstressed = phonemes_unstressed[i + 1]
-      phoneme_chains['weighted']['unstressed']\
-        .setdefault(phoneme_unstressed, {}).setdefault(next_phoneme_unstressed, 0)
-      phoneme_chains['weighted']['unstressed']\
-        [phoneme_unstressed][next_phoneme_unstressed] += frequency
-      phoneme_chains['unweighted']['unstressed']\
-        .setdefault(phoneme_unstressed, {}).setdefault(next_phoneme_unstressed, 0)
-      phoneme_chains['unweighted']['unstressed']\
-        [phoneme_unstressed][next_phoneme_unstressed] += 1
+  def parse_phoneme_chains(self, args):
+    phonemes, frequency = args
+    for stressing in ['stressed', 'unstressed']:
+      for i in range(0, len(phonemes[stressing]) - 1):
+        phoneme = phonemes[stressing][i]
+        next_phoneme = phonemes[stressing][i + 1]
 
-  pronouncing_dictionary.close()
-
-  return words, phoneme_chains
+        for weighting in ['weighted', 'unweighted']:
+          self.phoneme_chains.\
+            setdefault(weighting, {}).\
+            setdefault(stressing, {}).\
+            setdefault(phoneme, {}).\
+            setdefault(next_phoneme, 0)
+          self.phoneme_chains[weighting][stressing][phoneme][next_phoneme] += frequency

@@ -1,6 +1,7 @@
 import sys
 
-from data.parse.primary import frequency_list, pronouncing_dictionary
+from data.parse.primary import frequency_list
+from data.parse.primary.pronouncing_dictionary import PronouncingDictionary
 from data.parse.secondary.absolute_chain import AbsoluteChain
 from data.parse.secondary.most_probable_words import MostProbableWords
 from data.database import Database
@@ -17,7 +18,7 @@ def initialize_database():
   ########### PHASE ONE ####################
 
   word_frequencies = frequency_list.parse()
-  words, phoneme_chains = pronouncing_dictionary.parse(word_frequencies)
+  words, phoneme_chains = PronouncingDictionary(word_frequencies).parse()
   schema.words(words)
 
   ########### PHASE TWO ####################
