@@ -1,7 +1,7 @@
 def booleans_to_strings(unstressed, unweighted):
-  stressing = 'unstressed' if unstressed else 'stressed'
-  weighting = 'unweighted' if unweighted else 'weighted'
-  return stressing, weighting
+    stressing = 'unstressed' if unstressed else 'stressed'
+    weighting = 'unweighted' if unweighted else 'weighted'
+    return stressing, weighting
 
 SCORING_METHODS = {
     'integral_product': (False, False),

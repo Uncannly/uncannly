@@ -1,16 +1,16 @@
 # -*- coding: utf-8 -*-
 
 def ipa(word):
-  output = []
-  for phoneme in word:
-    output.append(IPA[phoneme])
-  return ''.join(output)
+    output = []
+    for phoneme in word:
+        output.append(IPA[phoneme])
+    return ''.join(output)
 
 def destress(word):
-  for character in "012":
-    if character in word:
-      word = word.replace(character, '')
-  return word
+    for character in "012":
+        if character in word:
+            word = word.replace(character, '')
+    return word
 
 IPA = {
     'AA': 'ɑ',  'AA1': 'ɑː',  'AA2': 'ɑ',  'AA0': 'ə',
