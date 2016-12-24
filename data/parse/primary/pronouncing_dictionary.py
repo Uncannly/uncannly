@@ -28,7 +28,7 @@ class PronouncingDictionary(object):
         for stressing in ['stressed', 'unstressed']:
             phonemes[stressing] = ['START_WORD'] + phonemes[stressing] + ['END_WORD']
 
-        frequency = self.word_frequencies[word] if word in self.word_frequencies else 1 
+        frequency = self.word_frequencies[word] if word in self.word_frequencies else 1
 
         return phonemes, frequency
 

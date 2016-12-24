@@ -61,7 +61,7 @@ class RandomMode(object):
                             return succeed(words, interface, selection)
                     word, phoneme, score = reset()
                 else:
-                  word.append(phoneme)
+                    word.append(phoneme)
 
 def next_phoneme(phoneme,
                  random_number,
