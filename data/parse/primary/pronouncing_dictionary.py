@@ -45,4 +45,5 @@ class PronouncingDictionary(object):
             setdefault(stressing, {}).\
             setdefault(phoneme, {}).\
             setdefault(next_phoneme, 0)
-          self.phoneme_chains[weighting][stressing][phoneme][next_phoneme] += frequency
+          self.phoneme_chains[weighting][stressing][phoneme][next_phoneme] += \
+            frequency if weighting == 'weighted' else 1
