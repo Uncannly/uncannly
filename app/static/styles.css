@@ -65,26 +65,30 @@ body {
   padding: 0;
 }
 
-.word img {
-	height: 20px;
+.word i {
 	opacity: 0;
 	cursor: pointer;
+  margin: 0 5px;
+  color: #444;
 }
 
-.word:hover img {
+.word:hover i {
 	opacity: 1;
-	fill: #000000;
 }
 
-.word:active img {
-	fill: #333333;
+.word i:hover {
+  color: #555;
+}
+
+.word i:active {
+	color: #666;
 }
 
 #random, #top {
 	background-color: #eeeeee;
   padding: 30px;
   border: 1px solid #dddddd;
-  height: 220px;
+  height: 200px;
   overflow-y: auto;
 }
 
@@ -145,8 +149,12 @@ input[type=checkbox]:checked + label:before {
   line-height: 15px;
 }
 
-.speak-word {
-  padding: 0 5px;
+.fa-volume-up, .fa-spinner, .fa-clipboard {
+  width: 16px;
+}
+
+.word-text {
+  padding-left: 12px !important;
 }
 
 .loading {

@@ -7,6 +7,7 @@
     <title>Uncann.ly</title>
     <link rel="stylesheet" href="{{url_for('static', filename='styles.css')}}">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans">  
+    <script src="https://use.fontawesome.com/620c216b67.js"></script>
   </head>
   <body>
     <h1>Uncann.ly</h1>
@@ -19,7 +20,7 @@
     {{ modes('random', readme, pool_default, pool_max) }}
 
     {{ modes('top', readme, pool_default, pool_max) }}
-
+    
     <script>
       window.noWordsMessage = `{{ no_words_message }}`
       window.tooFewMessage = `{{ too_few_message }}`

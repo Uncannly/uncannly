@@ -41,22 +41,26 @@ const addRefreshListener = function(mode) {
             $(`#${mode}`).append(`<div class="message">${word}</div>`);
           } else {
             $(`#${mode}`).append(
-            `<div class="word" id="word-${i}">
-              <img 
-                src="/static/img/clippy.svg" 
-                id="copy-word-${i}" 
-                data-clipboard-target="#text-${i}">
-              </img>
-              <img src="/static/img/audio.svg" class="speak-word"></img>
-              <div class="no-block" id="text-${i}">${word}</div>
-            </div>`
-          );
-          new Clipboard(`#copy-word-${i}`);
+              `<div class="word" id="word-${i}">
+                <i 
+                  class="fa fa-clipboard" 
+                  aria-hidden="true" 
+                  id="copy-word-${i}" 
+                  data-clipboard-target="#text-${i}"
+                >
+                </i>
+                <i class="fa fa-volume-up speak-word" aria-hidden="true"></i>
+                <div class="no-block word-text" id="text-${i}">${word}</div>
+              </div>`
+            );
+            new Clipboard(`#copy-word-${i}`);
           }
         });
 
         $('.speak-word').click(function(e) {
           const word = $(e.target).parent().text();
+          $(e.target).removeClass("fa fa-volume-up speak-word");
+          $(e.target).addClass("fa fa-spinner fa-spin");
           const request = new XMLHttpRequest();
           request.open('GET', `https://uncannly-tts.cfapps.io/pts?word=${word}`, true);
           request.responseType = 'arraybuffer';
@@ -67,6 +71,8 @@ const addRefreshListener = function(mode) {
               source.buffer = buffer;
               source.connect(context.destination);
               source.start(0); 
+              $(e.target).removeClass("fa fa-spinner fa-spin");
+              $(e.target).addClass("fa fa-volume-up speak-word");
             });
           }
           request.send();
