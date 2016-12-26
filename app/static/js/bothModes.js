@@ -6,7 +6,6 @@ const addModeListeners = function(mode) {
   addRefreshListener(mode);
   addSelectionListener(mode);
   addPoolAndSelectionBoundsListeners(mode);
-  new Clipboard(`#copy-${mode}`);
 };
 
 const addRefreshListener = function(mode) {
@@ -42,12 +41,15 @@ const addRefreshListener = function(mode) {
       url: url,
       success: function(data) { 
         $(`#${mode}`).html('');
-        JSON.parse(data).forEach(function(word) {
-          $(`#${mode}`).append(`<div class="word-to-speak">${word}</div>`);
+        JSON.parse(data).forEach(function(word, i) {
+          $(`#${mode}`).append(
+            `<div id="word-${i}"><img src="/static/img/clippy.svg" id="copy-word-${i}" data-clipboard-target="#text-${i}"></img><img src="/static/img/audio.svg" class="speak-word"></img><div class="no-block" id="text-${i}">${word}</div></div>`
+          );
+          new Clipboard(`#copy-word-${i}`);
         });
 
-        $('.word-to-speak').click(function(e) {
-          const word = e.target.textContent;
+        $('.speak-word').click(function(e) {
+          const word = $(e.target).parent().text();
           const request = new XMLHttpRequest();
           request.open('GET', `https://uncannly-tts.cfapps.io/pts?word=${word}`, true);
           request.responseType = 'arraybuffer';
