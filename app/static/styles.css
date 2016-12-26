@@ -32,13 +32,16 @@ div.no-block {
 
 select {
 	font-family: 'Open Sans', sans-serif;
+  height: 26px;
+  margin-left: 10px;
 }
 
 input[type=number] {
   width: 50px;
   font-family: 'Open Sans', sans-serif;
   text-align: center;
-  border: none;
+  margin-right: 10px;
+  /*border: none;*/
 }
 
 #random-word {
@@ -82,7 +85,7 @@ body {
 	background-color: #eeeeee;
   padding: 30px;
   border: 1px solid #dddddd;
-  height: 280px;
+  height: 220px;
   overflow-y: auto;
 }
 

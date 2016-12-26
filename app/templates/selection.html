@@ -1,17 +1,19 @@
 {% macro selection(mode, readme, pool_default, pool_max) -%}
 
-<label 
-  title="{{ readme.pool }}"
->
-  <input 
-    type="number" 
-    max="{{ pool_max }}" 
-    min="1" 
-    step="1" 
-    class="pool" 
-    value="{{ pool_default }}"
-  >pool
-</label>
+<div>
+  <label 
+    title="{{ readme.pool }}"
+  >
+    <input 
+      type="number" 
+      max="{{ pool_max }}" 
+      min="1" 
+      step="1" 
+      class="pool" 
+      value="{{ pool_default }}"
+    >pool
+  </label>
+</div>
 
 <div>
   <input 
