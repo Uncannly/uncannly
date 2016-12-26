@@ -41,6 +41,7 @@ const addRefreshListener = function(mode) {
     $.ajax({
       url: url,
       success: function(data) { 
+        $(`#${mode}`).html('');
         JSON.parse(data).forEach(function(word) {
           $(`#${mode}`).append(`<div class="word-to-speak">${word}</div>`);
         });
