@@ -226,3 +226,10 @@ li {
   height: 24px;
   padding: 3px 8px;
 }
+
+img {
+  position: absolute;
+  height: 200px;
+  top: 40px;
+  right: 40px;
+}
