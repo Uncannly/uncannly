@@ -62,3 +62,11 @@ body {
 .word:active img {
 	fill: #333333;
 }
+
+#random, #top {
+	background-color: #eeeeee;
+  padding: 30px;
+  border: 1px solid #dddddd;
+  height: 400px;
+  overflow-y: auto;
+}

@@ -12,11 +12,6 @@ SCORING_METHODS = {
 
 # these are all ~10000, which is more than the 1000 of each
 # which we are actually capable of fitting in our free plan cloud database
-
-
-# unstressed, unweighted, method_mean, method_addition
-
-
 DEFAULT_LIMITS = {
     'stressed': {
         'weighted': {
@@ -48,5 +43,5 @@ DEFAULT_LIMITS = {
     }
 }
 
-POOL_DEFAULT = 45
+POOL_DEFAULT = 15
 POOL_MAX = 1000
