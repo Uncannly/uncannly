@@ -5,12 +5,18 @@ $("body").keyup(function(e){
   }
 });
 
-$("input[name='mode']").change(function(e){
-  if($(this).val() == 'random') {
-    $('.random').css({display: 'block'});
-    $('.top').css({display: 'none'});
-  } else {
-    $('.top').css({display: 'block'});
-    $('.random').css({display: 'none'});
-  }
+$("li#random-tab").click(function() {
+  $('.random').css({display: 'block'});
+  $('.top').css({display: 'none'});
+
+  $('li#random-tab').addClass('active');
+  $('li#top-tab').removeClass('active');
+});
+
+$("li#top-tab").click(function() {
+  $('.top').css({display: 'block'});
+  $('.random').css({display: 'none'});
+
+  $('li#random-tab').removeClass('active');
+  $('li#top-tab').addClass('active');
 });
