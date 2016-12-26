@@ -4,7 +4,6 @@ const scoringMethods = [
 
 const addModeListeners = function(mode) {
   addRefreshListener(mode);
-  addSpeakListener(mode);
   addSelectionListener(mode);
   addPoolAndSelectionBoundsListeners(mode);
   new Clipboard(`#copy-${mode}`);
@@ -42,28 +41,28 @@ const addRefreshListener = function(mode) {
     $.ajax({
       url: url,
       success: function(data) { 
-        $(`#${mode}`).html(JSON.parse(data).join('<br>')); 
+        JSON.parse(data).forEach(function(word) {
+          $(`#${mode}`).append(`<div class="word-to-speak">${word}</div>`);
+        });
+
+        $('.word-to-speak').click(function(e) {
+          const word = e.target.textContent;
+          const request = new XMLHttpRequest();
+          request.open('GET', `https://uncannly-tts.cfapps.io/pts?word=${word}`, true);
+          request.responseType = 'arraybuffer';
+
+          request.onload = function() {
+            context.decodeAudioData(request.response, function(buffer) {
+              var source = context.createBufferSource();
+              source.buffer = buffer;
+              source.connect(context.destination);
+              source.start(0); 
+            });
+          }
+          request.send();
+        });
       }
     });
-  });
-}
-
-const addSpeakListener = function(mode) {
-  $(`.${mode} button.speak`).click(function() {
-    const words = $(`#${mode}`).text();
-    const request = new XMLHttpRequest();
-    request.open('GET', `https://uncannly-tts.cfapps.io/pts?word=${words}`, true);
-    request.responseType = 'arraybuffer';
-
-    request.onload = function() {
-      context.decodeAudioData(request.response, function(buffer) {
-        var source = context.createBufferSource();
-        source.buffer = buffer;
-        source.connect(context.destination);
-        source.start(0); 
-      });
-    }
-    request.send();
   });
 }
 
