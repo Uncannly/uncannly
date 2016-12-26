@@ -9,12 +9,15 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans">  
   </head>
   <body>
-    <label display="inline">
-      <input type="radio" name="mode" value="random" checked>random
-    </label>
-    <label display="inline">
-      <input type="radio" name="mode" value="top">top
-    </label>
+    <h1>Uncann.ly</h1>
+
+    <div class="choose-mode">
+      <input type="radio" name="mode" value="random" id="random-radio" checked>
+      <label display="inline" for="random-radio" class="fancy">random</label>
+      
+      <input type="radio" name="mode" value="top" id="top-radio">
+      <label display="inline" for="top-radio" class="fancy">top</label>
+    </div>
 
     {{ modes('random', readme, pool_default, pool_max) }}
 

@@ -1,15 +1,33 @@
 {% macro otherOptions(mode, readme) -%}
 
-<label title="{{ readme.unweighted }}" class="own-line">
-  <input type="checkbox" class="unweighted">unweighted
-</label>
+<div>
+	<input type="checkbox" class="unweighted" id="{{ mode }}-unweighted">
+	<label 
+	  class="fancy own-line"
+		title="{{ readme.unweighted }}" 
+		for="{{ mode }}-unweighted"
+	>
+		unweighted
+	</label>
 
-<label title="{{ readme.unstressed }}" class="own-line">
-  <input type="checkbox" class="unstressed">unstressed
-</label>
+	<input type="checkbox" class="unstressed" id="{{ mode }}-unstressed">
+	<label 
+		class="fancy own-line"
+		title="{{ readme.unstressed }}" 
+		for="{{ mode }}-unstressed"
+	>
+		unstressed
+	</label>
 
-<label title="{{ readme.exclude_real }}" class="own-line">
-  <input type="checkbox" class="exclude-real">exclude real
-</label>
+	<input type="checkbox" class="exclude-real" id="{{ mode }}-exclude-real">
+	<label 
+		class="fancy own-line"
+		title="{{ readme.exclude_real }}" 
+		for="{{ mode }}-exclude-real"
+	>
+		exclude real
+	</label>
+
+</div>
 
 {%- endmacro %}

@@ -12,14 +12,20 @@
     value="{{ pool_default }}"
   >pool
 </label>
-<label 
-  title="{{ readme.random_selection if mode == 'top' else readme.top_selection }}"
-  class="own-line"
->
+
+<div>
   <input 
     type="checkbox" 
     class="selection"
-  >{{ 'random' if mode == 'top' else 'top' }} selection
+    id="{{ mode }}-selection"
+  >
+  <label 
+    class="fancy"
+    title="{{ readme.random_selection if mode == 'top' else readme.top_selection }}"
+    for="{{ mode }}-selection"
+  >
+    {{ 'random' if mode == 'top' else 'top' }} selection
+  </label>
   <input 
     type="number" 
     min="1" 
@@ -29,7 +35,8 @@
     value="10"
     disabled
   >
-</label>
+</div>
+
 <div class="scoring-method" title="{{ readme.scoring_method }}">
   scoring by
   <select 
@@ -43,4 +50,4 @@
   </select>
 </div>
 
-{%- endmacro %}
+{%- endmacro %} 
