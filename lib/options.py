@@ -10,6 +10,9 @@ SCORING_METHODS = {
     'mean_arithmetic': (True, True),
 }
 
+TOO_FEW_MESSAGE = 'Fewer words met criteria than the specified return count.\n'
+NO_WORDS_MESSAGE = 'No words met criteria.\n'
+
 # these are all ~10000, which is more than the 1000 of each
 # which we are actually capable of fitting in our free plan cloud database
 DEFAULT_LIMITS = {

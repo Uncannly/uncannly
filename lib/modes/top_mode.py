@@ -5,10 +5,8 @@ sys.path.insert(1, os.path.join(sys.path[0], '..'))
 
 from lib.present import Present
 from lib.type_conversion import string_to_array
+from lib.options import TOO_FEW_MESSAGE, NO_WORDS_MESSAGE
 from data.load_data import load_scores
-
-TOO_FEW_MESSAGE = 'Fewer words met criteria than the specified return count.\n'
-NO_WORDS_MESSAGE = 'No words met criteria.\n'
 
 class TopMode(object):
     @staticmethod

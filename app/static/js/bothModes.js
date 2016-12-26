@@ -37,7 +37,10 @@ const addRefreshListener = function(mode) {
       success: function(data) { 
         $(`#${mode}`).empty();
         JSON.parse(data).forEach(function(word, i) {
-          $(`#${mode}`).append(
+          if (word == window.noWordsMessage || word == window.tooFewMessage) {
+            $(`#${mode}`).append(`<div class="message">${word}</div>`);
+          } else {
+            $(`#${mode}`).append(
             `<div class="word" id="word-${i}">
               <img 
                 src="/static/img/clippy.svg" 
@@ -49,6 +52,7 @@ const addRefreshListener = function(mode) {
             </div>`
           );
           new Clipboard(`#copy-word-${i}`);
+          }
         });
 
         $('.speak-word').click(function(e) {

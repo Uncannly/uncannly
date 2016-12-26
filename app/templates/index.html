@@ -11,22 +11,19 @@
   <body>
     <h1>Uncann.ly</h1>
 
-    <!-- <div class="choose-mode">
-      <input type="radio" name="mode" value="random" id="random-radio" checked>
-      <label display="inline" for="random-radio" class="fancy">random</label>
-      
-      <input type="radio" name="mode" value="top" id="top-radio">
-      <label display="inline" for="top-radio" class="fancy">top</label>
-    </div> -->
     <ul class="nav nav-tabs">
       <li class="mode-nav-item active" id="random-tab"><span>random</span></li>
       <li class="mode-nav-item" id="top-tab"><span>top</span></li>
-      <!-- <li id="mode-nav-leftover">_</li> -->
     </ul>
 
     {{ modes('random', readme, pool_default, pool_max) }}
 
     {{ modes('top', readme, pool_default, pool_max) }}
+
+    <script>
+      window.noWordsMessage = `{{ no_words_message }}`
+      window.tooFewMessage = `{{ too_few_message }}`
+    </script>
 
     <script src={{url_for('static', filename='vendor/jquery-3.1.1.min.js')}}></script>
     <script src={{url_for('static', filename='vendor/clipboard.min.js')}}></script>

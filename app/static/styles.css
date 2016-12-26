@@ -150,42 +150,10 @@ input[type=checkbox]:checked + label:before {
 .loading {
   padding: 0 50px;
 }
-/*
-.mode-nav-item.active {
-  border-left: 1px solid #dddddd;
-  border-top: 1px solid #dddddd;
-  border-right: 1px solid #dddddd;
-  border-bottom: none;
-}
 
-.mode-nav-item {
-  border-bottom: 1px solid #dddddd;
-  border-radius: 2px;
-  width: 100px;
-  text-align: center;
-  display: inline-block;
-  position: absolute;
-  top: 0px;
+.message {
+  padding: 50px;
 }
-
-.mode-nav-item#top-tab {
-  left: 100px;
-}
-
-#mode-nav-leftover {
-  border-bottom: 1px solid #dddddd;
-  top: 0px;
-  left: 200px;
-  display: inline-block;
-  //width: 100%;
-  position: absolute;
-  color: white;
-}
-
-#mode-nav {
-  position: relative;
-  height: 20px;
-}*/
 
 .nav-tabs {
     border-bottom: 1px solid #ddd;
@@ -240,9 +208,4 @@ li {
     background-color: #fff;
     border: 1px solid #ddd;
     border-bottom-color: transparent;
-    /*cursor: default;*/
 }
-
-/*.random, .top {
-  padding: 20px;
-}*/
