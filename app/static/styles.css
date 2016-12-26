@@ -41,7 +41,6 @@ input[type=number] {
   font-family: 'Open Sans', sans-serif;
   text-align: center;
   margin-right: 10px;
-  /*border: none;*/
 }
 
 #random-word {
@@ -211,4 +210,11 @@ li {
     background-color: #fff;
     border: 1px solid #ddd;
     border-bottom-color: transparent;
+}
+
+.scoring {
+  background-color: #aaa;
+  color: white;
+  height: 24px;
+  padding: 3px 8px;
 }
