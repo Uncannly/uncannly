@@ -4,6 +4,7 @@ const scoringMethods = [
 
 const addModeListeners = function(mode) {
   addRefreshListener(mode);
+  addSpeakListener(mode);
   addSelectionListener(mode);
   addPoolAndSelectionBoundsListeners(mode);
   new Clipboard(`#copy-${mode}`);
@@ -44,6 +45,25 @@ const addRefreshListener = function(mode) {
         $(`#${mode}`).html(JSON.parse(data).join('<br>')); 
       }
     });
+  });
+}
+
+const addSpeakListener = function(mode) {
+  $(`.${mode} button.speak`).click(function() {
+    const words = $(`#${mode}`).text();
+    const request = new XMLHttpRequest();
+    request.open('GET', `https://uncannly-tts.cfapps.io/pts?word=${words}`, true);
+    request.responseType = 'arraybuffer';
+
+    request.onload = function() {
+      context.decodeAudioData(request.response, function(buffer) {
+        var source = context.createBufferSource();
+        source.buffer = buffer;
+        source.connect(context.destination);
+        source.start(0); 
+      });
+    }
+    request.send();
   });
 }
 
