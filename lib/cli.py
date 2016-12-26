@@ -76,6 +76,11 @@ def cli(mode):
         action='store_true',
         help=README.get('exclude_real')
     )
+    parser.add_argument(
+        '--ignore-position', '-d',
+        action='store_true',
+        help=README.get('ignore_position')
+    )
 
     args = parser.parse_args()
     get_by_mode(mode=mode, interface='cli', args=vars(args))

@@ -1,12 +1,15 @@
 class AbsoluteChain(object):
     @staticmethod
     def parse(phoneme_chain_absolute):
-        this_phonemes_next_phonemes = {}
+        word_positions = []
 
-        for phoneme, next_phoneme_counts in phoneme_chain_absolute.iteritems():
-            this_phonemes_next_phonemes[phoneme] = next_phonemes(next_phoneme_counts)
+        for word_position in phoneme_chain_absolute:
+            this_phonemes_next_phonemes = {}
+            for phoneme, next_phoneme_counts in word_position.iteritems():
+                this_phonemes_next_phonemes[phoneme] = next_phonemes(next_phoneme_counts)
+            word_positions.append(this_phonemes_next_phonemes)
 
-        return this_phonemes_next_phonemes
+        return word_positions
 
 def next_phonemes(next_phoneme_counts):
     phonemes = sorted(

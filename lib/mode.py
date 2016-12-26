@@ -30,6 +30,7 @@ def get_by_mode(mode, interface, args):
     get_args['unweighted'] = args['unweighted'] or args['unweighted'] == ''
     get_args['unstressed'] = args['unstressed'] or args['unstressed'] == ''
     get_args['exclude_real'] = args['exclude_real'] or args['exclude_real'] == ''
+    get_args['ignore_position'] = args['ignore_position'] or args['ignore_position'] == ''
 
     getter = TopMode if mode == 'top' else RandomMode
     return getter.get(interface=interface, **get_args)

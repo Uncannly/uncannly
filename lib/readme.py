@@ -57,5 +57,8 @@ README = {
 
     'unweighted': 'Do not weight probabilities by frequency of words in the corpus.',
     'unstressed': 'Ignore stress levels of vowels.',
-    'exclude_real': 'Do not include words probable by pronunciation that do exist.'
+    'exclude_real': 'Do not include words probable by pronunciation that do exist.',
+    'ignore_position': (
+        'Do not consider position within the word when choosing the next phoneme.'
+    )
 }

@@ -17,9 +17,10 @@ class TopMode(object):
             score_threshold,
             unweighted,
             unstressed,
-            exclude_real):
+            exclude_real,
+            ignore_position):
 
-        most_probable_words = load_scores(scoring_method, unweighted, unstressed)
+        most_probable_words = load_scores(scoring_method, ignore_position, unstressed, unweighted)
         most_probable_words.sort(key=lambda x: -x[1])
         most_probable_words = most_probable_words[0:int(pool)]
 

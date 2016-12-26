@@ -35,15 +35,21 @@ class PronouncingDictionary(object):
     def parse_phoneme_chains(self, args):
         phonemes, frequency = args
         for stressing in ['stressed', 'unstressed']:
-            for i in range(0, len(phonemes[stressing]) - 1):
-                phoneme = phonemes[stressing][i]
-                next_phoneme = phonemes[stressing][i + 1]
+            for weighting in ['weighted', 'unweighted']:
+                self.phoneme_chains.setdefault(weighting, {}).setdefault(stressing, [{}])
+                for i in range(0, len(phonemes[stressing]) - 1):
+                    phoneme = phonemes[stressing][i] 
+                    next_phoneme = phonemes[stressing][i + 1]
 
-                for weighting in ['weighted', 'unweighted']:
-                    self.phoneme_chains.\
-                        setdefault(weighting, {}).\
-                        setdefault(stressing, {}).\
-                        setdefault(phoneme, {}).\
-                        setdefault(next_phoneme, 0)
-                    self.phoneme_chains[weighting][stressing][phoneme][next_phoneme] += \
-                        frequency if weighting == 'weighted' else 1
+                    self.phoneme_chains[weighting][stressing][0].\
+                        setdefault(phoneme, {}).setdefault(next_phoneme, 0)
+                    self.phoneme_chains[weighting][stressing][0][phoneme][next_phoneme] \
+                        += frequency if weighting == 'weighted' else 1
+
+                    while i + 2 > len(self.phoneme_chains[weighting][stressing]):
+                        self.phoneme_chains[weighting][stressing].append({})
+
+                    self.phoneme_chains[weighting][stressing][i + 1].\
+                        setdefault(phoneme, {}).setdefault(next_phoneme, 0)
+                    self.phoneme_chains[weighting][stressing][i + 1][phoneme][next_phoneme] \
+                        += frequency if weighting == 'weighted' else 1

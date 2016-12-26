@@ -26,7 +26,8 @@ class RandomMode(object):
             score_threshold,
             unweighted,
             unstressed,
-            exclude_real):
+            exclude_real,
+            ignore_position):
 
         selector = api_selector if interface == 'api' else cli_selector
 
@@ -44,7 +45,8 @@ class RandomMode(object):
                                           scoring_method=scoring_method,
                                           score_threshold=score_threshold,
                                           unweighted=unweighted,
-                                          unstressed=unstressed)
+                                          unstressed=unstressed,
+                                          ignore_position=ignore_position)
 
             if phoneme is None:
                 count_fails += 1
@@ -70,10 +72,12 @@ def next_phoneme(phoneme,
                  scoring_method,
                  score_threshold,
                  unweighted,
-                 unstressed):
+                 unstressed,
+                 ignore_position):
 
+    i = 0 if ignore_position else word_length
     stressing, weighting = booleans_to_strings(unstressed, unweighted)
-    next_phonemes = NEXT_PHONEMES_OPTIONS[stressing][weighting]
+    next_phonemes = NEXT_PHONEMES_OPTIONS[stressing][weighting][i]
 
     accumulated_probability = 0
     for (phoneme, probability) in next_phonemes[phoneme]:

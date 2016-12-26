@@ -2,6 +2,10 @@ const scoringMethods = [
   'integral-product', 'integral-sum', 'mean-geometric', 'mean-arithmetic'
 ]
 
+const otherOptions = [
+  'unweighted', 'unstressed', 'exclude-real', 'ignore-position'
+]
+
 const addRefreshListener = function(mode) {
   $(`.${mode} button.refresh`).click(function() {
     let url = `/${mode}`;
@@ -25,7 +29,7 @@ const addRefreshListener = function(mode) {
       data.push(`selection=${selectionValue == '' ? pool : selectionValue}`);
     }
 
-    ['unweighted', 'unstressed', 'exclude-real'].forEach(function(option) {
+    otherOptions.forEach(function(option) {
       if (checked(mode, option)) { data.push(option); };
     })
 
