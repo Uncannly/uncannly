@@ -32,42 +32,15 @@
 </label>
 <div class="scoring-method" title="{{ readme.scoring_method }}">
   scoring by
-  <label>
-    <input 
-      type="radio" 
-      name="{{ mode }}-scoring-method" 
-      class="integral-product" 
-      {{ 'disabled' if mode == 'random' else 'checked' }}
-    >
-    integral product
-  </label>
-  <label>
-    <input 
-      type="radio" 
-      name="{{ mode }}-scoring-method" 
-      class="integral-sum" 
-      {{ 'disabled' if mode == 'random' }}
-    >
-    integral sum
-  </label>
-  <label>
-    <input 
-      type="radio" 
-      name="{{ mode }}-scoring-method" 
-      class="mean-geometric" 
-      {{ 'disabled' if mode == 'random' }}
-    >
-    geometric mean
-  </label>
-  <label>
-    <input 
-      type="radio" 
-      name="{{ mode }}-scoring-method" 
-      class="mean-arithmetic" 
-      {{ 'disabled' if mode == 'random' }}
-    >
-    arithmetic mean
-  </label>
+  <select 
+    {{ 'disabled' if mode == 'random' }} 
+    name="{{ mode }}-scoring-method"
+  >
+    <option value="integral-product">integral product</option>
+    <option value="integral-sum">integral sum</option>
+    <option value="mean-geometric">mean geometric</option>
+    <option value="mean-arithmetic">mean arithmetic</option>
+  </select>
 </div>
 
 {%- endmacro %}

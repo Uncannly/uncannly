@@ -2,12 +2,6 @@ const scoringMethods = [
   'integral-product', 'integral-sum', 'mean-geometric', 'mean-arithmetic'
 ]
 
-const addModeListeners = function(mode) {
-  addRefreshListener(mode);
-  addSelectionListener(mode);
-  addPoolAndSelectionBoundsListeners(mode);
-};
-
 const addRefreshListener = function(mode) {
   $(`.${mode} button.refresh`).click(function() {
     let url = `/${mode}`;
@@ -16,9 +10,10 @@ const addRefreshListener = function(mode) {
     const pool = $(`.${mode} .pool`).val();
     if (pool) data.push(`pool=${pool}`);
 
-    scoringMethods.forEach(function(method) {
-      if (checked(mode, method)) data.push(`scoring-method=${method}`);
-    });
+    if (!$(`select[name=${mode}-scoring-method]`).prop('disabled')) {
+      const val = $(`select[name=${mode}-scoring-method]`).val();
+      data.push(`scoring-method=${val}`);
+    };
 
     const scoreThresholdPower = $(`.${mode} .score-threshold-power`).val();
     const scorePower = Math.pow(10, parseInt(scoreThresholdPower));
@@ -109,14 +104,17 @@ const addPoolAndSelectionBoundsListeners = function(mode) {
   });
 }
 
+const addScoringMethodListener = function(mode) {
+  $(`select[name=${mode}-scoring-method]`).change(function(e) {
+    updateHint(mode, scoreThresholds[e.target.value])
+  });
+}
+
 modes = ['random', 'top']
 
 modes.forEach(function(mode) {
-  addModeListeners(mode);
-
-  scoringMethods.forEach(function(method) { 
-    $(`.${mode} .${method}`).change(function() {
-      updateHint(mode, scoreThresholds[method])
-    });
-  });
+  addRefreshListener(mode);
+  addSelectionListener(mode);
+  addPoolAndSelectionBoundsListeners(mode);
+  addScoringMethodListener(mode);
 })

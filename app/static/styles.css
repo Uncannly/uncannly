@@ -26,6 +26,10 @@ div.no-block {
 	display: inline;
 }
 
+select {
+	font-family: 'Open Sans', sans-serif;
+}
+
 input[type=number] {
   width: 50px;
   font-family: 'Open Sans', sans-serif;
