@@ -41,7 +41,24 @@ body {
 	font-family: 'Open Sans', sans-serif;
 }
 
-img {
+.word {
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-start;
+	align-items: center;
+}
+
+.word img {
 	height: 20px;
-	padding: auto;
+	opacity: 0;
+	cursor: pointer;
+}
+
+.word:hover img {
+	opacity: 1;
+	fill: #000000;
+}
+
+.word:active img {
+	fill: #333333;
 }

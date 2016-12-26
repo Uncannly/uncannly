@@ -43,7 +43,15 @@ const addRefreshListener = function(mode) {
         $(`#${mode}`).html('');
         JSON.parse(data).forEach(function(word, i) {
           $(`#${mode}`).append(
-            `<div id="word-${i}"><img src="/static/img/clippy.svg" id="copy-word-${i}" data-clipboard-target="#text-${i}"></img><img src="/static/img/audio.svg" class="speak-word"></img><div class="no-block" id="text-${i}">${word}</div></div>`
+            `<div class="word" id="word-${i}">
+              <img 
+                src="/static/img/clippy.svg" 
+                id="copy-word-${i}" 
+                data-clipboard-target="#text-${i}">
+              </img>
+              <img src="/static/img/audio.svg" class="speak-word"></img>
+              <div class="no-block" id="text-${i}">${word}</div>
+            </div>`
           );
           new Clipboard(`#copy-word-${i}`);
         });
