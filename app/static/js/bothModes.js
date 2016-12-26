@@ -31,11 +31,11 @@ const addRefreshListener = function(mode) {
 
     if (data.length > 0) url += '?' + data.join('&');
 
-    $(`#${mode}`).html('Loading...');
+    $(`#${mode}`).empty().append('<div class="loading">Loading...</div>');
     $.ajax({
       url: url,
       success: function(data) { 
-        $(`#${mode}`).html('');
+        $(`#${mode}`).empty();
         JSON.parse(data).forEach(function(word, i) {
           $(`#${mode}`).append(
             `<div class="word" id="word-${i}">

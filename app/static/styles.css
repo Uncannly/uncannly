@@ -37,7 +37,7 @@ select {
 input[type=number] {
   width: 50px;
   font-family: 'Open Sans', sans-serif;
-  text-align: right;
+  text-align: center;
   border: none;
 }
 
@@ -141,4 +141,12 @@ input[type=checkbox]:checked + label:before {
   color: #f3f3f3;
   text-align: center;
   line-height: 15px;
+}
+
+.speak-word {
+  padding: 0 5px;
+}
+
+.loading {
+  padding: 0 50px;
 }
