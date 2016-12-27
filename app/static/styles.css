@@ -34,13 +34,22 @@ select {
 	font-family: 'Open Sans', sans-serif;
   height: 26px;
   margin-left: 10px;
+  font-size: 14px;
 }
 
 input[type=number] {
   width: 50px;
   font-family: 'Open Sans', sans-serif;
+  font-size: 14px;
   text-align: center;
   margin-right: 10px;
+  border: solid 1px #999;
+  height: 22px;
+  border-radius: 1px;
+}
+
+input[type=number]:hover {
+  border: solid 1px #777;
 }
 
 #random-word {
