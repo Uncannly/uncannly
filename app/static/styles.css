@@ -81,6 +81,10 @@ body {
   color: #444;
 }
 
+.word i.fa-spin {
+  opacity: 1;
+}
+
 .word:hover i {
 	opacity: 1;
 }
