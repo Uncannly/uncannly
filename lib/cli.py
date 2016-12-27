@@ -81,6 +81,11 @@ def cli(mode):
         action='store_true',
         help=README.get('ignore_position')
     )
+    parser.add_argument(
+        '--ignore-length', '-l',
+        action='store_true',
+        help=README.get('ignore_length')
+    )
 
     args = parser.parse_args()
     get_by_mode(mode=mode, interface='cli', args=vars(args))

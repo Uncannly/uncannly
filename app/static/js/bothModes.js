@@ -3,7 +3,7 @@ const scoringMethods = [
 ]
 
 const otherOptions = [
-  'unweighted', 'unstressed', 'exclude-real', 'ignore-position'
+  'unweighted', 'unstressed', 'exclude-real', 'ignore-position', 'ignore-length'
 ]
 
 const addRefreshListener = function(mode) {

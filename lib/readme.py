@@ -60,5 +60,9 @@ README = {
     'exclude_real': 'Do not include words probable by pronunciation that do exist.',
     'ignore_position': (
         'Do not consider position within the word when choosing the next phoneme.'
+    ),
+    'ignore_length': (
+        'Do not consider length of the word when choosing the next phoneme.'
+        'I will say more on this later.'
     )
 }

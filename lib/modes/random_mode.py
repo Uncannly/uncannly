@@ -27,11 +27,12 @@ class RandomMode(object):
             unweighted,
             unstressed,
             exclude_real,
-            ignore_position):
+            ignore_position,
+            ignore_length):
 
         selector = api_selector if interface == 'api' else cli_selector
 
-        word, phoneme, score = reset()
+        word, phoneme, score, length = reset(ignore_length)
 
         count_fails = 0
         count_successes = 0
@@ -46,13 +47,14 @@ class RandomMode(object):
                                           score_threshold=score_threshold,
                                           unweighted=unweighted,
                                           unstressed=unstressed,
-                                          ignore_position=ignore_position)
+                                          ignore_position=ignore_position,
+                                          length=length)
 
             if phoneme is None:
                 count_fails += 1
                 if count_fails > 1000000:
                     return fail(interface)
-                word, phoneme, score = reset()
+                word, phoneme, score, length = reset(ignore_length)
             else:
                 if phoneme == 'END_WORD':
                     selected_word = selector(word, selection, unstressed, exclude_real)
@@ -61,7 +63,9 @@ class RandomMode(object):
                         count_successes += 1
                         if count_successes == pool:
                             return succeed(words, interface, selection)
-                    word, phoneme, score = reset()
+                    word, phoneme, score, length = reset(ignore_length)
+                elif len(word) > 20:
+                    word, phoneme, score, length = reset(ignore_length)
                 else:
                     word.append(phoneme)
 
@@ -73,11 +77,20 @@ def next_phoneme(phoneme,
                  score_threshold,
                  unweighted,
                  unstressed,
-                 ignore_position):
+                 ignore_position,
+                 length):
 
-    i = 0 if ignore_position else word_length
     stressing, weighting = booleans_to_strings(unstressed, unweighted)
-    next_phonemes = NEXT_PHONEMES_OPTIONS[stressing][weighting][i]
+
+    position = 0 if ignore_position else word_length
+    if position >= length:
+        length = 0
+    if len(NEXT_PHONEMES_OPTIONS[stressing][weighting][length]) == 0:
+        length = 0
+    if len(NEXT_PHONEMES_OPTIONS[stressing][weighting][length][position]) == 0:
+        position = 0
+
+    next_phonemes = NEXT_PHONEMES_OPTIONS[stressing][weighting][length][position]
 
     accumulated_probability = 0
     for (phoneme, probability) in next_phonemes[phoneme]:
@@ -96,8 +109,9 @@ def cli_selector(word, selection, unstressed, exclude_real):
 def api_selector(word, selection, unstressed, exclude_real):
     return Present.for_web(word, unstressed, exclude_real)
 
-def reset():
-    return ([], 'START_WORD', 1.0)
+def reset(ignore_length):
+    length = 0 if ignore_length else int(random.random() * 20)
+    return ([], 'START_WORD', 1.0, length)
 
 def fail(interface):
     message = (

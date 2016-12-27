@@ -17,23 +17,35 @@ from lib.options import booleans_to_strings, SCORING_METHODS, DEFAULT_LIMITS, PO
 
 # comments are useful for finding the right threshold for the search
 class MostProbableWords(object):
-    def __init__(self, word_positions, options):
+    def __init__(self, word_lengths, ignore_length, options):
         ignore_position, unstressed, unweighted, method_mean, method_addition = options
         stressing, weighting = booleans_to_strings(unstressed, unweighted)
+
         positioning = 'ignore_position' if ignore_position else 'use_position'
+        length_consideration = 'ignore_length' if ignore_length else 'use_length'
 
         self.most_probable_words = []
-        self.word_positions = word_positions
+        self.word_lengths = word_lengths
         self.scoring_method = SCORING_METHODS.keys()[
             SCORING_METHODS.values().index((method_mean, method_addition))
         ]
         self.ignore_position = ignore_position
-        self.limit = DEFAULT_LIMITS[positioning][stressing][weighting][self.scoring_method]
+        self.ignore_length = ignore_length
+        self.limit = DEFAULT_LIMITS[length_consideration][positioning]\
+            [stressing][weighting][self.scoring_method]
         self.count = 0
-        # print diagnose_counts_helper(options), 'limit', self.limit
+        # print length_consideration, diagnose_counts_helper(options), 'limit', self.limit
 
     def get(self):
-        self.get_next_phoneme(['START_WORD'], 1.0)
+        if self.ignore_length:
+            self.word_length = 0
+            self.get_next_phoneme(['START_WORD'], 1.0)
+        else:
+            for word_length in range(1, len(self.word_lengths)):
+                self.word_length = word_length
+                if len(self.word_lengths[self.word_length]) != 0:
+                    self.get_next_phoneme(['START_WORD'], 1.0)
+
         self.most_probable_words.sort(key=lambda x: -x[1])
 
         # print 'total words searched: ', self.count
@@ -49,15 +61,17 @@ class MostProbableWords(object):
         if word_length > 20:
             pass
         else:
-            i = 0 if self.ignore_position else word_length
-            next_phonemes = self.word_positions[i]
+            word_position = 0 if self.ignore_position else word_length
+            next_phonemes = self.word_lengths[self.word_length][word_position]
             for next_phoneme, probability in next_phonemes[current_phoneme]:
                 score = get_score(score, self.scoring_method, probability, word_length)
                 if score < self.limit:
                     pass
                 elif next_phoneme == 'END_WORD':
                     stringified_word = array_to_string(word[1:len(word)])
-                    self.most_probable_words.append((stringified_word, score))
+                    self.most_probable_words.append(
+                        (stringified_word, score, self.word_length)
+                    )
                 else:
                     grown_word = word[:]
                     grown_word.append(next_phoneme)

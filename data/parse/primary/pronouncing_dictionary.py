@@ -34,22 +34,26 @@ class PronouncingDictionary(object):
 
     def parse_phoneme_chains(self, args):
         phonemes, frequency = args
-        for stressing in ['stressed', 'unstressed']:
-            for weighting in ['weighted', 'unweighted']:
-                self.phoneme_chains.setdefault(weighting, {}).setdefault(stressing, [{}])
-                for i in range(0, len(phonemes[stressing]) - 1):
-                    phoneme = phonemes[stressing][i] 
-                    next_phoneme = phonemes[stressing][i + 1]
+        for weighting in ['weighted', 'unweighted']:
+            for stressing in ['stressed', 'unstressed']:
+                self.phoneme_chains.setdefault(weighting, {}).setdefault(stressing, [])
+                word_length = len(phonemes[stressing])
 
-                    self.phoneme_chains[weighting][stressing][0].\
-                        setdefault(phoneme, {}).setdefault(next_phoneme, 0)
-                    self.phoneme_chains[weighting][stressing][0][phoneme][next_phoneme] \
-                        += frequency if weighting == 'weighted' else 1
+                for word_position in range(0, word_length - 1):
+                    phoneme = phonemes[stressing][word_position] 
+                    next_phoneme = phonemes[stressing][word_position + 1]
 
-                    while i + 2 > len(self.phoneme_chains[weighting][stressing]):
-                        self.phoneme_chains[weighting][stressing].append({})
+                    for ignore_length in [False, True]:
+                        length = 0 if ignore_length else word_length - 2 # for start_word and end_word
+                        while length + 1 > len(self.phoneme_chains[weighting][stressing]):
+                            self.phoneme_chains[weighting][stressing].append([])
 
-                    self.phoneme_chains[weighting][stressing][i + 1].\
-                        setdefault(phoneme, {}).setdefault(next_phoneme, 0)
-                    self.phoneme_chains[weighting][stressing][i + 1][phoneme][next_phoneme] \
-                        += frequency if weighting == 'weighted' else 1
+                        for ignore_position in [False, True]:
+                            position = 0 if ignore_position else word_position + 1 # bc word_position is also 0-indexed but we need it to start in index 1 since 0 is reserved for the catch-all (btw, the index 1 has only one key, START_WORD)
+                            while position + 1 > len(self.phoneme_chains[weighting][stressing][length]):
+                                self.phoneme_chains[weighting][stressing][length].append({})
+
+                            self.phoneme_chains[weighting][stressing][length][position].\
+                                setdefault(phoneme, {}).setdefault(next_phoneme, 0)
+                            self.phoneme_chains[weighting][stressing][length][position]\
+                                [phoneme][next_phoneme] += frequency if weighting == 'weighted' else 1

@@ -29,7 +29,7 @@ def route(mode, request):
     'pool', 'selection', 'top_selection', 'random_selection', 'scoring_method',
     'score_by_integral_product', 'score_by_integral_sum', 
     'score_by_mean_geometric', 'score_by_mean_arithmetic', 'score_threshold',
-    'unweighted', 'unstressed', 'exclude_real', 'ignore_position'
+    'unweighted', 'unstressed', 'exclude_real', 'ignore_position', 'ignore_length'
   ]
   for option in options:
     args[option] = request.args.get(snake_to_kebab(option))

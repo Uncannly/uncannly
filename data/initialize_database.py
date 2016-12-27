@@ -23,35 +23,37 @@ def initialize_database():
 
     ########### PHASE TWO ####################
 
-    word_positions = {'weighted': {}, 'unweighted': {}}
+    word_lengths = {'weighted': {}, 'unweighted': {}}
     for unstressed in [False, True]:
         stressing = 'unstressed' if unstressed else 'stressed'
 
-        word_positions['weighted'][stressing] = \
+        word_lengths['weighted'][stressing] = \
           AbsoluteChain.parse(phoneme_chains['weighted'][stressing])
-        word_positions['unweighted'][stressing] = \
+        word_lengths['unweighted'][stressing] = \
           AbsoluteChain.parse(phoneme_chains['unweighted'][stressing])
 
         schema.phonemes(
-            word_positions['weighted'][stressing],
-            word_positions['unweighted'][stressing],
+            word_lengths['weighted'][stressing],
+            word_lengths['unweighted'][stressing],
             unstressed
         )
 
     ########### PHASE THREE ####################
 
-    for ignore_position in [False, True]:
-        for unstressed in [False, True]:
-            for unweighted in [False, True]:
-                for method_mean in [False, True]:
-                    for method_addition in [False, True]:
-                        options = ignore_position, unstressed, unweighted, method_mean, method_addition
-                        stressing, weighting = booleans_to_strings(unstressed, unweighted)
-                        word_scores = MostProbableWords(
-                            word_positions[weighting][stressing],
-                            options
-                        )
-                        schema.scores(word_scores.get(), options)
+    for unstressed in [False, True]:
+        for unweighted in [False, True]:
+            for ignore_length in [False, True]:
+                for ignore_position in [False, True]:
+                    for method_mean in [False, True]:
+                        for method_addition in [False, True]:
+                            options = ignore_position, unstressed, unweighted, method_mean, method_addition
+                            stressing, weighting = booleans_to_strings(unstressed, unweighted)
+                            word_scores = MostProbableWords(
+                                word_lengths[weighting][stressing],
+                                ignore_length,
+                                options
+                            )
+                            schema.scores(word_scores.get(), options)
 
     schema.finish()
 

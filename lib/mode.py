@@ -31,6 +31,7 @@ def get_by_mode(mode, interface, args):
     get_args['unstressed'] = args['unstressed'] or args['unstressed'] == ''
     get_args['exclude_real'] = args['exclude_real'] or args['exclude_real'] == ''
     get_args['ignore_position'] = args['ignore_position'] or args['ignore_position'] == ''
+    get_args['ignore_length'] = args['ignore_length'] or args['ignore_length'] == ''
 
     getter = TopMode if mode == 'top' else RandomMode
     return getter.get(interface=interface, **get_args)
