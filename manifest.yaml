@@ -1,4 +1,5 @@
 ---
 applications:
 - name: uncannly
-  memory: 128M
+  memory: 256M
+  timeout: 180
