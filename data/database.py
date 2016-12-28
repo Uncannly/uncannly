@@ -1,8 +1,10 @@
 import os
+import sys
 import urlparse
 
 import psycopg2
 from cfenv import AppEnv
+
 
 class Database(object):
     def __init__(self):
@@ -29,10 +31,13 @@ class Database(object):
         return results
 
 def connect():
-    if os.environ.get('VCAP_SERVICES') is None:
-        credentials = 'postgres://postgres:5554d58@localhost:5432/uncannly'
-    else:
+    if len(sys.argv) > 1 and (sys.argv[1] == "--production" or sys.argv[1] == "-p"):
+        with open('production_database_credentials.txt', 'r') as credentials_file:
+            credentials = credentials_file.read().replace('\n', '')
+    elif os.environ.get('VCAP_SERVICES') is not None:
         credentials = AppEnv().get_service(label='elephantsql').credentials['uri']
+    else:
+        credentials = 'postgres://postgres:5554d58@localhost:5432/uncannly'
 
     parsed_credentials = urlparse.urlparse(credentials)
     return psycopg2.connect(

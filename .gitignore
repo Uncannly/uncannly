@@ -1,2 +1,3 @@
 *.pyc
 venv
+production_database_credentials.txt
