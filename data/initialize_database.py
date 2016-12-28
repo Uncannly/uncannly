@@ -18,8 +18,10 @@ def initialize_database():
     ########### PHASE ONE ####################
 
     word_frequencies = frequency_list.parse()
-    words, phoneme_chains = PronouncingDictionary(word_frequencies).parse()
+    words, phoneme_chains, word_length_distributions = \
+        PronouncingDictionary(word_frequencies).parse()
     schema.words(words)
+    schema.word_length_distributions(word_length_distributions)
 
     ########### PHASE TWO ####################
 

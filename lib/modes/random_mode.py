@@ -7,15 +7,19 @@ from lib.present import Present
 from lib.type_conversion import array_to_string
 from lib.score import get_score
 from lib.options import booleans_to_strings
-from data.load_data import load_phonemes
+from data.load_data import load_phonemes, load_word_length_distribution
 
 NEXT_PHONEMES_OPTIONS = {}
-for UNSTRESSED in [False, True]:
-    for UNWEIGHTED in [False, True]:
-        STRESSING, WEIGHTING = booleans_to_strings(UNSTRESSED, UNWEIGHTED)
+WORD_LENGTH_DISTRIBUTIONS = {}
+for UNWEIGHTED in [False, True]:
+    WEIGHTING = 'unweighted' if UNWEIGHTED else 'weighted'
+    for UNSTRESSED in [False, True]:
+        STRESSING = 'unstressed' if UNSTRESSED else 'stressed'
         NEXT_PHONEMES_OPTIONS.setdefault(STRESSING, {}).setdefault(
             WEIGHTING, load_phonemes(UNWEIGHTED, UNSTRESSED)
         )
+    WORD_LENGTH_DISTRIBUTIONS[WEIGHTING] = load_word_length_distribution(WEIGHTING)
+
 
 class RandomMode(object):
     @staticmethod
@@ -32,7 +36,9 @@ class RandomMode(object):
 
         selector = api_selector if interface == 'api' else cli_selector
 
-        word, phoneme, score, length = reset(ignore_length)
+        weighting = 'unweighted' if unweighted else 'weighted'
+
+        word, phoneme, score, length = reset(ignore_length, weighting)
 
         count_fails = 0
         count_successes = 0
@@ -54,7 +60,7 @@ class RandomMode(object):
                 count_fails += 1
                 if count_fails > 1000000:
                     return fail(interface)
-                word, phoneme, score, length = reset(ignore_length)
+                word, phoneme, score, length = reset(ignore_length, weighting)
             else:
                 if phoneme == 'END_WORD':
                     selected_word = selector(word, selection, unstressed, exclude_real)
@@ -63,9 +69,9 @@ class RandomMode(object):
                         count_successes += 1
                         if count_successes == pool:
                             return succeed(words, interface, selection)
-                    word, phoneme, score, length = reset(ignore_length)
+                    word, phoneme, score, length = reset(ignore_length, weighting)
                 elif len(word) > 20:
-                    word, phoneme, score, length = reset(ignore_length)
+                    word, phoneme, score, length = reset(ignore_length, weighting)
                 else:
                     word.append(phoneme)
 
@@ -109,9 +115,17 @@ def cli_selector(word, selection, unstressed, exclude_real):
 def api_selector(word, selection, unstressed, exclude_real):
     return Present.for_web(word, unstressed, exclude_real)
 
-def reset(ignore_length):
-    length = 0 if ignore_length else int(random.random() * 20)
+def reset(ignore_length, weighting):
+    length = 0 if ignore_length else random_length(weighting)
     return ([], 'START_WORD', 1.0, length)
+
+def random_length(weighting):
+    random_number = random.random()
+    accumulated_probability = 0
+    for length, probability in enumerate(WORD_LENGTH_DISTRIBUTIONS[weighting][1:]):
+        accumulated_probability += probability
+        if accumulated_probability >= random_number:
+            return length
 
 def fail(interface):
     message = (

@@ -1,4 +1,5 @@
 import json
+import cPickle
 
 class Schema(object):
     def __init__(self, database):
@@ -74,6 +75,12 @@ class Schema(object):
             )
             sql_string += ", ".join(sql_array)
             self.database.execute(sql_string)
+
+    def word_length_distributions(self, word_length_distributions):
+        for weighting, word_length_distribution in word_length_distributions.iteritems():
+            with open('data/secondary_data/word_length_distribution_{}.pkl'.\
+                format(weighting), 'wb') as output:
+                cPickle.dump(word_length_distribution, output, -1)
 
     def finish(self):
         self.database.disconnect()

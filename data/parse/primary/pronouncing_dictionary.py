@@ -7,14 +7,16 @@ class PronouncingDictionary(object):
         self.phoneme_chains = {}
         self.pronouncing_dictionary = open_primary_data_file('cmu_pronouncing_dictionary')
         self.word_frequencies = word_frequencies
+        self.word_lengths = {'weighted': [0], 'unweighted': [0]} 
 
     def parse(self):
         for line in self.pronouncing_dictionary:
             self.parse_phoneme_chains(self.parse_words(line))
-
         self.pronouncing_dictionary.close()
 
-        return self.words, self.phoneme_chains
+        self.normalize_word_lengths()
+
+        return self.words, self.phoneme_chains, self.word_lengths
 
     def parse_words(self, line):
         [word, word_pronunciation] = line.strip().split('\t')
@@ -25,16 +27,22 @@ class PronouncingDictionary(object):
 
         self.words.append((word, word_pronunciation))
 
+        word_length = len(phonemes['stressed'])
+
         for stressing in ['stressed', 'unstressed']:
             phonemes[stressing] = ['START_WORD'] + phonemes[stressing] + ['END_WORD']
 
         frequency = self.word_frequencies[word] if word in self.word_frequencies else 1
+
+        self.absolute_word_length_distributions(word_length, frequency)
 
         return phonemes, frequency
 
     def parse_phoneme_chains(self, args):
         phonemes, frequency = args
         for weighting in ['weighted', 'unweighted']:
+            increment = 1 if weighting == 'unweighted' else frequency
+
             for stressing in ['stressed', 'unstressed']:
                 self.phoneme_chains.setdefault(weighting, {}).setdefault(stressing, [])
                 word_length = len(phonemes[stressing])
@@ -56,4 +64,20 @@ class PronouncingDictionary(object):
                             self.phoneme_chains[weighting][stressing][length][position].\
                                 setdefault(phoneme, {}).setdefault(next_phoneme, 0)
                             self.phoneme_chains[weighting][stressing][length][position]\
-                                [phoneme][next_phoneme] += frequency if weighting == 'weighted' else 1
+                                [phoneme][next_phoneme] += increment
+
+    def absolute_word_length_distributions(self, word_length, frequency):
+        for unweighted, weighting in [(False, 'weighted'), (True, 'unweighted')]:
+            increment = 1 if unweighted else frequency
+
+            while word_length + 1 > len(self.word_lengths[weighting]):
+                self.word_lengths[weighting].append(0)
+
+            self.word_lengths[weighting][0] += increment
+            self.word_lengths[weighting][word_length] += increment
+
+    def normalize_word_lengths(self):
+        for unweighted, weighting in [(False, 'weighted'), (True, 'unweighted')]:
+            absolute_total_weight = self.word_lengths[weighting][0]
+            for word_length in range(0, len(self.word_lengths[weighting])):
+                self.word_lengths[weighting][word_length] /= float(absolute_total_weight)

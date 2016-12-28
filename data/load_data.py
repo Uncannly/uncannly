@@ -1,4 +1,5 @@
 import json
+import cPickle
 
 from data.database import Database
 from lib.options import SCORING_METHODS
@@ -35,3 +36,8 @@ def load_phonemes(unweighted, unstressed):
         output[word_length][word_position][phoneme] = json.loads(next_phonemes)
 
     return output
+
+def load_word_length_distribution(weighting):
+    with open('data/secondary_data/word_length_distribution_{}.pkl'.\
+        format(weighting), 'rb') as input:
+        return cPickle.load(input)
