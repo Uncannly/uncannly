@@ -70,6 +70,10 @@ body {
   padding: 0;
 }
 
+.word:hover {
+  background-color: #fff;
+}
+
 .word div {
   padding: 0;
 }
