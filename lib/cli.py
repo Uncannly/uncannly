@@ -23,68 +23,76 @@ def cli(mode):
         help=README.get('selection')
     )
     parser.add_argument(
-        '--top-selection', '-t',
+        '--top-selection', '-ts',
         nargs='?', const=POOL_DEFAULT, type=int,
         help='Alias for `selection` when in random mode.'
     )
     parser.add_argument(
-        '--random-selection', '-w',
+        '--random-selection', '-rs',
         nargs='?', const=POOL_DEFAULT, type=int,
         help='Alias for `selection` when in top mode.'
     )
     parser.add_argument(
-        '--scoring-method', '-r',
+        '--scoring-method', '-sm',
         help=README.get('scoring_method')
     )
     parser.add_argument(
-        '--score-by-integral-product', '-m',
+        '--score-by-integral-product', '-ip',
         action='store_true',
         help=README.get('score_by_integral_product')
     )
     parser.add_argument(
-        '--score-by-integral-sum', '-a',
+        '--score-by-integral-sum', '-is',
         action='store_true',
         help=README.get('score_by_integral_sum')
     )
     parser.add_argument(
-        '--score-by-mean-geometric', '-g',
+        '--score-by-mean-geometric', '-mg',
         action='store_true',
         help=README.get('score_by_mean_geometric')
     )
     parser.add_argument(
-        '--score-by-mean-arithmetic', '-v',
+        '--score-by-mean-arithmetic', '-ma',
         action='store_true',
         help=README.get('score_by_mean_arithmetic')
     )
     parser.add_argument(
-        '--score-threshold', '-c',
+        '--score-threshold', '-st',
         type=float,
         help=README.get('score_threshold')
     )
     parser.add_argument(
-        '--unweighted', '-u',
+        '--unweighted', '-xw',
         action='store_true',
         help=README.get('unweighted')
     )
     parser.add_argument(
-        '--unstressed', '-i',
+        '--unstressed', '-xs',
         action='store_true',
         help=README.get('unstressed')
     )
     parser.add_argument(
-        '--exclude-real', '-x',
+        '--exclude-real', '-xr',
         action='store_true',
         help=README.get('exclude_real')
     )
     parser.add_argument(
-        '--ignore-position', '-d',
+        '--ignore-position', '-xp',
         action='store_true',
         help=README.get('ignore_position')
     )
     parser.add_argument(
-        '--ignore-length', '-l',
+        '--ignore-length', '-xl',
         action='store_true',
         help=README.get('ignore_length')
+    )
+    parser.add_argument(
+        '--min-length', '-mn', type=int,
+        help=README.get('min_length')
+    )
+    parser.add_argument(
+        '--max-length', '-mx', type=int,
+        help=README.get('max_length')
     )
 
     args = parser.parse_args()

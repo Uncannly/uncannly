@@ -246,3 +246,7 @@ img {
   top: 40px;
   right: 40px;
 }
+
+.extra-margin {
+  padding-right: 10px;
+}

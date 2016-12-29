@@ -104,15 +104,15 @@ Scoring is required when filtering (one must filter by something). Filtering is 
 
 *Default: integral product.*
 
-CLI shortcut: `-r`
+CLI shortcut: `-sm`
 
-`-m` aliases `-r integral-product`.
+`-ip` aliases `-sm integral-product`.
 
-`-a` aliases `-r integral-sum`.
+`-is` aliases `-sm integral-sum`.
 
-`-g` aliases `-r mean-geometric`.
+`-mg` aliases `-sm mean-geometric`.
 
-`-v` aliases `-r mean-arithmetic`.
+`-ma` aliases `-sm mean-arithmetic`.
 
 
 <a name="score-threshold">
@@ -123,25 +123,25 @@ When specified, will not return words with scores lower than this threshold (acc
 
 *Default: 1^10-7, which is the threshold which still lets 45 words through for the default scoring method, integral product. All other scoring methods need higher thresholds to filter out more words than that.*
 
-CLI shortcut: `-c`
+CLI shortcut: `-st`
 
 ### unweighted
 
 Do not weight probabilities by frequency of words in the corpus.
 
-CLI shortcut: `-u`
+CLI shortcut: `-xw`
 
 ### unstressed
 
 Ignore stress levels of vowels.
 
-CLI shortcut: `-i`
+CLI shortcut: `-xs`
 
 ### exclude real
 
 Do not include words probable by pronunciation that do exist.
 
-CLI shortcut: `-x`
+CLI shortcut: `-xr`
 
 ## Examples
 

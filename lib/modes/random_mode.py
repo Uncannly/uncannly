@@ -6,7 +6,7 @@ sys.path.insert(1, os.path.join(sys.path[0], '..'))
 from lib.present import Present
 from lib.type_conversion import array_to_string
 from lib.score import get_score
-from lib.options import booleans_to_strings
+from lib.options import booleans_to_strings, MAX_WORD_LENGTH
 from data.load_data import load_phonemes, load_word_length_distribution
 
 NEXT_PHONEMES_OPTIONS = {}
@@ -32,13 +32,15 @@ class RandomMode(object):
             unstressed,
             exclude_real,
             ignore_position,
-            ignore_length):
+            ignore_length,
+            min_length,
+            max_length):
 
         selector = api_selector if interface == 'api' else cli_selector
 
         weighting = 'unweighted' if unweighted else 'weighted'
 
-        word, phoneme, score, length = reset(ignore_length, weighting)
+        word, phoneme, score, length = reset(ignore_length, weighting, min_length, max_length)
 
         count_fails = 0
         count_successes = 0
@@ -60,18 +62,29 @@ class RandomMode(object):
                 count_fails += 1
                 if count_fails > 1000000:
                     return fail(interface)
-                word, phoneme, score, length = reset(ignore_length, weighting)
+                word, phoneme, score, length = reset(ignore_length, weighting, min_length, max_length)
             else:
                 if phoneme == 'END_WORD':
+                    if min_length is not None and len(word) < min_length:
+                        word, phoneme, score, length = reset(ignore_length, weighting, min_length, max_length)
+                    else:
+                        selected_word = selector(word, selection, unstressed, exclude_real)
+                        if selected_word:
+                            words.append((selected_word, score))
+                            count_successes += 1
+                            if count_successes == pool:
+                                return succeed(words, interface, selection)
+                        word, phoneme, score, length = reset(ignore_length, weighting, min_length, max_length)
+                elif max_length is not None and len(word) >= max_length:
                     selected_word = selector(word, selection, unstressed, exclude_real)
                     if selected_word:
                         words.append((selected_word, score))
                         count_successes += 1
                         if count_successes == pool:
                             return succeed(words, interface, selection)
-                    word, phoneme, score, length = reset(ignore_length, weighting)
-                elif len(word) > 20:
-                    word, phoneme, score, length = reset(ignore_length, weighting)
+                    word, phoneme, score, length = reset(ignore_length, weighting, min_length, max_length)
+                elif len(word) > MAX_WORD_LENGTH:
+                    word, phoneme, score, length = reset(ignore_length, weighting, min_length, max_length)
                 else:
                     word.append(phoneme)
 
@@ -115,17 +128,26 @@ def cli_selector(word, selection, unstressed, exclude_real):
 def api_selector(word, selection, unstressed, exclude_real):
     return Present.for_web(word, unstressed, exclude_real)
 
-def reset(ignore_length, weighting):
-    length = 0 if ignore_length else random_length(weighting)
+def reset(ignore_length, weighting, min_length, max_length):
+    length = 0 if ignore_length else random_length(weighting, min_length, max_length)
     return ([], 'START_WORD', 1.0, length)
 
-def random_length(weighting):
-    random_number = random.random()
-    accumulated_probability = 0
-    for length, probability in enumerate(WORD_LENGTH_DISTRIBUTIONS[weighting][1:]):
-        accumulated_probability += probability
-        if accumulated_probability >= random_number:
-            return length
+def random_length(weighting, min_length, max_length):
+    # i mean, or we could slice the distributions and re-normalize.
+    # that especially would make more sense once we end up implementing the 
+    # continuous re-evaluation style.
+    while True:
+        random_number = random.random()
+        accumulated_probability = 0
+        for length, probability in enumerate(WORD_LENGTH_DISTRIBUTIONS[weighting][1:]):
+            accumulated_probability += probability
+            if accumulated_probability >= random_number:
+                if min_length is not None and length < min_length:
+                    pass
+                elif max_length is not None and length > max_length:
+                    pass 
+                else:
+                    return length
 
 def fail(interface):
     message = (

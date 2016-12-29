@@ -33,6 +33,11 @@ const addRefreshListener = function(mode) {
       if (checked(mode, option)) { data.push(option); };
     })
 
+    const minLength = $(`.${mode} .min-length`).val();
+    const maxLength = $(`.${mode} .max-length`).val();
+    if (minLength) data.push(`min-length=${minLength}`);
+    if (maxLength) data.push(`max-length=${maxLength}`);
+
     if (data.length > 0) url += '?' + data.join('&');
 
     $(`#${mode}`).empty().append('<div class="loading">Loading...</div>');
@@ -108,13 +113,13 @@ const addSelectionListener = function(mode) {
   });
 }
 
-const addPoolAndSelectionBoundsListeners = function(mode) {
-  $(`.${mode} .selection-value`).change(function(e) {
-    $(`.${mode} .pool`).attr("min", e.target.value);
+const addBoundsListeners = function(mode, lesser, greater) {
+  $(`.${mode} .${lesser}`).change(function(e) {
+    $(`.${mode} .${greater}`).attr("min", e.target.value || 0);
   });
 
-  $(`.${mode} .pool`).change(function(e) {
-    $(`.${mode} .selection-value`).attr("max", e.target.value);
+  $(`.${mode} .${greater}`).change(function(e) {
+    $(`.${mode} .${lesser}`).attr("max", e.target.value);
   });
 }
 
@@ -129,6 +134,7 @@ modes = ['random', 'top']
 modes.forEach(function(mode) {
   addRefreshListener(mode);
   addSelectionListener(mode);
-  addPoolAndSelectionBoundsListeners(mode);
+  addBoundsListeners(mode, 'selection-value', 'pool');
+  addBoundsListeners(mode, 'min-length', 'max-length');
   addScoringMethodListener(mode);
 })

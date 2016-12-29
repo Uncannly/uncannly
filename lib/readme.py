@@ -64,5 +64,7 @@ README = {
     'ignore_length': (
         'Do not consider length of the word when choosing the next phoneme.'
         'I will say more on this later.'
-    )
+    ),
+    'max_length': 'The maximum length (in phonemes) of words to return.',
+    'min_length': 'The minimum length (in phonemes) of words to return.'
 }

@@ -1,4 +1,4 @@
-{% macro otherOptions(mode, readme) -%}
+{% macro otherOptions(mode, readme, max_word_length) -%}
 
 <div>
 	<input type="checkbox" class="unweighted" id="{{ mode }}-unweighted">
@@ -27,7 +27,9 @@
 	>
 		exclude real
 	</label>
+</div>
 
+<div>
 	<input type="checkbox" class="ignore-position" id="{{ mode }}-ignore-position">
 	<label 
 		class="fancy own-line"
@@ -45,6 +47,31 @@
 	>
 		ignore length
 	</label>
+
+	<label 
+    title="{{ readme.min_length }}"
+    class="extra-margin"
+  >
+    <input 
+      type="number" 
+      max="{{ max_word_length }}" 
+      min="1" 
+      step="1" 
+      class="min-length" 
+    >minimum length
+  </label>
+
+  <label 
+    title="{{ readme.max_length }}"
+  >
+    <input 
+      type="number" 
+      max="{{ max_word_length }}" 
+      min="1" 
+      step="1" 
+      class="max-length" 
+    >maximum length
+  </label>
 
 </div>
 

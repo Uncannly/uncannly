@@ -4,7 +4,8 @@ sys.path.insert(1, os.path.join(sys.path[0], '..', '..'))
 
 from lib.type_conversion import array_to_string
 from lib.score import get_score
-from lib.options import booleans_to_strings, SCORING_METHODS, DEFAULT_LIMITS, POOL_MAX
+from lib.options import booleans_to_strings, \
+    SCORING_METHODS, DEFAULT_LIMITS, POOL_MAX, MAX_WORD_LENGTH
 
 # def diagnose_counts_helper(options):
 #     output = ''
@@ -58,7 +59,7 @@ class MostProbableWords(object):
         word_length = len(word)
         current_phoneme = word[word_length - 1]
 
-        if word_length > 20:
+        if word_length > MAX_WORD_LENGTH:
             pass
         else:
             word_position = 0 if self.ignore_position else word_length

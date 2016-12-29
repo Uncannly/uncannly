@@ -19,7 +19,9 @@ class TopMode(object):
             unstressed,
             exclude_real,
             ignore_position,
-            ignore_length):
+            ignore_length,
+            min_length,
+            max_length):
 
         most_probable_words = load_scores(scoring_method, ignore_length, ignore_position, unstressed, unweighted)
         most_probable_words.sort(key=lambda x: -x[1])
@@ -33,8 +35,13 @@ class TopMode(object):
 
         words = []
         for word, score in most_probable_words:
+            length = len(string_to_array(word))
             if score < score_threshold:
                 break
+            elif min_length is not None and length < min_length:
+                pass
+            elif max_length is not None and length > max_length:
+                pass
             else:
                 words.append(word)
 

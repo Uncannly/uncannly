@@ -8,7 +8,8 @@ from gevent.wsgi import WSGIServer
 from lib.mode import get_by_mode
 from lib.readme import README
 from lib.case_conversion import snake_to_kebab
-from lib.options import POOL_DEFAULT, POOL_MAX, TOO_FEW_MESSAGE, NO_WORDS_MESSAGE
+from lib.options import POOL_DEFAULT, POOL_MAX, TOO_FEW_MESSAGE, \
+  NO_WORDS_MESSAGE, MAX_WORD_LENGTH
 
 app = Flask(__name__)
 CORS(app)
@@ -20,7 +21,8 @@ def root():
                          pool_default=POOL_DEFAULT, 
                          pool_max=POOL_MAX,
                          too_few_message=TOO_FEW_MESSAGE, 
-                         no_words_message=NO_WORDS_MESSAGE
+                         no_words_message=NO_WORDS_MESSAGE,
+                         max_word_length=MAX_WORD_LENGTH
   )
 
 def route(mode, request):
@@ -29,7 +31,8 @@ def route(mode, request):
     'pool', 'selection', 'top_selection', 'random_selection', 'scoring_method',
     'score_by_integral_product', 'score_by_integral_sum', 
     'score_by_mean_geometric', 'score_by_mean_arithmetic', 'score_threshold',
-    'unweighted', 'unstressed', 'exclude_real', 'ignore_position', 'ignore_length'
+    'unweighted', 'unstressed', 'exclude_real', 'ignore_position', 'ignore_length',
+    'min_length', 'max_length'
   ]
   for option in options:
     args[option] = request.args.get(snake_to_kebab(option))

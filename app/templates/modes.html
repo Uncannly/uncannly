@@ -2,13 +2,13 @@
 {% from 'scoring.html' import scoring as scoring %}
 {% from 'otherOptions.html' import otherOptions as otherOptions %}
 
-{% macro modes(mode, readme, pool_default, pool_max) -%}
+{% macro modes(mode, readme, pool_default, pool_max, max_word_length) -%}
 
 <div class="{{ mode }}" style="{{ 'display: none' if mode == 'top' }}">
 
   {{ selection(mode, readme, pool_default, pool_max) }}
   {{ scoring(mode, readme) }}
-  {{ otherOptions(mode, readme) }}
+  {{ otherOptions(mode, readme, max_word_length) }}
 
   <button class="refresh">Refresh</button>
   
