@@ -20,30 +20,30 @@ DEFAULT_LIMITS = {
         'use_position': {
             'stressed': {
                 'weighted': {
-                    'integral_product': 8.1   * 10**-5,  # 
-                    'integral_sum':     9  * 10**-1, # 
-                    'mean_geometric':   3.1   * 10**-1, # 
-                    'mean_arithmetic':  8.5  * 10**-1 # 
+                    'integral_product': 8.1   * 10**-5,  #
+                    'integral_sum':     9  * 10**-1, #
+                    'mean_geometric':   3.1   * 10**-1, #
+                    'mean_arithmetic':  8.5  * 10**-1 #
                 },
                 'unweighted': {
                     'integral_product': 1.4   * 10**-6, #
                     'integral_sum':     4.85  * 10**-1, #
-                    'mean_geometric':   2.5   * 10**-1, # 
-                    'mean_arithmetic':  5.55  * 10**-1 # 
+                    'mean_geometric':   2.5   * 10**-1, #
+                    'mean_arithmetic':  5.55  * 10**-1 #
                 }
             },
             'unstressed': {
                 'weighted': {
-                    'integral_product': 1  * 10**-5, # 
-                    'integral_sum':     9.4   * 10**-1, # 
-                    'mean_geometric':   3.1   * 10**-1, # 
-                    'mean_arithmetic':  8.69  * 10**-1 # 
+                    'integral_product': 1  * 10**-5, #
+                    'integral_sum':     9.4   * 10**-1, #
+                    'mean_geometric':   3.1   * 10**-1, #
+                    'mean_arithmetic':  8.69  * 10**-1 #
                 },
                 'unweighted': {
                     'integral_product': 3.5   * 10**-5, #
-                    'integral_sum':     8.9   * 10**-1,  # 
-                    'mean_geometric':   9.0   * 10**-1, # 
-                    'mean_arithmetic':  7.98  * 10**-1  # 
+                    'integral_sum':     8.9   * 10**-1,  #
+                    'mean_geometric':   9.0   * 10**-1, #
+                    'mean_arithmetic':  7.98  * 10**-1  #
                 }
             }
         },

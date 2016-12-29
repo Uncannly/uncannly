@@ -1,7 +1,6 @@
 import json
-import cPickle
 
-class Schema(object):
+class Tables(object):
     def __init__(self, database):
         self.database = database
 
@@ -40,7 +39,7 @@ class Schema(object):
                 iterator_word_length = max_word_length if word_length == 0 else word_length
                 for word_position in range(0, iterator_word_length):
                     for phoneme, next_phonemes in \
-                        word_lengths[word_length][word_position].iteritems(): 
+                        word_lengths[word_length][word_position].iteritems():
                         next_phonemes_unweighted = word_lengths_unweighted\
                             [word_length][word_position][phoneme]
                         sql_array.append("('{}', '{}', '{}', '{}', '{}', '{}')"\
@@ -49,8 +48,7 @@ class Schema(object):
                                     phoneme,
                                     unstressed,
                                     json.dumps(next_phonemes),
-                                    json.dumps(next_phonemes_unweighted))
-                        )
+                                    json.dumps(next_phonemes_unweighted)))
         sql_string = (
             "insert into phonemes (word_length, word_position, phoneme, "
             "unstressed, next_phonemes, next_phonemes_unweighted) values "
@@ -75,12 +73,6 @@ class Schema(object):
             )
             sql_string += ", ".join(sql_array)
             self.database.execute(sql_string)
-
-    def word_length_distributions(self, word_length_distributions):
-        for weighting, word_length_distribution in word_length_distributions.iteritems():
-            with open('data/secondary_data/word_length_distribution_{}.pkl'.\
-                format(weighting), 'wb') as output:
-                cPickle.dump(word_length_distribution, output, -1)
 
     def finish(self):
         self.database.disconnect()

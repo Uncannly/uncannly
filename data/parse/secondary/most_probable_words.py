@@ -14,9 +14,11 @@ from lib.options import booleans_to_strings, \
 #     output += 'unweighted ' if options[2] else 'weighted '
 #     output += 'avg ' if options[3] else 'integral '
 #     output += '+' if options[4] else '*'
-#     return output 
+#     return output
 
 # comments are useful for finding the right threshold for the search
+
+# pylint: disable=too-many-instance-attributes
 class MostProbableWords(object):
     def __init__(self, word_lengths, ignore_length, options):
         ignore_position, unstressed, unweighted, method_mean, method_addition = options
@@ -35,6 +37,7 @@ class MostProbableWords(object):
         self.limit = DEFAULT_LIMITS[length_consideration][positioning]\
             [stressing][weighting][self.scoring_method]
         self.count = 0
+        self.word_length = None
         # print length_consideration, diagnose_counts_helper(options), 'limit', self.limit
 
     def get(self):
@@ -77,3 +80,4 @@ class MostProbableWords(object):
                     grown_word = word[:]
                     grown_word.append(next_phoneme)
                     self.get_next_phoneme(grown_word, score)
+# pylint: enable=too-many-instance-attributes

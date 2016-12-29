@@ -2,23 +2,26 @@ import sys
 
 from data.parse.primary import frequency_list
 from data.parse.primary.pronouncing_dictionary import PronouncingDictionary
-from data.parse.secondary.absolute_chain import AbsoluteChain
+from data.parse.secondary import absolute_chain
 from data.parse.secondary.most_probable_words import MostProbableWords
 from data.database import Database
-from data.schema import Schema
+from data.tables import Tables
+from data.secondary_data_io import save_word_length_distributions
 from lib.options import booleans_to_strings
 
-class DatabaseInitializer():
+class DatabaseInitializer(object):
     def __init__(self):
-        self.schema = Schema(Database())
-        self.schema.schema()
+        self.tables = Tables(Database())
+        self.tables.schema()
+        self.phoneme_chains = None
+        self.word_lengths = None
 
     def initialize_words(self):
         word_frequencies = frequency_list.parse()
         words, self.phoneme_chains, word_length_distributions = \
             PronouncingDictionary(word_frequencies).parse()
-        self.schema.words(words)
-        self.schema.word_length_distributions(word_length_distributions)
+        self.tables.words(words)
+        save_word_length_distributions(word_length_distributions)
 
     def initialize_phoneme_chains(self):
         self.word_lengths = {'weighted': {}, 'unweighted': {}}
@@ -26,11 +29,11 @@ class DatabaseInitializer():
             stressing = 'unstressed' if unstressed else 'stressed'
 
             self.word_lengths['weighted'][stressing] = \
-              AbsoluteChain.parse(self.phoneme_chains['weighted'][stressing])
+              absolute_chain.parse(self.phoneme_chains['weighted'][stressing])
             self.word_lengths['unweighted'][stressing] = \
-              AbsoluteChain.parse(self.phoneme_chains['unweighted'][stressing])
+              absolute_chain.parse(self.phoneme_chains['unweighted'][stressing])
 
-            self.schema.phonemes(
+            self.tables.phonemes(
                 self.word_lengths['weighted'][stressing],
                 self.word_lengths['unweighted'][stressing],
                 unstressed
@@ -43,33 +46,22 @@ class DatabaseInitializer():
                     for ignore_position in [False, True]:
                         for method_mean in [False, True]:
                             for method_addition in [False, True]:
-                                self.save_scores(ignore_length,
-                                                 ignore_position, 
-                                                 unstressed,
-                                                 unweighted, 
-                                                 method_mean, 
-                                                 method_addition)
-
-    def save_scores(self, 
-                    ignore_length,
-                    ignore_position, 
-                    unstressed, 
-                    unweighted, 
-                    method_mean, 
-                    method_addition):
-        options = ignore_position, unstressed, unweighted, method_mean, method_addition
-        stressing, weighting = booleans_to_strings(unstressed, unweighted)
-        word_scores = MostProbableWords(self.word_lengths[weighting][stressing],
-                                        ignore_length,
-                                        options)
-        self.schema.scores(word_scores.get(), options)
+                                options = ignore_position, unstressed, \
+                                    unweighted, method_mean, method_addition
+                                stressing, weighting = booleans_to_strings(unstressed,
+                                                                           unweighted)
+                                word_scores = MostProbableWords(
+                                    self.word_lengths[weighting][stressing],
+                                    ignore_length,
+                                    options)
+                                self.tables.scores(word_scores.get(), options)
 
     def finish(self):
-        self.schema.finish()
+        self.tables.finish()
         sys.stdout.write('Database successfully initialized.\n')
 
-database_initializer = DatabaseInitializer()
-database_initializer.initialize_words()
-database_initializer.initialize_phoneme_chains()
-database_initializer.initialize_scores()
-database_initializer.finish()
+DATABASE_INITIALIZER = DatabaseInitializer()
+DATABASE_INITIALIZER.initialize_words()
+DATABASE_INITIALIZER.initialize_phoneme_chains()
+DATABASE_INITIALIZER.initialize_scores()
+DATABASE_INITIALIZER.finish()

@@ -7,7 +7,8 @@ from lib.present import Present
 from lib.type_conversion import array_to_string
 from lib.score import get_score
 from lib.options import booleans_to_strings, MAX_WORD_LENGTH
-from data.load_data import load_phonemes, load_word_length_distribution
+from data.load_data import load_phonemes
+from data.secondary_data_io import load_word_length_distribution
 
 NEXT_PHONEMES_OPTIONS = {}
 WORD_LENGTH_DISTRIBUTIONS = {}
@@ -20,7 +21,8 @@ for UNWEIGHTED in [False, True]:
         )
     WORD_LENGTH_DISTRIBUTIONS[WEIGHTING] = load_word_length_distribution(WEIGHTING)
 
-
+# pylint: disable=too-many-arguments,too-many-locals,too-many-branches
+# pylint: disable=too-few-public-methods,too-many-nested-blocks
 class RandomMode(object):
     @staticmethod
     def get(interface,
@@ -62,11 +64,17 @@ class RandomMode(object):
                 count_fails += 1
                 if count_fails > 1000000:
                     return fail(interface)
-                word, phoneme, score, length = reset(ignore_length, weighting, min_length, max_length)
+                word, phoneme, score, length = reset(ignore_length,
+                                                     weighting,
+                                                     min_length,
+                                                     max_length)
             else:
                 if phoneme == 'END_WORD':
                     if min_length is not None and len(word) < min_length:
-                        word, phoneme, score, length = reset(ignore_length, weighting, min_length, max_length)
+                        word, phoneme, score, length = reset(ignore_length,
+                                                             weighting,
+                                                             min_length,
+                                                             max_length)
                     else:
                         selected_word = selector(word, selection, unstressed, exclude_real)
                         if selected_word:
@@ -74,7 +82,10 @@ class RandomMode(object):
                             count_successes += 1
                             if count_successes == pool:
                                 return succeed(words, interface, selection)
-                        word, phoneme, score, length = reset(ignore_length, weighting, min_length, max_length)
+                        word, phoneme, score, length = reset(ignore_length,
+                                                             weighting,
+                                                             min_length,
+                                                             max_length)
                 elif max_length is not None and len(word) >= max_length:
                     selected_word = selector(word, selection, unstressed, exclude_real)
                     if selected_word:
@@ -82,12 +93,21 @@ class RandomMode(object):
                         count_successes += 1
                         if count_successes == pool:
                             return succeed(words, interface, selection)
-                    word, phoneme, score, length = reset(ignore_length, weighting, min_length, max_length)
+                    word, phoneme, score, length = reset(ignore_length,
+                                                         weighting,
+                                                         min_length,
+                                                         max_length)
                 elif len(word) > MAX_WORD_LENGTH:
-                    word, phoneme, score, length = reset(ignore_length, weighting, min_length, max_length)
+                    word, phoneme, score, length = reset(ignore_length,
+                                                         weighting,
+                                                         min_length,
+                                                         max_length)
                 else:
                     word.append(phoneme)
+# pylint: enable=too-many-arguments,too-many-locals,too-many-branches
+# pylint: enable=too-few-public-methods,too-many-nested-blocks
 
+# pylint: disable=too-many-arguments,too-many-locals
 def next_phoneme(phoneme,
                  random_number,
                  word_length,
@@ -117,6 +137,7 @@ def next_phoneme(phoneme,
         if accumulated_probability >= random_number:
             score = get_score(score, scoring_method, probability, word_length)
             return (None, score) if score < score_threshold else (phoneme, score)
+# pylint: enable=too-many-arguments,too-many-locals
 
 def cli_selector(word, selection, unstressed, exclude_real):
     stringified_word = array_to_string(word)
@@ -125,8 +146,10 @@ def cli_selector(word, selection, unstressed, exclude_real):
                                 exclude_real=exclude_real,
                                 suppress_immediate=selection)
 
+# pylint: disable=unused-argument
 def api_selector(word, selection, unstressed, exclude_real):
     return Present.for_web(word, unstressed, exclude_real)
+# pylint: enable=unused-argument
 
 def reset(ignore_length, weighting, min_length, max_length):
     length = 0 if ignore_length else random_length(weighting, min_length, max_length)
@@ -134,7 +157,7 @@ def reset(ignore_length, weighting, min_length, max_length):
 
 def random_length(weighting, min_length, max_length):
     # i mean, or we could slice the distributions and re-normalize.
-    # that especially would make more sense once we end up implementing the 
+    # that especially would make more sense once we end up implementing the
     # continuous re-evaluation style.
     while True:
         random_number = random.random()
@@ -145,7 +168,7 @@ def random_length(weighting, min_length, max_length):
                 if min_length is not None and length < min_length:
                     pass
                 elif max_length is not None and length > max_length:
-                    pass 
+                    pass
                 else:
                     return length
 

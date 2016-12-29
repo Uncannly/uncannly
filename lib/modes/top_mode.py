@@ -8,6 +8,7 @@ from lib.type_conversion import string_to_array
 from lib.options import TOO_FEW_MESSAGE, NO_WORDS_MESSAGE
 from data.load_data import load_scores
 
+# pylint: disable=too-many-arguments,too-many-locals,too-few-public-methods
 class TopMode(object):
     @staticmethod
     def get(interface,
@@ -23,7 +24,11 @@ class TopMode(object):
             min_length,
             max_length):
 
-        most_probable_words = load_scores(scoring_method, ignore_length, ignore_position, unstressed, unweighted)
+        most_probable_words = load_scores(scoring_method,
+                                          ignore_length,
+                                          ignore_position,
+                                          unstressed,
+                                          unweighted)
         most_probable_words.sort(key=lambda x: -x[1])
         most_probable_words = most_probable_words[0:int(pool)]
 
@@ -107,3 +112,4 @@ def api_select_random(words, selection, unstressed, exclude_real):
         output = [NO_WORDS_MESSAGE]
 
     return output
+# pylint: enable=too-many-arguments,too-many-locals,too-few-public-methods
