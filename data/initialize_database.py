@@ -8,57 +8,68 @@ from data.database import Database
 from data.schema import Schema
 from lib.options import booleans_to_strings
 
-def initialize_database():
+class DatabaseInitializer():
+    def __init__(self):
+        self.schema = Schema(Database())
+        self.schema.schema()
 
-    ########### PHASE ZERO ####################
+    def initialize_words(self):
+        word_frequencies = frequency_list.parse()
+        words, self.phoneme_chains, word_length_distributions = \
+            PronouncingDictionary(word_frequencies).parse()
+        self.schema.words(words)
+        self.schema.word_length_distributions(word_length_distributions)
 
-    schema = Schema(Database())
-    schema.schema()
+    def initialize_phoneme_chains(self):
+        self.word_lengths = {'weighted': {}, 'unweighted': {}}
+        for unstressed in [False, True]:
+            stressing = 'unstressed' if unstressed else 'stressed'
 
-    ########### PHASE ONE ####################
+            self.word_lengths['weighted'][stressing] = \
+              AbsoluteChain.parse(self.phoneme_chains['weighted'][stressing])
+            self.word_lengths['unweighted'][stressing] = \
+              AbsoluteChain.parse(self.phoneme_chains['unweighted'][stressing])
 
-    word_frequencies = frequency_list.parse()
-    words, phoneme_chains, word_length_distributions = \
-        PronouncingDictionary(word_frequencies).parse()
-    schema.words(words)
-    schema.word_length_distributions(word_length_distributions)
+            self.schema.phonemes(
+                self.word_lengths['weighted'][stressing],
+                self.word_lengths['unweighted'][stressing],
+                unstressed
+            )
 
-    ########### PHASE TWO ####################
+    def initialize_scores(self):
+        for unstressed in [False, True]:
+            for unweighted in [False, True]:
+                for ignore_length in [False, True]:
+                    for ignore_position in [False, True]:
+                        for method_mean in [False, True]:
+                            for method_addition in [False, True]:
+                                self.save_scores(ignore_length,
+                                                 ignore_position, 
+                                                 unstressed,
+                                                 unweighted, 
+                                                 method_mean, 
+                                                 method_addition)
 
-    word_lengths = {'weighted': {}, 'unweighted': {}}
-    for unstressed in [False, True]:
-        stressing = 'unstressed' if unstressed else 'stressed'
+    def save_scores(self, 
+                    ignore_length,
+                    ignore_position, 
+                    unstressed, 
+                    unweighted, 
+                    method_mean, 
+                    method_addition):
+        options = ignore_position, unstressed, unweighted, method_mean, method_addition
+        stressing, weighting = booleans_to_strings(unstressed, unweighted)
+        word_scores = MostProbableWords(self.word_lengths[weighting][stressing],
+                                        ignore_length,
+                                        options)
+        self.schema.scores(word_scores.get(), options)
 
-        word_lengths['weighted'][stressing] = \
-          AbsoluteChain.parse(phoneme_chains['weighted'][stressing])
-        word_lengths['unweighted'][stressing] = \
-          AbsoluteChain.parse(phoneme_chains['unweighted'][stressing])
+    def finish(self):
+        self.schema.finish()
+        sys.stdout.write('Database successfully initialized.\n')
 
-        schema.phonemes(
-            word_lengths['weighted'][stressing],
-            word_lengths['unweighted'][stressing],
-            unstressed
-        )
-
-    ########### PHASE THREE ####################
-
-    for unstressed in [False, True]:
-        for unweighted in [False, True]:
-            for ignore_length in [False, True]:
-                for ignore_position in [False, True]:
-                    for method_mean in [False, True]:
-                        for method_addition in [False, True]:
-                            options = ignore_position, unstressed, unweighted, method_mean, method_addition
-                            stressing, weighting = booleans_to_strings(unstressed, unweighted)
-                            word_scores = MostProbableWords(
-                                word_lengths[weighting][stressing],
-                                ignore_length,
-                                options
-                            )
-                            schema.scores(word_scores.get(), options)
-
-    schema.finish()
-
-    sys.stdout.write('Database successfully initialized.\n')
-
-initialize_database()
+database_initializer = DatabaseInitializer()
+database_initializer.initialize_words()
+database_initializer.initialize_phoneme_chains()
+database_initializer.initialize_scores()
+database_initializer.finish()
