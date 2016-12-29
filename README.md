@@ -143,6 +143,18 @@ Do not include words probable by pronunciation that do exist.
 
 CLI shortcut: `-xr`
 
+### ignore position
+
+Do not consider position within the word when choosing the next phoneme.
+
+CLI shortcut: `-xp`
+
+### ignore length
+
+Do not consider length of the word when choosing the next phoneme. I will say more on this later.
+
+CLI shortcut: `-xl`
+
 ## Examples
 
 https://uncannly.cfapps.io/random
@@ -159,7 +171,7 @@ AE1 S IY1 D IH0 SH IH0 T R D
 https://uncannly.cfapps.io/random?pool=5&selection=3&scoring-method=mean-geometric&score-threshold=0.0000000000001&unweighted&unstressed&exclude-real
 
 ```
-$ chiry@munscalune:~/workspace/uncannly: python bin/random_mode.py -p 5 -s 3 -g -c 0.0000000000001 -u -i -x
+$ chiry@munscalune:~/workspace/uncannly: python bin/random_mode.py -p 5 -s 3 -mg -st 0.0000000000001 -xw -xs -xr -xp -xl
 S IH NG G ER
 S T AY P ER
 K AA R EY D AY T S AH L AH S
@@ -178,7 +190,7 @@ W AA1 R
 
 https://uncannly.cfapps.io/top?pool=500&selection=3&scoring-method=integral-sum&score-threshold=0.01&unweighted&unstressed&exclude-real
 ```
-$ chiry@munscalune:~/workspace/uncannly: python bin/top_mode.py -p 500 -s 3 -a -c 0.1 -u -i -x
+$ chiry@munscalune:~/workspace/uncannly: python bin/top_mode.py -p 500 -s 3 -is -st 0.1 -xw -xs -xr -xp -xl
 K AA N T
 M AH
 B ER Z AH N
