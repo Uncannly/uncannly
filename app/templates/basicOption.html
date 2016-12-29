@@ -1,0 +1,12 @@
+{% macro basicOption(mode, readme, option) -%}
+
+<input type="checkbox" class="{{ option }}" id="{{ mode }}-{{ option }}">
+<label 
+  class="fancy own-line"
+	title="{{ readme.get(option.replace('-', '_')) }}" 
+	for="{{ mode }}-{{ option }}"
+>
+	{{ option.replace('-', ' ') }}
+</label>
+
+{%- endmacro %}

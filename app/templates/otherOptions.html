@@ -1,52 +1,17 @@
+{% from 'basicOption.html' import basicOption as basicOption %}
+
 {% macro otherOptions(mode, readme, max_word_length) -%}
 
 <div>
-	<input type="checkbox" class="unweighted" id="{{ mode }}-unweighted">
-	<label 
-	  class="fancy own-line"
-		title="{{ readme.unweighted }}" 
-		for="{{ mode }}-unweighted"
-	>
-		unweighted
-	</label>
-
-	<input type="checkbox" class="unstressed" id="{{ mode }}-unstressed">
-	<label 
-		class="fancy own-line"
-		title="{{ readme.unstressed }}" 
-		for="{{ mode }}-unstressed"
-	>
-		unstressed
-	</label>
-
-	<input type="checkbox" class="exclude-real" id="{{ mode }}-exclude-real">
-	<label 
-		class="fancy own-line"
-		title="{{ readme.exclude_real }}" 
-		for="{{ mode }}-exclude-real"
-	>
-		exclude real
-	</label>
+	{{ basicOption(mode, readme, 'unweighted') }}
+	{{ basicOption(mode, readme, 'unstressed') }}
+	{{ basicOption(mode, readme, 'exclude-real') }}
 </div>
 
 <div>
-	<input type="checkbox" class="ignore-position" id="{{ mode }}-ignore-position">
-	<label 
-		class="fancy own-line"
-		title="{{ readme.ignore_position }}" 
-		for="{{ mode }}-ignore-position"
-	>
-		ignore position
-	</label>
 
-	<input type="checkbox" class="ignore-length" id="{{ mode }}-ignore-length">
-	<label 
-		class="fancy own-line"
-		title="{{ readme.ignore_length }}" 
-		for="{{ mode }}-ignore-length"
-	>
-		ignore length
-	</label>
+	{{ basicOption(mode, readme, 'ignore-position') }}
+	{{ basicOption(mode, readme, 'ignore-length') }}
 
 	<label 
     title="{{ readme.min_length }}"
