@@ -68,23 +68,48 @@ const addRefreshListener = function(mode) {
 
         $('.speak-word').click(function(e) {
           const word = $(e.target).parent().text();
-          $(e.target).removeClass("fa fa-volume-up speak-word");
-          $(e.target).addClass("fa fa-spinner fa-spin");
-          const request = new XMLHttpRequest();
-          request.open('GET', `https://uncannly-tts.cfapps.io/pts?word=${word}`, true);
-          request.responseType = 'arraybuffer';
-
-          request.onload = function() {
-            context.decodeAudioData(request.response, function(buffer) {
-              var source = context.createBufferSource();
-              source.buffer = buffer;
-              source.connect(context.destination);
-              source.start(0); 
-              $(e.target).removeClass("fa fa-spinner fa-spin");
+          const blob = SPOKEN_WORDS[word]
+          if (blob) {
+            if (ALREADY_SAVED[word]) {
+              const fileReader = new FileReader();
+              fileReader.onload = function() {
+                context.decodeAudioData(fileReader.result, function(buffer) {
+                  var source = context.createBufferSource();
+                  source.buffer = buffer;
+                  source.connect(context.destination);
+                  source.start(0);
+                });
+              }  
+              fileReader.readAsArrayBuffer(blob)
+            } else {
+              saveAs(blob, 'uncannly.mp3');
+              ALREADY_SAVED[word] = true;
+              $(e.target).removeClass("fa fa-download");
               $(e.target).addClass("fa fa-volume-up speak-word");
-            });
+            }
+          } else {
+            $(e.target).removeClass("fa fa-volume-up speak-word");
+            $(e.target).addClass("fa fa-spinner fa-spin");
+            const request = new XMLHttpRequest();
+            request.open('GET', `https://uncannly-tts.cfapps.io/pts?word=${word}`, true);
+            request.responseType = 'arraybuffer';
+
+            request.onload = function() {
+              var blob = new Blob([request.response], {type: "octet/stream"});
+              SPOKEN_WORDS[word] = blob;
+
+              context.decodeAudioData(request.response, function(buffer) {
+                var source = context.createBufferSource();
+                source.buffer = buffer;
+                source.connect(context.destination);
+                source.start(0); 
+                $(e.target).removeClass("fa fa-spinner fa-spin");
+                $(e.target).addClass("fa fa-download");
+              });
+            }
+
+            request.send();
           }
-          request.send();
         });
       }
     });

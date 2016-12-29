@@ -93,6 +93,10 @@ body {
   opacity: 1;
 }
 
+.word i.fa-download {
+  width: 16px;
+}
+
 .word:hover i {
 	opacity: 1;
 }
