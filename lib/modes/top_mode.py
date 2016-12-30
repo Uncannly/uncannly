@@ -47,6 +47,8 @@ class TopMode(object):
                 pass
             elif max_length is not None and length > max_length:
                 pass
+            elif word in words:
+                pass
             else:
                 words.append(word)
 
