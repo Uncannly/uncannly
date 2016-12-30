@@ -50,7 +50,6 @@ class RandomMode(object):
 
         while True:
             phoneme, score = next_phoneme(phoneme=phoneme,
-                                          random_number=random.random(),
                                           word_length=len(word) + 1,
                                           score=score,
                                           scoring_method=scoring_method,
@@ -109,7 +108,6 @@ class RandomMode(object):
 
 # pylint: disable=too-many-arguments,too-many-locals
 def next_phoneme(phoneme,
-                 random_number,
                  word_length,
                  score,
                  scoring_method,
@@ -132,13 +130,14 @@ def next_phoneme(phoneme,
 
     next_phonemes = NEXT_PHONEMES_OPTIONS[stressing][weighting][length][position]
 
-    accumulated_probability = 0
-    for (phoneme, probability) in next_phonemes[phoneme]:
-        accumulated_probability += probability
-        if accumulated_probability >= random_number:
-            score = get_score(score, scoring_method, probability, word_length)
-            return (None, score) if score < score_threshold else (phoneme, score)
+    other_args = score, scoring_method, word_length, score_threshold
+    return choose_next(next_phonemes[phoneme], test, other_args)
 # pylint: enable=too-many-arguments,too-many-locals
+
+def test(phoneme, probability, other_args):
+    score, scoring_method, word_length, score_threshold = other_args
+    score = get_score(score, scoring_method, probability, word_length)
+    return (None, score) if score < score_threshold else (phoneme, score)
 
 def cli_selector(word, selection, unstressed, exclude_real):
     stringified_word = array_to_string(word)
@@ -160,18 +159,21 @@ def random_length(weighting, min_length, max_length):
     # i mean, or we could slice the distributions and re-normalize.
     # that especially would make more sense once we end up implementing the
     # continuous re-evaluation style.
-    while True:
-        random_number = random.random()
-        accumulated_probability = 0
-        for length, probability in enumerate(WORD_LENGTH_DISTRIBUTIONS[weighting][1:]):
-            accumulated_probability += probability
-            if accumulated_probability >= random_number:
-                if min_length is not None and length < min_length:
-                    pass
-                elif max_length is not None and length > max_length:
-                    pass
-                else:
-                    return length
+    thing_to_iterate_on = enumerate(WORD_LENGTH_DISTRIBUTIONS[weighting][1:])
+    other_args = min_length, max_length
+    length = None
+    while length is None:
+        length = choose_next(thing_to_iterate_on, bind_length, other_args)
+    return length
+
+def bind_length(length, _, other_args):
+    min_length, max_length = other_args
+    if min_length is not None and length < min_length:
+        pass
+    elif max_length is not None and length > max_length:
+        pass
+    else:
+        return length
 
 def fail(interface):
     message = (
@@ -191,3 +193,11 @@ def succeed(words, interface, selection):
                 sys.stdout.write(word + '\n')
     else:
         return [x[0] for x in words]
+
+def choose_next(thing_to_iterate_on, method, other_args):
+    random_number = random.random()
+    accumulated_probability = 0
+    for other_thing, probability in thing_to_iterate_on:
+        accumulated_probability += probability
+        if accumulated_probability > random_number:
+            return method(other_thing, probability, other_args)
