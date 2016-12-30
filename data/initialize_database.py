@@ -7,7 +7,7 @@ from data.parse.secondary.most_probable_words import MostProbableWords
 from data.database import Database
 from data.tables import Tables
 from data.secondary_data_io import save_word_length_distributions
-from lib.options import OPTION_VALUES, option_value_boolean_to_string
+from lib.options import OPTION_VALUES
 
 class DatabaseInitializer(object):
     def __init__(self):

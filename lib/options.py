@@ -10,7 +10,7 @@ def option_value_boolean_to_string(option, boolean):
     return OPTION_VALUES[option][index]
 
 def option_value_string_to_boolean(value):
-    for option, values in OPTION_VALUES.iteritems():
+    for values in OPTION_VALUES.itervalues():
         if value == values[0]:
             return True
         elif value == values[1]:

@@ -21,7 +21,7 @@ from lib.options import SCORING_METHODS, DEFAULT_LIMITS, POOL_MAX, MAX_WORD_LENG
 # pylint: disable=too-many-instance-attributes
 class MostProbableWords(object):
     def __init__(self, word_lengths, ignore_length, options):
-        ignore_position, unstressed, unweighted, method_mean, method_addition = options 
+        ignore_position, unstressed, unweighted, method_mean, method_addition = options
         length_consideration = option_value_boolean_to_string('length_consideration', ignore_length)
         positioning = option_value_boolean_to_string('positioning', ignore_position)
         stressing = option_value_boolean_to_string('stressing', unstressed)
