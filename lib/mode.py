@@ -4,7 +4,7 @@ from lib.case_conversion import kebab_to_snake
 from lib.options import SCORING_METHODS, POOL_DEFAULT
 
 def get_by_mode(mode, interface, args):
-    get_args = {'selection': None, 'scoring_method': 'integral_product'}
+    get_args = {'selection': None, 'scoring_method': 'integral_product', 'interface': interface}
 
     get_args['pool'] = int(args['pool']) if args['pool'] else POOL_DEFAULT
 
@@ -36,5 +36,5 @@ def get_by_mode(mode, interface, args):
     get_args['min_length'] = int(args['min_length']) if args['min_length'] else None
     get_args['max_length'] = int(args['max_length']) if args['max_length'] else None
 
-    getter = TopMode if mode == 'top' else RandomMode
-    return getter.get(interface=interface, **get_args)
+    Getter = TopMode if mode == 'top' else RandomMode
+    return Getter(get_args).get()

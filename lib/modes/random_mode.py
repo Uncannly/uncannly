@@ -11,188 +11,157 @@ from lib.options import OPTION_VALUES, option_value_string_to_boolean, \
 from data.load_data import load_phonemes
 from data.secondary_data_io import load_word_length_distribution
 
-NEXT_PHONEMES_OPTIONS = {}
-WORD_LENGTH_DISTRIBUTIONS = {}
-for WEIGHTING in OPTION_VALUES['weighting']:
-    for STRESSING in OPTION_VALUES['stressing']:
-        UNSTRESSED = option_value_string_to_boolean(STRESSING)
-        NEXT_PHONEMES_OPTIONS.setdefault(STRESSING, {}).setdefault(
-            WEIGHTING, load_phonemes(WEIGHTING, UNSTRESSED)
-        )
-    WORD_LENGTH_DISTRIBUTIONS[WEIGHTING] = load_word_length_distribution(WEIGHTING)
-
 # pylint: disable=too-many-arguments,too-many-locals,too-many-branches
 # pylint: disable=too-few-public-methods,too-many-nested-blocks
 class RandomMode(object):
-    @staticmethod
-    def get(interface,
-            pool,
-            selection,
-            scoring_method,
-            score_threshold,
-            unweighted,
-            unstressed,
-            exclude_real,
-            ignore_position,
-            ignore_length,
-            min_length,
-            max_length):
+    def __init__(self, options):
+        self.interface = options['interface']
+        self.pool = options['pool']
+        self.selection = options['selection']
+        self.scoring_method = options['scoring_method']
+        self.score_threshold = options['score_threshold']
+        self.unweighted = options['unweighted']
+        self.unstressed = options['unstressed']
+        self.exclude_real = options['exclude_real']
+        self.ignore_position = options['ignore_position']
+        self.ignore_length = options['ignore_length']
+        self.min_length = options['min_length']
+        self.max_length = options['max_length']
 
-        selector = api_selector if interface == 'api' else cli_selector
+        weighting = option_value_boolean_to_string('weighting', self.unweighted)
+        self.next_phonemes_options = load_phonemes(weighting, self.unstressed)
+        self.word_length_distributions = load_word_length_distribution(weighting)
 
-        weighting = option_value_boolean_to_string('weighting', unweighted)
+        self.selector = self.api_selector if self.interface == 'api' else self.cli_selector
+        self.count_successes = 0
+        self.count_fails = 0
 
-        word, phoneme, score, length = reset(ignore_length, weighting, min_length, max_length)
-
-        count_fails = 0
-        count_successes = 0
+    def get(self):
+        self.reset()
         words = []
 
         while True:
-            phoneme, score = next_phoneme(phoneme=phoneme,
-                                          word_length=len(word) + 1,
-                                          score=score,
-                                          scoring_method=scoring_method,
-                                          score_threshold=score_threshold,
-                                          unweighted=unweighted,
-                                          unstressed=unstressed,
-                                          ignore_position=ignore_position,
-                                          length=length)
+            word_length = len(self.word) + 1
+            self.next_phoneme(word_length)
 
-            if phoneme is None:
-                count_fails += 1
-                if count_fails > 1000000:
-                    return fail(interface)
-                word, phoneme, score, length = reset(ignore_length,
-                                                     weighting,
-                                                     min_length,
-                                                     max_length)
+            if self.phoneme is None:
+                failure = self.maybe_fail()
+                if failure:
+                    return failure
             else:
-                if phoneme == 'END_WORD':
-                    if min_length is not None and len(word) < min_length:
-                        word, phoneme, score, length = reset(ignore_length,
-                                                             weighting,
-                                                             min_length,
-                                                             max_length)
+                if self.phoneme == 'END_WORD':
+                    if self.min_length is not None and word_length < self.min_length:
+                        self.reset()
                     else:
-                        selected_word = selector(word, selection, unstressed, exclude_real)
-                        if selected_word:
-                            words.append((selected_word, score))
-                            count_successes += 1
-                            if count_successes == pool:
-                                return succeed(words, interface, selection)
-                        word, phoneme, score, length = reset(ignore_length,
-                                                             weighting,
-                                                             min_length,
-                                                             max_length)
-                elif max_length is not None and len(word) >= max_length:
-                    selected_word = selector(word, selection, unstressed, exclude_real)
-                    if selected_word:
-                        words.append((selected_word, score))
-                        count_successes += 1
-                        if count_successes == pool:
-                            return succeed(words, interface, selection)
-                    word, phoneme, score, length = reset(ignore_length,
-                                                         weighting,
-                                                         min_length,
-                                                         max_length)
-                elif len(word) > MAX_WORD_LENGTH:
-                    word, phoneme, score, length = reset(ignore_length,
-                                                         weighting,
-                                                         min_length,
-                                                         max_length)
+                        success = self.maybe_succeed(words)
+                        if success:
+                            return success
+                elif self.max_length is not None and word_length > self.max_length:
+                    success = self.maybe_succeed(words)
+                    if success:
+                        return success
+                elif word_length > MAX_WORD_LENGTH:
+                    self.reset()
                 else:
-                    word.append(phoneme)
-# pylint: enable=too-many-arguments,too-many-locals,too-many-branches
-# pylint: enable=too-few-public-methods,too-many-nested-blocks
+                    self.word.append(self.phoneme)
+    # pylint: enable=too-many-arguments,too-many-locals,too-many-branches
+    # pylint: enable=too-few-public-methods,too-many-nested-blocks
 
-# pylint: disable=too-many-arguments,too-many-locals
-def next_phoneme(phoneme,
-                 word_length,
-                 score,
-                 scoring_method,
-                 score_threshold,
-                 unweighted,
-                 unstressed,
-                 ignore_position,
-                 length):
+    def maybe_fail(self):
+        self.count_fails += 1
+        if self.count_fails > 1000000:
+            return self.fail()
+        self.reset()
 
-    stressing = option_value_boolean_to_string('stressing', unstressed)
-    weighting = option_value_boolean_to_string('weighting', unweighted)
+    def maybe_succeed(self, words):
+        selected_word = self.selector()
+        if selected_word:
+            words.append((selected_word, self.score))
+            self.count_successes += 1
+            if self.count_successes == self.pool:
+                return self.succeed(words)
+        self.reset()
 
-    position = 0 if ignore_position else word_length
-    if position >= length:
-        length = 0
-    if len(NEXT_PHONEMES_OPTIONS[stressing][weighting][length]) == 0:
-        length = 0
-    if len(NEXT_PHONEMES_OPTIONS[stressing][weighting][length][position]) == 0:
-        position = 0
+    # pylint: disable=too-many-arguments,too-many-locals
+    def next_phoneme(self, word_length):
+        position = 0 if self.ignore_position else word_length
+        if position >= self.length:
+            self.length = 0
+        if len(self.next_phonemes_options[self.length]) == 0:
+            self.length = 0
+        if len(self.next_phonemes_options[self.length][position]) == 0:
+            position = 0
 
-    next_phonemes = NEXT_PHONEMES_OPTIONS[stressing][weighting][length][position]
+        next_phonemes = self.next_phonemes_options[self.length][position]
 
-    method_args = score, scoring_method, word_length, score_threshold
-    return choose_next(next_phonemes[phoneme], test, method_args)
-# pylint: enable=too-many-arguments,too-many-locals
+        choose_next(next_phonemes[self.phoneme], self.test, word_length)
+    # pylint: enable=too-many-arguments,too-many-locals
 
-def test(phoneme, probability, method_args):
-    score, scoring_method, word_length, score_threshold = method_args
-    score = get_score(score, scoring_method, probability, word_length)
-    return (None, score) if score < score_threshold else (phoneme, score)
+    def test(self, phoneme, probability, word_length):
+        self.score = get_score(self.score, self.scoring_method, probability, word_length)
+        self.phoneme = None if self.score < self.score_threshold else phoneme
 
-def cli_selector(word, selection, unstressed, exclude_real):
-    stringified_word = array_to_string(word)
-    return Present.for_terminal(word=stringified_word,
-                                unstressed=unstressed,
-                                exclude_real=exclude_real,
-                                suppress_immediate=selection)
+    def cli_selector(self):
+        stringified_word = array_to_string(self.word)
+        return Present.for_terminal(word=stringified_word,
+                                    unstressed=self.unstressed,
+                                    exclude_real=self.exclude_real,
+                                    suppress_immediate=self.selection)
 
-# pylint: disable=unused-argument
-def api_selector(word, selection, unstressed, exclude_real):
-    return Present.for_web(word, unstressed, exclude_real)
-# pylint: enable=unused-argument
+    def api_selector(self):
+        return Present.for_web(self.word, self.unstressed, self.exclude_real)
 
-def reset(ignore_length, weighting, min_length, max_length):
-    length = 0 if ignore_length else random_length(weighting, min_length, max_length)
-    return ([], 'START_WORD', 1.0, length)
+    def reset(self):
+        if self.ignore_length:
+            length = 0
+        else:
+            length = self.random_length()
+        self.word = []
+        self.phoneme = 'START_WORD'
+        self.score = 1.0
+        self.length = length
 
-def random_length(weighting, min_length, max_length):
-    # i mean, or we could slice the distributions and re-normalize.
-    # that especially would make more sense once we end up implementing the
-    # continuous re-evaluation style.
-    method_args = min_length, max_length
-    length = None
-    while length is None:
-        distributions = enumerate(WORD_LENGTH_DISTRIBUTIONS[weighting][1:])
-        length = choose_next(distributions, bind_length, method_args)
-    return length
-
-def bind_length(length, _, other_args):
-    min_length, max_length = other_args
-    if min_length is not None and length < min_length:
-        pass
-    elif max_length is not None and length > max_length:
-        pass
-    else:
+    def random_length(self):
+        # i mean, or we could slice the distributions and re-normalize.
+        # that especially would make more sense once we end up implementing the
+        # continuous re-evaluation style.
+        length = None
+        while length is None:
+            distributions = enumerate(self.word_length_distributions[1:])
+            length = choose_next(distributions, self.bind_length, None)
         return length
 
-def fail(interface):
-    message = (
-        '1000000 times consecutively failed to find a word above the score '
-        'threshold. Please try lowering it.'
-    )
-    return sys.stdout.write(message + '\n') if interface == "cli" else [message]
+    def bind_length(self, length, _, __):
+        if self.min_length is not None and length < self.min_length:
+            pass
+        elif self.max_length is not None and length > self.max_length:
+            pass
+        else:
+            return length
 
-def succeed(words, interface, selection):
-    if selection:
-        words.sort(key=lambda x: -x[1])
-        words = words[:selection]
+    def fail(self):
+        message = (
+            '1000000 times consecutively failed to find a word above the score '
+            'threshold. Please try lowering it.'
+        )
+        if self.interface == "cli":
+            sys.stdout.write(message + '\n')
+            return True
+        else:
+            return [message]
 
-    if interface == 'cli':
-        if selection:
-            for word, _ in words:
-                sys.stdout.write(word + '\n')
-    else:
-        return [x[0] for x in words]
+    def succeed(self, words):
+        if self.selection:
+            words.sort(key=lambda x: -x[1])
+            words = words[:selection]
+
+        if self.interface == 'cli':
+            if self.selection:
+                for word, _ in words:
+                    sys.stdout.write(word + '\n')
+            return True
+        else:
+            return [x[0] for x in words]
 
 def choose_next(iterator, method, method_args):
     random_number = random.random()

@@ -10,49 +10,51 @@ from data.load_data import load_scores
 
 # pylint: disable=too-many-arguments,too-many-locals,too-few-public-methods
 class TopMode(object):
-    @staticmethod
-    def get(interface,
-            pool,
-            selection,
-            scoring_method,
-            score_threshold,
-            unweighted,
-            unstressed,
-            exclude_real,
-            ignore_position,
-            ignore_length,
-            min_length,
-            max_length):
+    def __init__(self, options):
+        self.interface = options['interface']
+        self.pool = options['pool']
+        self.selection = options['selection']
+        self.scoring_method = options['scoring_method']
+        self.score_threshold = options['score_threshold']
+        self.unweighted = options['unweighted']
+        self.unstressed = options['unstressed']
+        self.exclude_real = options['exclude_real']
+        self.ignore_position = options['ignore_position']
+        self.ignore_length = options['ignore_length']
+        self.min_length = options['min_length']
+        self.max_length = options['max_length']
 
-        most_probable_words = load_scores(scoring_method,
-                                          ignore_length,
-                                          ignore_position,
-                                          unstressed,
-                                          unweighted)
+    def get(self):
+
+        most_probable_words = load_scores(self.scoring_method,
+                                          self.ignore_length,
+                                          self.ignore_position,
+                                          self.unstressed,
+                                          self.unweighted)
         most_probable_words.sort(key=lambda x: -x[1])
-        most_probable_words = most_probable_words[0:int(pool)]
+        most_probable_words = most_probable_words[0:int(self.pool)]
 
-        if selection:
-            selector = api_select_random if interface == 'api' else cli_select_random
+        if self.selection:
+            selector = api_select_random if self.interface == 'api' else cli_select_random
         else:
-            selection = pool
-            selector = api_select_top if interface == 'api' else cli_select_top
+            self.selection = self.pool
+            selector = api_select_top if self.interface == 'api' else cli_select_top
 
         words = []
         for word, score in most_probable_words:
             length = len(string_to_array(word))
-            if score < score_threshold:
+            if score < self.score_threshold:
                 break
-            elif min_length is not None and length < min_length:
+            elif self.min_length is not None and length < self.min_length:
                 pass
-            elif max_length is not None and length > max_length:
+            elif self.max_length is not None and length > self.max_length:
                 pass
             elif word in words:
                 pass
             else:
                 words.append(word)
 
-        return selector(words, selection, unstressed, exclude_real)
+        return selector(words, self.selection, self.unstressed, self.exclude_real)
 
 def cli_select_top(words, selection, unstressed, exclude_real):
     if len(words) > 0:
