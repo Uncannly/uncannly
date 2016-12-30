@@ -1,5 +1,7 @@
 import json
 
+from lib.options import option_value_string_to_boolean
+
 class Tables(object):
     def __init__(self, database):
         self.database = database
@@ -10,7 +12,7 @@ class Tables(object):
             "create table words (word varchar, pronunciation varchar)",
             "drop table if exists phonemes",
             "create table phonemes (word_length int, word_position int, \
-              phoneme varchar, unstressed boolean, next_phonemes varchar, \
+              phoneme varchar, unstressed boolean, next_phonemes_weighted varchar, \
               next_phonemes_unweighted varchar)",
             "drop table if exists scores",
             "create table scores (word varchar, score real, length int, \
@@ -31,15 +33,16 @@ class Tables(object):
         sql_string += ", ".join(sql_array)
         self.database.execute(sql_string)
 
-    def phonemes(self, word_lengths, word_lengths_unweighted, unstressed):
+    def phonemes(self, word_lengths_weighted, word_lengths_unweighted, stressing):
         sql_array = []
-        max_word_length = len(word_lengths)
+        max_word_length = len(word_lengths_weighted)
+        unstressed = option_value_string_to_boolean(stressing)
         for word_length in range(0, max_word_length):
-            if len(word_lengths[word_length]) != 0:
+            if len(word_lengths_weighted[word_length]) != 0:
                 iterator_word_length = max_word_length if word_length == 0 else word_length
                 for word_position in range(0, iterator_word_length):
-                    for phoneme, next_phonemes in \
-                        word_lengths[word_length][word_position].iteritems():
+                    for phoneme, next_phonemes_weighted in \
+                        word_lengths_weighted[word_length][word_position].iteritems():
                         next_phonemes_unweighted = word_lengths_unweighted\
                             [word_length][word_position][phoneme]
                         sql_array.append("('{}', '{}', '{}', '{}', '{}', '{}')"\
@@ -47,11 +50,11 @@ class Tables(object):
                                     word_position,
                                     phoneme,
                                     unstressed,
-                                    json.dumps(next_phonemes),
+                                    json.dumps(next_phonemes_weighted),
                                     json.dumps(next_phonemes_unweighted)))
         sql_string = (
             "insert into phonemes (word_length, word_position, phoneme, "
-            "unstressed, next_phonemes, next_phonemes_unweighted) values "
+            "unstressed, next_phonemes_weighted, next_phonemes_unweighted) values "
         )
         sql_string += ", ".join(sql_array)
         self.database.execute(sql_string)

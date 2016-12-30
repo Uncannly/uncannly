@@ -1,7 +1,20 @@
-def booleans_to_strings(unstressed, unweighted):
-    stressing = 'unstressed' if unstressed else 'stressed'
-    weighting = 'unweighted' if unweighted else 'weighted'
-    return stressing, weighting
+OPTION_VALUES = {
+    'stressing': ('unstressed', 'stressed'),
+    'weighting': ('unweighted', 'weighted'),
+    'positioning': ('ignore_position', 'use_position'),
+    'length_consideration': ('ignore_length', 'use_length')
+}
+
+def option_value_boolean_to_string(option, boolean):
+    index = 0 if boolean else 1
+    return OPTION_VALUES[option][index]
+
+def option_value_string_to_boolean(value):
+    for option, values in OPTION_VALUES.iteritems():
+        if value == values[0]:
+            return True
+        elif value == values[1]:
+            return False
 
 SCORING_METHODS = {
     'integral_product': (False, False),

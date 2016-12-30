@@ -17,11 +17,9 @@ def load_scores(scoring_method, ignore_length, ignore_position, unstressed, unwe
 
     return Database.fetch(sql)
 
-def load_phonemes(unweighted, unstressed):
-    next_phonemes = 'next_phonemes_unweighted' if unweighted else 'next_phonemes'
-    sql = "select word_length, word_position, phoneme, {} \
-        from phonemes where unstressed = {};".format(
-            next_phonemes, unstressed)
+def load_phonemes(weighting, unstressed):
+    sql = "select word_length, word_position, phoneme, next_phonemes_{} \
+        from phonemes where unstressed = {};".format(weighting, unstressed)
     results = Database.fetch(sql)
 
     output = []

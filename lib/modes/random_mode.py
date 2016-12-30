@@ -6,18 +6,18 @@ sys.path.insert(1, os.path.join(sys.path[0], '..'))
 from lib.present import Present
 from lib.type_conversion import array_to_string
 from lib.score import get_score
-from lib.options import booleans_to_strings, MAX_WORD_LENGTH
+from lib.options import OPTION_VALUES, option_value_string_to_boolean, \
+  option_value_boolean_to_string, MAX_WORD_LENGTH
 from data.load_data import load_phonemes
 from data.secondary_data_io import load_word_length_distribution
 
 NEXT_PHONEMES_OPTIONS = {}
 WORD_LENGTH_DISTRIBUTIONS = {}
-for UNWEIGHTED in [False, True]:
-    WEIGHTING = 'unweighted' if UNWEIGHTED else 'weighted'
-    for UNSTRESSED in [False, True]:
-        STRESSING = 'unstressed' if UNSTRESSED else 'stressed'
+for WEIGHTING in OPTION_VALUES['weighting']:
+    for STRESSING in OPTION_VALUES['stressing']:
+        UNSTRESSED = option_value_string_to_boolean(STRESSING)
         NEXT_PHONEMES_OPTIONS.setdefault(STRESSING, {}).setdefault(
-            WEIGHTING, load_phonemes(UNWEIGHTED, UNSTRESSED)
+            WEIGHTING, load_phonemes(WEIGHTING, UNSTRESSED)
         )
     WORD_LENGTH_DISTRIBUTIONS[WEIGHTING] = load_word_length_distribution(WEIGHTING)
 
@@ -40,7 +40,7 @@ class RandomMode(object):
 
         selector = api_selector if interface == 'api' else cli_selector
 
-        weighting = 'unweighted' if unweighted else 'weighted'
+        weighting = option_value_boolean_to_string('weighting', unweighted)
 
         word, phoneme, score, length = reset(ignore_length, weighting, min_length, max_length)
 
@@ -119,7 +119,8 @@ def next_phoneme(phoneme,
                  ignore_position,
                  length):
 
-    stressing, weighting = booleans_to_strings(unstressed, unweighted)
+    stressing = option_value_boolean_to_string('stressing', unstressed)
+    weighting = option_value_boolean_to_string('weighting', unweighted)
 
     position = 0 if ignore_position else word_length
     if position >= length:

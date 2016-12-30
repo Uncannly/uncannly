@@ -1,5 +1,6 @@
 from data.parse.primary.open_helper import open_primary_data_file
 from lib.ipa import destress
+from lib.options import OPTION_VALUES
 
 class PronouncingDictionary(object):
     def __init__(self, word_frequencies):
@@ -40,10 +41,10 @@ class PronouncingDictionary(object):
 
     def parse_phoneme_chains(self, args):
         phonemes, frequency = args
-        for weighting in ['weighted', 'unweighted']:
+        for weighting in OPTION_VALUES['weighting']:
             increment = 1 if weighting == 'unweighted' else frequency
 
-            for stressing in ['stressed', 'unstressed']:
+            for stressing in OPTION_VALUES['stressing']:
                 self.phoneme_chains.setdefault(weighting, {}).setdefault(stressing, [])
                 word_length = len(phonemes[stressing])
 
@@ -72,8 +73,8 @@ class PronouncingDictionary(object):
                                 [phoneme][next_phoneme] += increment
 
     def length_distributions(self, word_length, frequency):
-        for unweighted, weighting in [(False, 'weighted'), (True, 'unweighted')]:
-            increment = 1 if unweighted else frequency
+        for weighting in OPTION_VALUES['weighting']:
+            increment = 1 if weighting == 'unweighted' else frequency
 
             while word_length + 1 > len(self.word_lengths[weighting]):
                 self.word_lengths[weighting].append(0)
@@ -82,7 +83,7 @@ class PronouncingDictionary(object):
             self.word_lengths[weighting][word_length] += increment
 
     def normalize_word_lengths(self):
-        for weighting in ['weighted', 'unweighted']:
+        for weighting in OPTION_VALUES['weighting']:
             absolute_total_weight = self.word_lengths[weighting][0]
             for word_length in range(0, len(self.word_lengths[weighting])):
                 self.word_lengths[weighting][word_length] /= float(absolute_total_weight)

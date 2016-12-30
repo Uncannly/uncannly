@@ -4,8 +4,8 @@ sys.path.insert(1, os.path.join(sys.path[0], '..', '..'))
 
 from lib.type_conversion import array_to_string
 from lib.score import get_score
-from lib.options import booleans_to_strings, \
-    SCORING_METHODS, DEFAULT_LIMITS, POOL_MAX, MAX_WORD_LENGTH
+from lib.options import SCORING_METHODS, DEFAULT_LIMITS, POOL_MAX, MAX_WORD_LENGTH, \
+    option_value_boolean_to_string
 
 # def diagnose_counts_helper(options):
 #     output = ''
@@ -21,14 +21,14 @@ from lib.options import booleans_to_strings, \
 # pylint: disable=too-many-instance-attributes
 class MostProbableWords(object):
     def __init__(self, word_lengths, ignore_length, options):
-        ignore_position, unstressed, unweighted, method_mean, method_addition = options
-        stressing, weighting = booleans_to_strings(unstressed, unweighted)
-
-        positioning = 'ignore_position' if ignore_position else 'use_position'
-        length_consideration = 'ignore_length' if ignore_length else 'use_length'
+        ignore_position, unstressed, unweighted, method_mean, method_addition = options 
+        length_consideration = option_value_boolean_to_string('length_consideration', ignore_length)
+        positioning = option_value_boolean_to_string('positioning', ignore_position)
+        stressing = option_value_boolean_to_string('stressing', unstressed)
+        weighting = option_value_boolean_to_string('weighting', unweighted)
 
         self.most_probable_words = []
-        self.word_lengths = word_lengths
+        self.word_lengths = word_lengths[weighting][stressing]
         self.scoring_method = SCORING_METHODS.keys()[
             SCORING_METHODS.values().index((method_mean, method_addition))
         ]

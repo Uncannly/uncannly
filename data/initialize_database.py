@@ -7,7 +7,7 @@ from data.parse.secondary.most_probable_words import MostProbableWords
 from data.database import Database
 from data.tables import Tables
 from data.secondary_data_io import save_word_length_distributions
-from lib.options import booleans_to_strings
+from lib.options import OPTION_VALUES, option_value_boolean_to_string
 
 class DatabaseInitializer(object):
     def __init__(self):
@@ -25,9 +25,7 @@ class DatabaseInitializer(object):
 
     def initialize_phoneme_chains(self):
         self.word_lengths = {'weighted': {}, 'unweighted': {}}
-        for unstressed in [False, True]:
-            stressing = 'unstressed' if unstressed else 'stressed'
-
+        for stressing in OPTION_VALUES['stressing']:
             self.word_lengths['weighted'][stressing] = \
               absolute_chain.parse(self.phoneme_chains['weighted'][stressing])
             self.word_lengths['unweighted'][stressing] = \
@@ -36,7 +34,7 @@ class DatabaseInitializer(object):
             self.tables.phonemes(
                 self.word_lengths['weighted'][stressing],
                 self.word_lengths['unweighted'][stressing],
-                unstressed
+                stressing
             )
 
     def initialize_scores(self):
@@ -48,10 +46,8 @@ class DatabaseInitializer(object):
                             for method_addition in [False, True]:
                                 options = ignore_position, unstressed, \
                                     unweighted, method_mean, method_addition
-                                stressing, weighting = booleans_to_strings(unstressed,
-                                                                           unweighted)
                                 word_scores = MostProbableWords(
-                                    self.word_lengths[weighting][stressing],
+                                    self.word_lengths,
                                     ignore_length,
                                     options)
                                 self.tables.scores(word_scores.get(), options)
