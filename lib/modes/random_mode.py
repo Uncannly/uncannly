@@ -130,12 +130,12 @@ def next_phoneme(phoneme,
 
     next_phonemes = NEXT_PHONEMES_OPTIONS[stressing][weighting][length][position]
 
-    other_args = score, scoring_method, word_length, score_threshold
-    return choose_next(next_phonemes[phoneme], test, other_args)
+    method_args = score, scoring_method, word_length, score_threshold
+    return choose_next(next_phonemes[phoneme], test, method_args)
 # pylint: enable=too-many-arguments,too-many-locals
 
-def test(phoneme, probability, other_args):
-    score, scoring_method, word_length, score_threshold = other_args
+def test(phoneme, probability, method_args):
+    score, scoring_method, word_length, score_threshold = method_args
     score = get_score(score, scoring_method, probability, word_length)
     return (None, score) if score < score_threshold else (phoneme, score)
 
@@ -159,11 +159,11 @@ def random_length(weighting, min_length, max_length):
     # i mean, or we could slice the distributions and re-normalize.
     # that especially would make more sense once we end up implementing the
     # continuous re-evaluation style.
-    thing_to_iterate_on = enumerate(WORD_LENGTH_DISTRIBUTIONS[weighting][1:])
-    other_args = min_length, max_length
+    method_args = min_length, max_length
     length = None
     while length is None:
-        length = choose_next(thing_to_iterate_on, bind_length, other_args)
+        distributions = enumerate(WORD_LENGTH_DISTRIBUTIONS[weighting][1:])
+        length = choose_next(distributions, bind_length, method_args)
     return length
 
 def bind_length(length, _, other_args):
@@ -194,10 +194,10 @@ def succeed(words, interface, selection):
     else:
         return [x[0] for x in words]
 
-def choose_next(thing_to_iterate_on, method, other_args):
+def choose_next(iterator, method, method_args):
     random_number = random.random()
     accumulated_probability = 0
-    for other_thing, probability in thing_to_iterate_on:
+    for item, probability in iterator:
         accumulated_probability += probability
         if accumulated_probability > random_number:
-            return method(other_thing, probability, other_args)
+            return method(item, probability, method_args)
