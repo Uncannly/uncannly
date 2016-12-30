@@ -1,10 +1,10 @@
 const scoringMethods = [
   'integral-product', 'integral-sum', 'mean-geometric', 'mean-arithmetic'
-]
+];
 
 const otherOptions = [
   'unweighted', 'unstressed', 'exclude-real', 'ignore-position', 'ignore-length'
-]
+];
 
 const addRefreshListener = function(mode) {
   $(`.${mode} button.refresh`).click(function() {
@@ -39,80 +39,8 @@ const addRefreshListener = function(mode) {
     if (maxLength) data.push(`max-length=${maxLength}`);
 
     if (data.length > 0) url += '?' + data.join('&');
-
-    $(`#${mode}`).empty().append('<div class="loading">Loading...</div>');
-    $.ajax({
-      url: url,
-      success: function(data) { 
-        $(`#${mode}`).empty();
-        JSON.parse(data).forEach(function(word, i) {
-          if (word == window.noWordsMessage || word == window.tooFewMessage) {
-            $(`#${mode}`).append(`<div class="message">${word}</div>`);
-          } else {
-            $(`#${mode}`).append(
-              `<div class="word" id="word-${i}">
-                <i 
-                  class="fa fa-clipboard" 
-                  aria-hidden="true" 
-                  id="copy-word-${i}" 
-                  data-clipboard-target="#text-${i}"
-                >
-                </i>
-                <i class="fa fa-volume-up speak-word" aria-hidden="true"></i>
-                <div class="no-block word-text" id="text-${i}">${word}</div>
-              </div>`
-            );
-            new Clipboard(`#copy-word-${i}`);
-          }
-        });
-
-        $('.speak-word').click(function(e) {
-          const word = $(e.target).parent().text();
-          const blob = SPOKEN_WORDS[word]
-          if (blob) {
-            if (ALREADY_SAVED[word]) {
-              const fileReader = new FileReader();
-              fileReader.onload = function() {
-                context.decodeAudioData(fileReader.result, function(buffer) {
-                  var source = context.createBufferSource();
-                  source.buffer = buffer;
-                  source.connect(context.destination);
-                  source.start(0);
-                });
-              }  
-              fileReader.readAsArrayBuffer(blob)
-            } else {
-              saveAs(blob, 'uncannly.mp3');
-              ALREADY_SAVED[word] = true;
-              $(e.target).removeClass("fa fa-download");
-              $(e.target).addClass("fa fa-volume-up speak-word");
-            }
-          } else {
-            $(e.target).removeClass("fa fa-volume-up speak-word");
-            $(e.target).addClass("fa fa-spinner fa-spin");
-            const request = new XMLHttpRequest();
-            request.open('GET', `https://uncannly-tts.cfapps.io/pts?word=${word}`, true);
-            request.responseType = 'arraybuffer';
-
-            request.onload = function() {
-              var blob = new Blob([request.response], {type: "octet/stream"});
-              SPOKEN_WORDS[word] = blob;
-
-              context.decodeAudioData(request.response, function(buffer) {
-                var source = context.createBufferSource();
-                source.buffer = buffer;
-                source.connect(context.destination);
-                source.start(0); 
-                $(e.target).removeClass("fa fa-spinner fa-spin");
-                $(e.target).addClass("fa fa-download");
-              });
-            }
-
-            request.send();
-          }
-        });
-      }
-    });
+    
+    requestWords(url, mode);
   });
 }
 
