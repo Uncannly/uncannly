@@ -48,22 +48,21 @@ class RandomMode(object):
                 failure = self.maybe_fail()
                 if failure:
                     return failure
-            else:
-                if self.phoneme == 'END_WORD':
-                    if self.min_length is not None and word_length < self.min_length:
-                        self.reset()
-                    else:
-                        success = self.maybe_succeed(words)
-                        if success:
-                            return success
-                elif self.max_length is not None and word_length > self.max_length:
+            elif self.phoneme == 'END_WORD':
+                if self.min_length is not None and word_length < self.min_length:
+                    self.reset()
+                else:
                     success = self.maybe_succeed(words)
                     if success:
                         return success
-                elif word_length > MAX_WORD_LENGTH:
-                    self.reset()
-                else:
-                    self.word.append(self.phoneme)
+            elif self.max_length is not None and word_length > self.max_length:
+                success = self.maybe_succeed(words)
+                if success:
+                    return success
+            elif word_length > MAX_WORD_LENGTH:
+                self.reset()
+            else:
+                self.word.append(self.phoneme)
     # pylint: enable=too-many-arguments,too-many-locals,too-many-branches
     # pylint: enable=too-few-public-methods,too-many-nested-blocks
 
