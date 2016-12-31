@@ -5,46 +5,27 @@ import cPickle
 
 from lib.type_conversion import array_to_string
 from lib.score import get_score
-from lib.options import SCORING_METHODS, DEFAULT_LIMITS, POOL_MAX, MAX_WORD_LENGTH, \
-    option_value_boolean_to_string
-
-# def diagnose_counts_helper(options):
-#     output = ''
-#     output += 'ignore_position ' if options[0] else 'use_pos '
-#     output += 'unstressed ' if options[1] else 'stressed '
-#     output += 'unweighted ' if options[2] else 'weighted '
-#     output += 'avg ' if options[3] else 'integral '
-#     output += '+' if options[4] else '*'
-#     return output
-
-# comments are useful for finding the right threshold for the search
+from lib.options import POOL_MAX, MAX_WORD_LENGTH, option_value_string_to_boolean
 
 # pylint: disable=too-many-instance-attributes
 class MostProbableWords(object):
-    def __init__(self, word_lengths, ignore_length, options):
-        ignore_position, unstressed, unweighted, method_mean, method_addition = options
-        length_consideration = option_value_boolean_to_string('length_consideration', ignore_length)
-        positioning = option_value_boolean_to_string('positioning', ignore_position)
-        stressing = option_value_boolean_to_string('stressing', unstressed)
-        weighting = option_value_boolean_to_string('weighting', unweighted)
+    def __init__(self, word_lengths, length_consideration, options):
+        positioning, stressing, weighting, self.scoring_method = options
 
         with open('data/secondary_data/default_limits.pkl', 'rb') as data:
             default_limits = cPickle.load(data)
 
         self.most_probable_words = []
         self.word_lengths = word_lengths[weighting][stressing]
-        self.scoring_method = SCORING_METHODS.keys()[
-            SCORING_METHODS.values().index((method_mean, method_addition))
-        ]
-        self.ignore_position = ignore_position
-        self.ignore_length = ignore_length
-        self.limit = default_limits[length_consideration][positioning]\
-            [stressing][weighting][self.scoring_method]
+        self.ignore_position = option_value_string_to_boolean(positioning)
+        self.ignore_length = option_value_string_to_boolean(length_consideration)
+        self.limit = 1.0 if not default_limits else default_limits\
+            .get(length_consideration, {}).get(positioning, {}).get(stressing, {})\
+            .get(weighting, {}).get(self.scoring_method, 1.0)
         self.upper_limit = None
         self.lower_limit = None
         self.count = 0
         self.word_length = None
-        # print length_consideration, diagnose_counts_helper(options), 'limit', self.limit
 
     def get(self):
         new_default_limits = {}

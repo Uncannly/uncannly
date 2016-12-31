@@ -1,6 +1,6 @@
 import json
 
-from lib.options import option_value_string_to_boolean
+from lib.options import option_value_string_to_boolean, SCORING_METHODS
 
 class Tables(object):
     def __init__(self, database):
@@ -60,6 +60,8 @@ class Tables(object):
         self.database.execute(sql_string)
 
     def scores(self, most_probable_words, options):
+        boolean_options = string_to_boolean(options)
+
         if len(most_probable_words) == 0:
             return
         else:
@@ -67,7 +69,7 @@ class Tables(object):
             for word, score, length in most_probable_words:
                 sql_array.append(
                     "('{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}')".\
-                    format(word, score, length, *options)
+                    format(word, score, length, *boolean_options)
                 )
             sql_string = (
                 "insert into scores (word, score, length, ignore_position, "
@@ -79,3 +81,11 @@ class Tables(object):
 
     def finish(self):
         self.database.disconnect()
+
+def string_to_boolean(options):
+    positioning, stressing, weighting, scoring_method = options
+    ignore_position = option_value_string_to_boolean(positioning)
+    unstressed = option_value_string_to_boolean(stressing)
+    unweighted = option_value_string_to_boolean(weighting)
+    method_mean, method_addition = SCORING_METHODS[scoring_method]
+    return ignore_position, unstressed, unweighted, method_mean, method_addition

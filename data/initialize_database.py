@@ -40,42 +40,30 @@ class DatabaseInitializer(object):
 
     def initialize_scores(self):
         updated_limits = {}
-        for unstressed in [False, True]:
-            for unweighted in [False, True]:
-                for ignore_length in [False, True]:
-                    for ignore_position in [False, True]:
+        for stressing in OPTION_VALUES['stressing']:
+            for weighting in OPTION_VALUES['weighting']:
+                for length_consideration in OPTION_VALUES['length_consideration']:
+                    for positioning in OPTION_VALUES['positioning']:
                         for method_mean in [False, True]:
                             for method_addition in [False, True]:
-                                options = ignore_position, unstressed, \
-                                    unweighted, method_mean, method_addition
-
-                                word_scores = MostProbableWords(
-                                    self.word_lengths,
-                                    ignore_length,
-                                    options)
-                                scores, limit = word_scores.get()
-
-                                length_consideration = option_value_boolean_to_string(
-                                    'length_consideration', ignore_length)
-                                positioning = option_value_boolean_to_string(
-                                    'positioning', ignore_position)
-                                stressing = option_value_boolean_to_string(
-                                    'stressing', unstressed)
-                                weighting = option_value_boolean_to_string(
-                                    'weighting', unweighted)
                                 scoring_method = SCORING_METHODS.keys()[
                                     SCORING_METHODS.values().index(
                                         (method_mean, method_addition)
                                     )
                                 ]
-
+                                options = positioning, stressing, weighting, scoring_method
+                                word_scores = MostProbableWords(
+                                    self.word_lengths,
+                                    length_consideration,
+                                    options)
+                                scores, limit = word_scores.get()
                                 self.tables.scores(scores, options)
-        updated_limits\
-            .setdefault(length_consideration, {})\
-            .setdefault(positioning, {})\
-            .setdefault(stressing, {})\
-            .setdefault(weighting, {})\
-            .setdefault(scoring_method, limit)
+                                updated_limits\
+                                    .setdefault(length_consideration, {})\
+                                    .setdefault(positioning, {})\
+                                    .setdefault(stressing, {})\
+                                    .setdefault(weighting, {})\
+                                    .setdefault(scoring_method, limit)
 
         with open('data/secondary_data/default_limits.pkl', 'wb') as output:
             cPickle.dump(updated_limits, output, -1)
