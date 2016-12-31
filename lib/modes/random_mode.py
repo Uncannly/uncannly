@@ -78,7 +78,6 @@ class RandomMode(object):
                 return self.succeed(words)
         self.reset()
 
-    # pylint: disable=too-many-arguments,too-many-locals
     def next_phoneme(self, word_length):
         position = 0 if self.ignore_position else word_length
         if position >= self.length:
@@ -91,7 +90,6 @@ class RandomMode(object):
         next_phonemes = self.next_phonemes_options[self.length][position]
 
         choose_next(next_phonemes[self.phoneme], self.test, word_length)
-    # pylint: enable=too-many-arguments,too-many-locals
 
     def test(self, phoneme, probability, method_args):
         self.score = get_score(self.score, self.scoring_method, probability, method_args)
