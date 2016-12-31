@@ -1,5 +1,11 @@
-window.AudioContext = window.AudioContext || window.webkitAudioContext;
-window.context = new AudioContext();
+define("audio", function() { 
 
-SPOKEN_WORDS = []
-ALREADY_SAVED = []
+const AudioContext = window.AudioContext || window.webkitAudioContext;
+const context = new AudioContext();
+
+const spokenWords = []
+const alreadySaved = []
+
+return { context: context, spokenWords: spokenWords, alreadySaved: alreadySaved }
+
+});

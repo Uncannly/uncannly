@@ -1,3 +1,5 @@
+define("helpers", ["jquery"], function($) { 
+
 const poolDefault = $('.pool').attr("max")
 
 const scoreThresholds = {
@@ -16,3 +18,11 @@ const updateHint = function(mode, scoreThreshold) {
     `to return just over ${poolDefault} words with default settings, set threshold to ${scoreThreshold}.`
   )
 }
+
+return {
+	updateHint: updateHint, 
+	scoreThresholds: scoreThresholds,
+	checked: checked,
+};
+
+});

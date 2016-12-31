@@ -1,3 +1,5 @@
+require(["jquery", "helpers", "requestWords"], function($, helpers, requestWords) { 
+
 const scoringMethods = [
   'integral-product', 'integral-sum', 'mean-geometric', 'mean-arithmetic'
 ];
@@ -25,12 +27,12 @@ const addRefreshListener = function(mode) {
     scoreThreshold && data.push(`score-threshold=${scoreThreshold}`);
 
     const selectionValue = $(`.${mode} .selection-value`).val();
-    if (checked(mode, 'selection')) {
+    if (helpers.checked(mode, 'selection')) {
       data.push(`selection=${selectionValue == '' ? pool : selectionValue}`);
     }
 
     otherOptions.forEach(function(option) {
-      if (checked(mode, option)) { data.push(option); };
+      if (helpers.checked(mode, option)) { data.push(option); };
     })
 
     const minLength = $(`.${mode} .min-length`).val();
@@ -40,7 +42,7 @@ const addRefreshListener = function(mode) {
 
     if (data.length > 0) url += '?' + data.join('&');
     
-    requestWords(url, mode);
+    requestWords.requestWords(url, mode);
   });
 }
 
@@ -78,7 +80,7 @@ const addBoundsListeners = function(mode, lesser, greater) {
 
 const addScoringMethodListener = function(mode) {
   $(`select[name=${mode}-scoring-method]`).change(function(e) {
-    updateHint(mode, scoreThresholds[e.target.value])
+    helpers.updateHint(mode, helpers.scoreThresholds[e.target.value])
   });
 }
 
@@ -90,4 +92,6 @@ modes.forEach(function(mode) {
   addBoundsListeners(mode, 'selection-value', 'pool');
   addBoundsListeners(mode, 'min-length', 'max-length');
   addScoringMethodListener(mode);
-})
+});
+
+});

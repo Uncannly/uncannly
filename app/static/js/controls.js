@@ -1,3 +1,5 @@
+require(["jquery"], function($) { 
+
 $("body").keyup(function(e){
   if (e.keyCode == 13) {
     const mode = $("input[name='mode']:checked").val()
@@ -19,4 +21,6 @@ $("li#top-tab").click(function() {
 
   $('li#random-tab').removeClass('active');
   $('li#top-tab').addClass('active');
+});
+
 });

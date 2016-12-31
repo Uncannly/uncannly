@@ -19,7 +19,7 @@ assets = Environment(app)
 assets.url = app.static_url_path
 assets.directory = app.static_folder
 assets.append_path(os.path.join('app', 'styles'))
-scss = Bundle('styles.scss', filters='pyscss', output='all.css')
+scss = Bundle('styles.scss', filters='pyscss', output='app.css')
 assets.register('scss_all', scss)
 
 @app.route('/')

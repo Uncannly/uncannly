@@ -1,3 +1,6 @@
+define('requestWords', ["jquery", "Clipboard", "filesaver", "audio"], 
+  function($, Clipboard, saveAs, audio) { 
+
 const requestWords = function(url, mode) {
   $(`#${mode}`).empty().append('<div class="loading">Loading...</div>');
 
@@ -43,9 +46,9 @@ const wordRow = function(word, i) {
 const speak = function(e) {
   const target = e.target;
   const word = $(target).parent().text();
-  const blob = SPOKEN_WORDS[word]
+  const blob = audio.spokenWords[word]
   if (blob) {
-    ALREADY_SAVED[word] ? say(blob) : downloadSpeech(blob, target, word);
+    audio.alreadySaved[word] ? say(blob) : downloadSpeech(blob, target, word);
   } else {
     getSpeech(target, word)
   }
@@ -68,28 +71,32 @@ const say = function(blob) {
 }
 
 const onLoadSpeech = function(word, target) {
-  SPOKEN_WORDS[word] = new Blob([this.response], {type: "octet/stream"});
-  window.context.decodeAudioData(this.response, function(buffer) {
+  audio.spokenWords[word] = new Blob([this.response], {type: "octet/stream"});
+  audio.context.decodeAudioData(this.response, function(buffer) {
     playSound(buffer);
     $(target).removeClass("fa fa-spinner fa-spin").addClass("fa fa-download");
   });
 }
 
 const onReloadSpeech = function() {
-  window.context.decodeAudioData(this.result, function(buffer) {
+  audio.context.decodeAudioData(this.result, function(buffer) {
     playSound(buffer);
   });
 }
 
 const playSound = function(buffer) {
-  const source = window.context.createBufferSource();
+  const source = audio.context.createBufferSource();
   source.buffer = buffer;
-  source.connect(window.context.destination);
+  source.connect(audio.context.destination);
   source.start(0); 
 }
 
 const downloadSpeech = function(blob, target, word) {
   saveAs(blob, 'uncannly.mp3');
-  ALREADY_SAVED[word] = true;
+  audio.alreadySaved[word] = true;
   $(target).removeClass("fa fa-download").addClass("fa fa-volume-up speak-word");
 }
+
+return { requestWords: requestWords }
+
+});
