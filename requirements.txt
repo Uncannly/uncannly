@@ -1,5 +1,7 @@
 flask
 flask_cors
+Flask-Assets
 gevent
 psycopg2
 cfenv
+pyscss

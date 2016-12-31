@@ -3,6 +3,7 @@ sys.path.insert(1, os.path.join(sys.path[0], '..'))
 
 from flask_cors import CORS
 from flask import Flask, request, render_template
+from flask_assets import Environment, Bundle
 from gevent.wsgi import WSGIServer
 
 from lib.mode import get_by_mode
@@ -13,6 +14,13 @@ from lib.options import POOL_DEFAULT, POOL_MAX, TOO_FEW_MESSAGE, \
 
 app = Flask(__name__)
 CORS(app)
+
+assets = Environment(app)
+assets.url = app.static_url_path
+assets.directory = app.static_folder
+assets.append_path(os.path.join('app', 'styles'))
+scss = Bundle('styles.scss', filters='pyscss', output='all.css')
+assets.register('scss_all', scss)
 
 @app.route('/')
 def root():
