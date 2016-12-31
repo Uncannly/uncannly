@@ -6,13 +6,10 @@ sys.path.insert(1, os.path.join(sys.path[0], '..'))
 from lib.present import Present
 from lib.type_conversion import array_to_string
 from lib.score import get_score
-from lib.options import OPTION_VALUES, option_value_string_to_boolean, \
-  option_value_boolean_to_string, MAX_WORD_LENGTH
+from lib.options import option_value_boolean_to_string, MAX_WORD_LENGTH
 from data.load_data import load_phonemes
 from data.secondary_data_io import load_word_length_distribution
 
-# pylint: disable=too-many-arguments,too-many-locals,too-many-branches
-# pylint: disable=too-few-public-methods,too-many-nested-blocks
 class RandomMode(object):
     def __init__(self, options):
         self.interface = options['interface']
@@ -35,6 +32,8 @@ class RandomMode(object):
         self.selector = self.api_selector if self.interface == 'api' else self.cli_selector
         self.count_successes = 0
         self.count_fails = 0
+
+        self.reset()
 
     def get(self):
         self.reset()
@@ -63,8 +62,6 @@ class RandomMode(object):
                 self.reset()
             else:
                 self.word.append(self.phoneme)
-    # pylint: enable=too-many-arguments,too-many-locals,too-many-branches
-    # pylint: enable=too-few-public-methods,too-many-nested-blocks
 
     def maybe_fail(self):
         self.count_fails += 1
@@ -96,8 +93,8 @@ class RandomMode(object):
         choose_next(next_phonemes[self.phoneme], self.test, word_length)
     # pylint: enable=too-many-arguments,too-many-locals
 
-    def test(self, phoneme, probability, word_length):
-        self.score = get_score(self.score, self.scoring_method, probability, word_length)
+    def test(self, phoneme, probability, method_args):
+        self.score = get_score(self.score, self.scoring_method, probability, method_args)
         self.phoneme = None if self.score < self.score_threshold else phoneme
 
     def cli_selector(self):
@@ -130,13 +127,15 @@ class RandomMode(object):
             length = choose_next(distributions, self.bind_length, None)
         return length
 
-    def bind_length(self, length, _, __):
+    # pylint: disable=unused-argument
+    def bind_length(self, length, probability=None, method_args=None):
         if self.min_length is not None and length < self.min_length:
             pass
         elif self.max_length is not None and length > self.max_length:
             pass
         else:
             return length
+    # pylint: enable=unused-argument
 
     def fail(self):
         message = (
@@ -152,7 +151,7 @@ class RandomMode(object):
     def succeed(self, words):
         if self.selection:
             words.sort(key=lambda x: -x[1])
-            words = words[:selection]
+            words = words[:self.selection]
 
         if self.interface == 'cli':
             if self.selection:
@@ -168,4 +167,4 @@ def choose_next(iterator, method, method_args):
     for item, probability in iterator:
         accumulated_probability += probability
         if accumulated_probability > random_number:
-            return method(item, probability, method_args)
+            return method(item, probability=probability, method_args=method_args)

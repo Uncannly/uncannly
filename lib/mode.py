@@ -36,5 +36,5 @@ def get_by_mode(mode, interface, args):
     get_args['min_length'] = int(args['min_length']) if args['min_length'] else None
     get_args['max_length'] = int(args['max_length']) if args['max_length'] else None
 
-    Getter = TopMode if mode == 'top' else RandomMode
-    return Getter(get_args).get()
+    getter = TopMode if mode == 'top' else RandomMode
+    return getter(get_args).get()

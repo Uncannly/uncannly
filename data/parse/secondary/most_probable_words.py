@@ -28,7 +28,6 @@ class MostProbableWords(object):
         self.word_length = None
 
     def get(self):
-        new_default_limits = {}
         good_count = False
         while not good_count:
             self.most_probable_words = []
@@ -50,13 +49,13 @@ class MostProbableWords(object):
                 if self.lower_limit:
                     self.limit -= (self.limit - self.lower_limit) / 2
                 else:
-                    self.limit /= 2 
+                    self.limit /= 2
             elif len(self.most_probable_words) > POOL_MAX * 10:
                 self.lower_limit = self.limit
                 if self.upper_limit:
                     self.limit += (self.upper_limit - self.limit) / 2
                 else:
-                    self.limit *= 2 
+                    self.limit *= 2
             else:
                 # print 'the correct limit was', self.limit
                 good_count = True
@@ -69,7 +68,7 @@ class MostProbableWords(object):
         self.count += 1
         if self.count > POOL_MAX * 10:
             return
-            
+
         word_length = len(word)
         current_phoneme = word[word_length - 1]
 

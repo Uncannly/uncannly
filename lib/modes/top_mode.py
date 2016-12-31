@@ -8,7 +8,7 @@ from lib.type_conversion import string_to_array
 from lib.options import TOO_FEW_MESSAGE, NO_WORDS_MESSAGE
 from data.load_data import load_scores
 
-# pylint: disable=too-many-arguments,too-many-locals,too-few-public-methods
+# pylint: disable=too-many-instance-attributes,too-few-public-methods
 class TopMode(object):
     def __init__(self, options):
         self.interface = options['interface']
@@ -55,6 +55,7 @@ class TopMode(object):
                 words.append(word)
 
         return selector(words, self.selection, self.unstressed, self.exclude_real)
+# pylint: enable=too-many-instance-attributes,too-few-public-methods
 
 def cli_select_top(words, selection, unstressed, exclude_real):
     if len(words) > 0:
@@ -116,4 +117,3 @@ def api_select_random(words, selection, unstressed, exclude_real):
         output = [NO_WORDS_MESSAGE]
 
     return output
-# pylint: enable=too-many-arguments,too-many-locals,too-few-public-methods
