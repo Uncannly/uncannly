@@ -1,9 +1,13 @@
 #!/bin/bash
 
 set -e
-echo "***********************\nLinting\n************************"
-pylint uncannly > pylint.log
-echo "*************\nUpdating Production Database\n*************"
-python data/initialize_database.py --production
-echo "**********************\nDeploying\n***********************"
+echo ""
+echo "***********************Linting************************"
+echo ""
+pylint uncannly > pylint.log || echo "Linting failed; see pylint.log" && exit 1
+echo ""
+echo "*************Updating Production Database*************"
+echo ""
+python data/initialize_database.py --production || echo "Prod db init failed." && exit 1
+echo "**********************Deploying***********************"
 cf push
