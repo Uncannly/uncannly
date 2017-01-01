@@ -9,7 +9,7 @@ class Tables(object):
     def schema(self):
         sql_array = [
             "drop table if exists words",
-            "create table words (word varchar, pronunciation varchar)",
+            "create table words (word varchar, pronunciation varchar, frequency int)",
             "drop table if exists phonemes",
             "create table phonemes (word_length int, word_position int, \
               phoneme varchar, unstressed boolean, next_phonemes_weighted varchar, \
@@ -25,11 +25,11 @@ class Tables(object):
 
     def words(self, words):
         sql_array = []
-        for word, pronunciation in words:
-            sql_array.append("('{}', '{}')".format(
-                word.replace("'", "''"), pronunciation
+        for word, pronunciation, frequency in words:
+            sql_array.append("('{}', '{}', '{}')".format(
+                word.replace("'", "''"), pronunciation, frequency
             ))
-        sql_string = "insert into words (word, pronunciation) values "
+        sql_string = "insert into words (word, pronunciation, frequency) values "
         sql_string += ", ".join(sql_array)
         self.database.execute(sql_string)
 

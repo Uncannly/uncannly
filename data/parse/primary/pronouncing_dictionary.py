@@ -26,14 +26,14 @@ class PronouncingDictionary(object):
         phonemes['stressed'] = word_pronunciation.split()
         phonemes['unstressed'] = [destress(phoneme) for phoneme in phonemes['stressed']]
 
-        self.words.append((word, word_pronunciation))
-
         word_length = len(phonemes['stressed'])
 
         for stressing in ['stressed', 'unstressed']:
             phonemes[stressing] = ['START_WORD'] + phonemes[stressing] + ['END_WORD']
 
         frequency = self.word_frequencies[word] if word in self.word_frequencies else 1
+
+        self.words.append((word, word_pronunciation, frequency))
 
         self.length_distributions(word_length, frequency)
 

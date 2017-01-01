@@ -34,8 +34,14 @@ def present_word(word, exclude_real, existing_word):
         return word
 
 def already_in_dictionary(word, unstressed):
-    for spelling, pronunciation in WORDS:
+    highest_frequency = 0
+    best_match = None
+    for spelling, pronunciation, frequency in WORDS:
         if unstressed:
             pronunciation = destress(pronunciation)
-        if word == pronunciation:
-            return spelling
+
+        if word == pronunciation and frequency > highest_frequency:
+            best_match = spelling
+            highest_frequency = frequency
+
+    return best_match
