@@ -3,7 +3,7 @@ import os
 import sys
 sys.path.insert(1, os.path.join(sys.path[0], '..'))
 
-from lib.present import Present
+from lib.present import for_web, for_terminal
 from lib.conversion import string_to_array
 from lib.options import TOO_FEW_MESSAGE, NO_WORDS_MESSAGE
 from data.load_data import load_scores
@@ -65,10 +65,10 @@ def cli_select_top(words, selection, unstressed, exclude_real):
             while not presented:
                 if i == len(words):
                     return sys.stdout.write(TOO_FEW_MESSAGE)
-                presented = Present.for_terminal(words[i],
-                                                 unstressed,
-                                                 exclude_real,
-                                                 False)
+                presented = for_terminal(words[i],
+                                         unstressed,
+                                         exclude_real,
+                                         False)
 
                 i += 1
     else:
@@ -77,10 +77,10 @@ def cli_select_top(words, selection, unstressed, exclude_real):
 def cli_select_random(words, selection, unstressed, exclude_real):
     if len(words) > 0:
         for _ in xrange(selection):
-            while not Present.for_terminal(random.choice(words),
-                                           unstressed,
-                                           exclude_real,
-                                           False):
+            while not for_terminal(random.choice(words),
+                                   unstressed,
+                                   exclude_real,
+                                   False):
                 pass
     else:
         sys.stdout.write(NO_WORDS_MESSAGE)
@@ -95,7 +95,7 @@ def api_select_top(words, selection, unstressed, exclude_real):
             break
         arrayified_word = (string_to_array(words[i][0]), words[i][1])
         i += 1
-        result = Present.for_web(arrayified_word, unstressed, exclude_real)
+        result = for_web(arrayified_word, unstressed, exclude_real)
         if result:
             no_words_returned = False
             output.append(result)
@@ -110,7 +110,7 @@ def api_select_random(words, selection, unstressed, exclude_real):
     while len(output) < selection:
         i = int(random.random * len(words))
         arrayified_word = (string_to_array(words[i][0]), words[i][1])
-        result = Present.for_web(arrayified_word, unstressed, exclude_real)
+        result = for_web(arrayified_word, unstressed, exclude_real)
         if result:
             output.append(result)
 

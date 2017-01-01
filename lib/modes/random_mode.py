@@ -3,7 +3,7 @@ import os
 import sys
 sys.path.insert(1, os.path.join(sys.path[0], '..'))
 
-from lib.present import Present
+from lib.present import for_web, for_terminal
 from lib.conversion import array_to_string, to_sig_figs
 from lib.score import get_score
 from lib.options import option_value_boolean_to_string, MAX_WORD_LENGTH
@@ -101,13 +101,13 @@ class RandomMode(object):
 
     def cli_selector(self):
         stringified_word = array_to_string(self.word)
-        return Present.for_terminal((stringified_word, to_sig_figs(self.score, 6)),
+        return for_terminal((stringified_word, to_sig_figs(self.score, 6)),
                                     self.unstressed,
                                     self.exclude_real,
                                     self.selection)
 
     def api_selector(self):
-        return Present.for_web((self.word, to_sig_figs(self.score, 6)),
+        return for_web((self.word, to_sig_figs(self.score, 6)),
                                self.unstressed,
                                self.exclude_real)
 
