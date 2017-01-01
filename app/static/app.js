@@ -1,4 +1,5 @@
 requirejs.config({ 
+	baseUrl: 'static/js',
   paths: { 
     'jquery': '../vendor/jquery-3.1.1.min',
     'Clipboard': '../vendor/clipboard.min',
