@@ -2,7 +2,7 @@ define('requestWords', ["jquery", "Clipboard", "filesaver", "audio"],
   function($, Clipboard, saveAs, audio) { 
 
 const requestWords = function(url, mode) {
-  $(`#${mode}`).empty().append('<div class="loading">Loading...</div>');
+  $(`#${mode}`).empty().append('<span class="message">Loading...</span>');
 
   $.ajax({
     url: url,
@@ -20,7 +20,7 @@ const addWordRows = function(data, mode) {
 
 const addWordRow = function(word, i) {
   if (word == window.noWordsMessage || word == window.tooFewMessage) {
-    $(`#${this}`).append(`<div class="message">${word}</div>`);
+    $(`#${this}`).append(`<span class="message">${word}</span>`);
   } else {
     $(`#${this}`).append(wordRow(word, i));
     new Clipboard(`#copy-word-${i}`);
@@ -38,7 +38,7 @@ const wordRow = function(word, i) {
       >
       </i>
       <i class="fa fa-volume-up speak-word" aria-hidden="true"></i>
-      <div class="no-block word-text" id="text-${i}">${word}</div>
+      <span class="word-text" id="text-${i}">${word}</div>
     </div>
   `)
 }

@@ -6,13 +6,15 @@
 
 <div class="{{ mode }}" style="{{ 'display: none' if mode == 'top' }}">
 
-  {{ selection(mode, readme, pool_default, pool_max) }}
-  {{ scoring(mode, readme) }}
-  {{ otherOptions(mode, readme, max_word_length) }}
+	<div class="form">
+	  {{ selection(mode, readme, pool_default, pool_max) }}
+	  {{ scoring(mode, readme) }}
+	  {{ otherOptions(mode, readme, max_word_length) }}
 
-  <button class="refresh">Refresh</button>
+	  <button class="refresh">Refresh</button>
+  </div>
   
-  <div id="{{ mode }}"></div>
+  <div class="results" id="{{ mode }}"></div>
 
 </div>
 

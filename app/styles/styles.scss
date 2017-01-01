@@ -19,12 +19,8 @@ img {
   right: 40px;
 }
 
-div {
-  padding: 10px 0;
-
-  &.no-block {
-    display: inline;
-  }
+span {
+  display: inline;
 }
 
 #random-word {

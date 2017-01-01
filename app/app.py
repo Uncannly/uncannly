@@ -18,6 +18,8 @@ CORS(app)
 assets = Environment(app)
 assets.url = app.static_url_path
 assets.directory = app.static_folder
+assets.manifest = None
+assets.cache = False
 assets.append_path(os.path.join('app', 'styles'))
 scss = Bundle('styles.scss', filters='pyscss', output='app.css')
 assets.register('scss_all', scss)
