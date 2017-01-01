@@ -90,7 +90,7 @@ class RandomMode(object):
 
         next_phonemes = self.next_phonemes_options[self.length][position]
 
-        if self.must_end and 'END_WORD' in [x[0] for x in next_phonemes[self.phoneme]]:
+        if self.must_end and 'END_WORD' in (x[0] for x in next_phonemes[self.phoneme]):
             self.phoneme = 'END_WORD'
         else:
             choose_next(next_phonemes[self.phoneme], self.test, word_length)
@@ -164,7 +164,7 @@ class RandomMode(object):
                     sys.stdout.write(word + '\n')
             return True
         else:
-            return [x[0] for x in words]
+            return (x[0] for x in words)
 
 def choose_next(iterator, method, method_args):
     random_number = random.random()
