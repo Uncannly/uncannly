@@ -4,7 +4,7 @@ import sys
 sys.path.insert(1, os.path.join(sys.path[0], '..'))
 
 from lib.present import Present
-from lib.type_conversion import array_to_string
+from lib.conversion import array_to_string, to_sig_figs
 from lib.score import get_score
 from lib.options import option_value_boolean_to_string, MAX_WORD_LENGTH
 from data.load_data import load_phonemes
@@ -101,13 +101,15 @@ class RandomMode(object):
 
     def cli_selector(self):
         stringified_word = array_to_string(self.word)
-        return Present.for_terminal(word=(stringified_word, self.score),
-                                    unstressed=self.unstressed,
-                                    exclude_real=self.exclude_real,
-                                    suppress_immediate=self.selection)
+        return Present.for_terminal((stringified_word, to_sig_figs(self.score, 6)),
+                                    self.unstressed,
+                                    self.exclude_real,
+                                    self.selection)
 
     def api_selector(self):
-        return Present.for_web((self.word, self.score), self.unstressed, self.exclude_real)
+        return Present.for_web((self.word, to_sig_figs(self.score, 6)),
+                               self.unstressed,
+                               self.exclude_real)
 
     def reset(self):
         if self.ignore_length:

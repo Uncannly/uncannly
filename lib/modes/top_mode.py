@@ -4,7 +4,7 @@ import sys
 sys.path.insert(1, os.path.join(sys.path[0], '..'))
 
 from lib.present import Present
-from lib.type_conversion import string_to_array
+from lib.conversion import string_to_array
 from lib.options import TOO_FEW_MESSAGE, NO_WORDS_MESSAGE
 from data.load_data import load_scores
 
@@ -65,10 +65,10 @@ def cli_select_top(words, selection, unstressed, exclude_real):
             while not presented:
                 if i == len(words):
                     return sys.stdout.write(TOO_FEW_MESSAGE)
-                presented = Present.for_terminal(word=words[i],
-                                                 unstressed=unstressed,
-                                                 exclude_real=exclude_real,
-                                                 suppress_immediate=False)
+                presented = Present.for_terminal(words[i],
+                                                 unstressed,
+                                                 exclude_real,
+                                                 False)
 
                 i += 1
     else:
@@ -77,10 +77,10 @@ def cli_select_top(words, selection, unstressed, exclude_real):
 def cli_select_random(words, selection, unstressed, exclude_real):
     if len(words) > 0:
         for _ in xrange(selection):
-            while not Present.for_terminal(word=random.choice(words),
-                                           unstressed=unstressed,
-                                           exclude_real=exclude_real,
-                                           suppress_immediate=False):
+            while not Present.for_terminal(random.choice(words),
+                                           unstressed,
+                                           exclude_real,
+                                           False):
                 pass
     else:
         sys.stdout.write(NO_WORDS_MESSAGE)

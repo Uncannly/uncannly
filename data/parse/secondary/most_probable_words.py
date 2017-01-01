@@ -3,7 +3,7 @@ import sys
 sys.path.insert(1, os.path.join(sys.path[0], '..', '..'))
 import cPickle
 
-from lib.type_conversion import array_to_string
+from lib.conversion import array_to_string
 from lib.score import get_score
 from lib.options import POOL_MAX, MAX_WORD_LENGTH, option_value_string_to_boolean
 

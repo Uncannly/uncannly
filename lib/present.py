@@ -1,7 +1,7 @@
 import sys
 
 from lib.ipa import ipa, destress
-from lib.type_conversion import array_to_string
+from lib.conversion import array_to_string
 from data.load_data import load_words
 
 WORDS = load_words()
@@ -26,7 +26,7 @@ class Present(object):
             return False
         else:
             if not suppress_immediate:
-                sys.stdout.write(word + '[' + score + ']\n')
+                sys.stdout.write(word + ' [' + str(score) + ']\n')
             return word_and_score
 
 def present_word(word, score, exclude_real, existing_word):

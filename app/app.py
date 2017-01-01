@@ -8,7 +8,7 @@ from gevent.wsgi import WSGIServer
 
 from lib.mode import get_by_mode
 from lib.readme import README
-from lib.case_conversion import snake_to_kebab
+from lib.conversion import snake_to_kebab
 from lib.options import POOL_DEFAULT, POOL_MAX, TOO_FEW_MESSAGE, \
   NO_WORDS_MESSAGE, MAX_WORD_LENGTH
 

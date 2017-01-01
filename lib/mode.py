@@ -1,6 +1,6 @@
 from lib.modes.top_mode import TopMode
 from lib.modes.random_mode import RandomMode
-from lib.case_conversion import kebab_to_snake
+from lib.conversion import kebab_to_snake
 from lib.options import SCORING_METHODS, POOL_DEFAULT
 
 def get_by_mode(mode, interface, args):
