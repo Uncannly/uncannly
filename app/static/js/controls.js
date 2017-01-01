@@ -2,7 +2,7 @@ require(["jquery"], function($) {
 
 $("body").keyup(function(e){
   if (e.keyCode == 13) {
-    const mode = $("input[name='mode']:checked").val()
+    const mode = $('.mode-nav-item.active').text()
     $(`.${mode} button.refresh`).click();
   }
 });
