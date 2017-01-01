@@ -2,6 +2,7 @@ import json
 
 from data.database import Database
 from lib.options import SCORING_METHODS
+from lib.conversion import sparse
 
 def load_words():
     return Database.fetch("select * from words;")
@@ -24,10 +25,8 @@ def load_phonemes(weighting, unstressed):
 
     output = []
     for word_length, word_position, phoneme, next_phonemes in results:
-        while word_length + 1 > len(output):
-            output.append([])
-        while word_position + 1 > len(output[word_length]):
-            output[word_length].append({})
+        sparse(output, word_length, [])
+        sparse(output[word_length], word_position, {})
 
         output[word_length][word_position][phoneme] = json.loads(next_phonemes)
 

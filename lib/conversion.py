@@ -1,4 +1,5 @@
 from math import floor, log10
+from copy import copy
 
 def kebab_to_snake(string):
     return string.replace('-', '_')
@@ -14,3 +15,7 @@ def array_to_string(word):
 
 def string_to_array(word):
     return word.split(' ')
+
+def sparse(nonsparse, desired_index, initial_value):
+    while desired_index + 1 > len(nonsparse):
+        nonsparse.append(copy(initial_value))

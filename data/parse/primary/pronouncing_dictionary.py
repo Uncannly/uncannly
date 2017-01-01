@@ -1,6 +1,7 @@
 from data.parse.primary.open_helper import open_primary_data_file
 from lib.ipa import destress
 from lib.options import OPTION_VALUES
+from lib.conversion import sparse
 
 class PronouncingDictionary(object):
     def __init__(self, word_frequencies):
@@ -55,17 +56,14 @@ class PronouncingDictionary(object):
                     for ignore_length in [False, True]:
                         # the minus two is for start_word and end_word
                         length = 0 if ignore_length else word_length - 2
-                        while length + 1 > len(self.phoneme_chains[weighting][stressing]):
-                            self.phoneme_chains[weighting][stressing].append([])
+                        sparse(self.phoneme_chains[weighting][stressing], length, [])
 
                         for ignore_position in [False, True]:
                             # the plus 1 is because word_position is also 0-indexed
                             # but we need it to start in index 1 since 0 is reserved
                             # for the catch-all (btw, the index 1 has only one key, START_WORD)
                             position = 0 if ignore_position else word_position + 1
-                            while position + 1 > len(self.phoneme_chains\
-                                [weighting][stressing][length]):
-                                self.phoneme_chains[weighting][stressing][length].append({})
+                            sparse(self.phoneme_chains[weighting][stressing][length], position, {})
 
                             self.phoneme_chains[weighting][stressing][length][position].\
                                 setdefault(phoneme, {}).setdefault(next_phoneme, 0)
@@ -76,8 +74,7 @@ class PronouncingDictionary(object):
         for weighting in OPTION_VALUES['weighting']:
             increment = 1 if weighting == 'unweighted' else frequency
 
-            while word_length + 1 > len(self.word_lengths[weighting]):
-                self.word_lengths[weighting].append(0)
+            sparse(self.word_lengths[weighting], word_length, 0)
 
             self.word_lengths[weighting][0] += increment
             self.word_lengths[weighting][word_length] += increment
