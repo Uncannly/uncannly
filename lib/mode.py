@@ -20,7 +20,7 @@ def get_by_mode(mode, interface, args):
     if args['scoring_method']:
         get_args['scoring_method'] = kebab_to_snake(args['scoring_method'])
     else:
-        for method in SCORING_METHODS.keys():
+        for method in SCORING_METHODS:
             if args.get('score_by_{}'.format(method)):
                 get_args['scoring_method'] = method
 

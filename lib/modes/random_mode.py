@@ -92,7 +92,7 @@ class RandomMode(object):
 
         if self.must_end and 'END_WORD' in [x[0] for x in next_phonemes[self.phoneme]]:
             self.phoneme = 'END_WORD'
-        else:    
+        else:
             choose_next(next_phonemes[self.phoneme], self.test, word_length)
 
     def test(self, phoneme, probability, method_args):
