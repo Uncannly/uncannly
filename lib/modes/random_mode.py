@@ -36,14 +36,15 @@ class RandomMode(object):
         self.reset()
 
     def get(self):
-        self.reset()
         words = []
 
         while True:
             word_length = len(self.word) + 1
             self.next_phoneme(word_length)
 
-            if self.phoneme is None:
+            if word_length > MAX_WORD_LENGTH:
+                self.reset()
+            elif self.phoneme is None:
                 failure = self.maybe_fail()
                 if failure:
                     return failure
@@ -54,14 +55,14 @@ class RandomMode(object):
                     success = self.maybe_succeed(words)
                     if success:
                         return success
-            elif self.max_length is not None and word_length > self.max_length:
-                success = self.maybe_succeed(words)
-                if success:
-                    return success
-            elif word_length > MAX_WORD_LENGTH:
-                self.reset()
             else:
-                self.word.append(self.phoneme)
+                if self.max_length is not None and word_length == self.max_length:
+                    self.must_end = True
+
+                if self.max_length is not None and word_length > self.max_length:
+                    self.reset()
+                else:
+                    self.word.append(self.phoneme)
 
     def maybe_fail(self):
         self.count_fails += 1
@@ -89,7 +90,10 @@ class RandomMode(object):
 
         next_phonemes = self.next_phonemes_options[self.length][position]
 
-        choose_next(next_phonemes[self.phoneme], self.test, word_length)
+        if self.must_end and 'END_WORD' in [x[0] for x in next_phonemes[self.phoneme]]:
+            self.phoneme = 'END_WORD'
+        else:    
+            choose_next(next_phonemes[self.phoneme], self.test, word_length)
 
     def test(self, phoneme, probability, method_args):
         self.score = get_score(self.score, self.scoring_method, probability, method_args)
@@ -114,6 +118,7 @@ class RandomMode(object):
         self.phoneme = 'START_WORD'
         self.score = 1.0
         self.length = length
+        self.must_end = False
 
     def random_length(self):
         # i mean, or we could slice the distributions and re-normalize.
