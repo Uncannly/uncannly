@@ -108,7 +108,7 @@ def api_select_top(words, selection, unstressed, exclude_real):
 def api_select_random(words, selection, unstressed, exclude_real):
     output = []
     while len(output) < selection:
-        i = int(random.random * len(words))
+        i = int(random.random() * len(words))
         arrayified_word = (string_to_array(words[i][0]), words[i][1])
         result = for_web(arrayified_word, unstressed, exclude_real)
         if result:
