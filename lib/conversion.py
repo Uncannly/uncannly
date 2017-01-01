@@ -7,6 +7,12 @@ def kebab_to_snake(string):
 def snake_to_kebab(string):
     return string.replace('_', '-')
 
+def kebab_to_space(string):
+    return string.replace('-', ' ')
+
+def snake_to_space(string):
+    return string.replace('_', ' ')
+
 def to_sig_figs(num, figs):
     return round(num, -int(floor(log10(num))) + (figs - 1))
 

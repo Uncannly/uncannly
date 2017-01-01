@@ -8,9 +8,11 @@ from data.database import Database
 from data.tables import Tables
 from data.secondary_data_io import save
 from lib.options import OPTION_VALUES, SCORING_METHODS
+from lib.conversion import snake_to_space
 
 class DatabaseInitializer(object):
     def __init__(self):
+        sys.stdout.write('Initializing database.\n\n')
         self.tables = Tables(Database())
         self.tables.schema()
         self.phoneme_chains = None
@@ -18,11 +20,13 @@ class DatabaseInitializer(object):
 
     def initialize_words(self):
         word_frequencies = frequency_list.parse()
+        sys.stdout.write('Frequency list parsed.\n\n')
         words, self.phoneme_chains, word_length_distributions = \
             PronouncingDictionary(word_frequencies).parse()
-        self.tables.words(words)
         for weighting, distribution in word_length_distributions.iteritems():
             save(distribution, 'word_length_distribution_{}'.format(weighting))
+        sys.stdout.write('Word length distributions saved.\n')
+        self.tables.words(words)
 
     def initialize_phoneme_chains(self):
         self.word_lengths = {'weighted': {}, 'unweighted': {}}
@@ -31,12 +35,14 @@ class DatabaseInitializer(object):
               absolute_chain.parse(self.phoneme_chains['weighted'][stressing])
             self.word_lengths['unweighted'][stressing] = \
               absolute_chain.parse(self.phoneme_chains['unweighted'][stressing])
+            sys.stdout.write('Phoneme chains {} normalized.\n'.format(stressing))
 
             self.tables.phonemes(
                 self.word_lengths['weighted'][stressing],
                 self.word_lengths['unweighted'][stressing],
                 stressing
             )
+        sys.stdout.write('Phoneme chain table populated.\n\n')
 
     def initialize_scores(self):
         updated_limits = {}
@@ -64,12 +70,20 @@ class DatabaseInitializer(object):
                                     .setdefault(stressing, {})\
                                     .setdefault(weighting, {})\
                                     .setdefault(scoring_method, limit)
+                                sys.stdout.write('Most probable words {} {} {} {} {} done.\n'\
+                                    .format(snake_to_space(stressing),
+                                            snake_to_space(weighting),
+                                            snake_to_space(length_consideration),
+                                            snake_to_space(positioning),
+                                            snake_to_space(scoring_method)))
 
+        sys.stdout.write('Most probable words table populated.\n\n')
         save(updated_limits, 'default_limits')
+        sys.stdout.write('Default limits per option combination updated.\n\n')
 
     def finish(self):
         self.tables.finish()
-        sys.stdout.write('Database successfully initialized.\n')
+        sys.stdout.write('Database successfully initialized.\n\n')
 
 DATABASE_INITIALIZER = DatabaseInitializer()
 DATABASE_INITIALIZER.initialize_words()

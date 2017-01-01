@@ -1,3 +1,4 @@
+import sys
 import json
 
 from lib.options import option_value_string_to_boolean, SCORING_METHODS
@@ -22,6 +23,7 @@ class Tables(object):
         ]
         sql_string = ";".join(sql_array)
         self.database.execute(sql_string)
+        sys.stdout.write('Tables created.\n\n')
 
     def words(self, words):
         sql_array = []
@@ -32,6 +34,7 @@ class Tables(object):
         sql_string = "insert into words (word, pronunciation, frequency) values "
         sql_string += ", ".join(sql_array)
         self.database.execute(sql_string)
+        sys.stdout.write('Words table populated.\n\n')
 
     def phonemes(self, word_lengths_weighted, word_lengths_unweighted, stressing):
         sql_array = []
@@ -52,6 +55,12 @@ class Tables(object):
                                     unstressed,
                                     json.dumps(next_phonemes_weighted),
                                     json.dumps(next_phonemes_unweighted)))
+            if word_length == 0:
+                sys.stdout.write(('Phoneme chain table all positions for ignore length '
+                                  '{} updated.\n').format(stressing))
+            else:
+                sys.stdout.write(('Phoneme chain table all positions for length '
+                                  '{} {} updated.\n').format(word_length, stressing))
         sql_string = (
             "insert into phonemes (word_length, word_position, phoneme, "
             "unstressed, next_phonemes_weighted, next_phonemes_unweighted) values "

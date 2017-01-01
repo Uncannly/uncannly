@@ -1,17 +1,17 @@
 {% from 'basicOption.html' import basicOption as basicOption %}
 
-{% macro otherOptions(mode, readme, max_word_length) -%}
+{% macro otherOptions(mode, readme, max_word_length, kebab_to_space) -%}
 
 <div>
-	{{ basicOption(mode, readme, 'unweighted') }}
-	{{ basicOption(mode, readme, 'unstressed') }}
-	{{ basicOption(mode, readme, 'exclude-real') }}
+	{{ basicOption(mode, readme, 'unweighted', kebab_to_space) }}
+	{{ basicOption(mode, readme, 'unstressed', kebab_to_space) }}
+	{{ basicOption(mode, readme, 'exclude-real', kebab_to_space) }}
 </div>
 
 <div>
 
-	{{ basicOption(mode, readme, 'ignore-position') }}
-	{{ basicOption(mode, readme, 'ignore-length') }}
+	{{ basicOption(mode, readme, 'ignore-position', kebab_to_space) }}
+	{{ basicOption(mode, readme, 'ignore-length', kebab_to_space) }}
 
 	<label 
     title="{{ readme.min_length }}"

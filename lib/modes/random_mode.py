@@ -102,14 +102,14 @@ class RandomMode(object):
     def cli_selector(self):
         stringified_word = array_to_string(self.word)
         return for_terminal((stringified_word, to_sig_figs(self.score, 6)),
-                                    self.unstressed,
-                                    self.exclude_real,
-                                    self.selection)
+                            self.unstressed,
+                            self.exclude_real,
+                            self.selection)
 
     def api_selector(self):
         return for_web((self.word, to_sig_figs(self.score, 6)),
-                               self.unstressed,
-                               self.exclude_real)
+                       self.unstressed,
+                       self.exclude_real)
 
     def reset(self):
         if self.ignore_length:

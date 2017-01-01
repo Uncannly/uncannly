@@ -27,9 +27,9 @@
       <li class="mode-nav-item" id="top-tab"><span>top</span></li>
     </ul>
 
-    {{ modes('random', readme, pool_default, pool_max, max_word_length) }}
+    {{ modes('random', readme, pool_default, pool_max, max_word_length, kebab_to_space) }}
 
-    {{ modes('top', readme, pool_default, pool_max, max_word_length) }}
+    {{ modes('top', readme, pool_default, pool_max, max_word_length, kebab_to_space) }}
     
     <script>
       window.noWordsMessage = `{{ no_words_message }}`

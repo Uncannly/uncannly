@@ -1,4 +1,4 @@
-{% macro basicOption(mode, readme, option) -%}
+{% macro basicOption(mode, readme, option, kebab_to_space) -%}
 
 <input type="checkbox" class="{{ option }}" id="{{ mode }}-{{ option }}">
 <label 
@@ -6,7 +6,7 @@
 	title="{{ readme.get(option.replace('-', '_')) }}" 
 	for="{{ mode }}-{{ option }}"
 >
-	{{ option.replace('-', ' ') }}
+	{{ kebab_to_space(option) }}
 </label>
 
 {%- endmacro %}

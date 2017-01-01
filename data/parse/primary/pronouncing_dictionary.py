@@ -1,7 +1,11 @@
+import sys
+
 from data.parse.primary.open_helper import open_primary_data_file
 from lib.ipa import destress
 from lib.options import OPTION_VALUES
 from lib.conversion import sparse
+
+# pylint: disable=too-few-public-methods
 
 class PronouncingDictionary(object):
     def __init__(self, word_frequencies):
@@ -12,15 +16,23 @@ class PronouncingDictionary(object):
         self.word_lengths = {'weighted': [0], 'unweighted': [0]}
 
     def parse(self):
+        count = 0
+        total = sum(1 for line in self.pronouncing_dictionary)
+        self.pronouncing_dictionary.seek(0)
         for line in self.pronouncing_dictionary:
-            self.parse_phoneme_chains(self.parse_words(line))
+            self._increment_phoneme_chain(self._parse_word(line))
+            count += 1
+            if count % 10000 == 0:
+                sys.stdout.write('{} words out of {} parsed.\n'.format(count, total))
         self.pronouncing_dictionary.close()
+        sys.stdout.write('Absolute phoneme chains created.\n')
+        sys.stdout.write('Absolute word length distributions created.\n')
 
-        self.normalize_word_lengths()
+        self._normalize_word_lengths()
 
         return self.words, self.phoneme_chains, self.word_lengths
 
-    def parse_words(self, line):
+    def _parse_word(self, line):
         [word, word_pronunciation] = line.strip().split('\t')
 
         phonemes = {}
@@ -36,11 +48,11 @@ class PronouncingDictionary(object):
 
         self.words.append((word, word_pronunciation, frequency))
 
-        self.length_distributions(word_length, frequency)
+        self._increment_length_distribution(word_length, frequency)
 
         return phonemes, frequency
 
-    def parse_phoneme_chains(self, args):
+    def _increment_phoneme_chain(self, args):
         phonemes, frequency = args
         for weighting in OPTION_VALUES['weighting']:
             increment = 1 if weighting == 'unweighted' else frequency
@@ -70,7 +82,7 @@ class PronouncingDictionary(object):
                             self.phoneme_chains[weighting][stressing][length][position]\
                                 [phoneme][next_phoneme] += increment
 
-    def length_distributions(self, word_length, frequency):
+    def _increment_length_distribution(self, word_length, frequency):
         for weighting in OPTION_VALUES['weighting']:
             increment = 1 if weighting == 'unweighted' else frequency
 
@@ -79,8 +91,11 @@ class PronouncingDictionary(object):
             self.word_lengths[weighting][0] += increment
             self.word_lengths[weighting][word_length] += increment
 
-    def normalize_word_lengths(self):
+    def _normalize_word_lengths(self):
         for weighting in OPTION_VALUES['weighting']:
             absolute_total_weight = self.word_lengths[weighting][0]
             for word_length in range(0, len(self.word_lengths[weighting])):
                 self.word_lengths[weighting][word_length] /= float(absolute_total_weight)
+        sys.stdout.write('Word length distributions normalized.\n')
+
+# pylint: enable=too-few-public-methods

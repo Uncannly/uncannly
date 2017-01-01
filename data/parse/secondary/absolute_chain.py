@@ -1,3 +1,5 @@
+# pylint: disable=too-few-public-methods
+
 def parse(phoneme_chain_absolute):
     word_lengths = []
     for word_length, word_positions in enumerate(phoneme_chain_absolute):
@@ -17,3 +19,5 @@ def _next_phonemes(next_counts):
 
 def _normalize(phoneme, next_counts, total_next):
     return phoneme, float(next_counts[phoneme]) / float(total_next)
+
+# pylint: enable=too-few-public-methods
