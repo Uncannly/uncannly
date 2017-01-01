@@ -5,7 +5,7 @@
   height: 200px;
   overflow-y: auto;
 
-  &.mobile .word i, &.mobile .word i {
+  &.mobile .word i, &.mobile .word .word-score {
     opacity: 1;
   }
 
@@ -21,6 +21,11 @@
 
     .word-text {
       padding-left: 12px;
+      width: 350px;
+    }
+
+    .word-score {
+      opacity: 0;
     }
 
     i {
@@ -46,7 +51,7 @@
     &:hover {
       background-color: #fff;
 
-      i {
+      i, .word-score {
         opacity: 1;
       }
     }

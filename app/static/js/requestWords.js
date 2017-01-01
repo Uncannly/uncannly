@@ -38,14 +38,15 @@ const wordRow = function(word, i) {
       >
       </i>
       <i class="fa fa-volume-up speak-word" aria-hidden="true"></i>
-      <span class="word-text" id="text-${i}">${word}</div>
+      <span class="word-text" id="text-${i}">${word[0]}</span>
+      <span class="word-score">${word[1]}</span>
     </div>
   `)
 }
 
 const speak = function(e) {
   const target = e.target;
-  const word = $(target).parent().text();
+  const word = $($(target).parent()).find('.word-text').text();
   const blob = audio.spokenWords[word]
   if (blob) {
     audio.alreadySaved[word] ? say(blob) : downloadSpeech(blob, target, word);

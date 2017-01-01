@@ -52,7 +52,7 @@ class TopMode(object):
             elif word in words:
                 pass
             else:
-                words.append(word)
+                words.append((word, score))
 
         return selector(words, self.selection, self.unstressed, self.exclude_real)
 # pylint: enable=too-many-instance-attributes,too-few-public-methods
@@ -93,7 +93,7 @@ def api_select_top(words, selection, unstressed, exclude_real):
         if i == len(words):
             output.append(TOO_FEW_MESSAGE)
             break
-        arrayified_word = string_to_array(words[i])
+        arrayified_word = (string_to_array(words[i][0]), words[i][1])
         i += 1
         result = Present.for_web(arrayified_word, unstressed, exclude_real)
         if result:
@@ -108,7 +108,8 @@ def api_select_top(words, selection, unstressed, exclude_real):
 def api_select_random(words, selection, unstressed, exclude_real):
     output = []
     while len(output) < selection:
-        arrayified_word = string_to_array(random.choice(words))
+        i = int(random.random * len(words))
+        arrayified_word = (string_to_array(words[i][0]), words[i][1])
         result = Present.for_web(arrayified_word, unstressed, exclude_real)
         if result:
             output.append(result)
