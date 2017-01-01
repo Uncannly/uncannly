@@ -1,5 +1,4 @@
 import sys
-import cPickle
 
 from data.parse.primary import frequency_list
 from data.parse.primary.pronouncing_dictionary import PronouncingDictionary
@@ -7,7 +6,7 @@ from data.parse.secondary import absolute_chain
 from data.parse.secondary.most_probable_words import MostProbableWords
 from data.database import Database
 from data.tables import Tables
-from data.secondary_data_io import save_word_length_distributions
+from data.secondary_data_io import save
 from lib.options import OPTION_VALUES, SCORING_METHODS
 
 class DatabaseInitializer(object):
@@ -22,7 +21,8 @@ class DatabaseInitializer(object):
         words, self.phoneme_chains, word_length_distributions = \
             PronouncingDictionary(word_frequencies).parse()
         self.tables.words(words)
-        save_word_length_distributions(word_length_distributions)
+        for weighting, distribution in word_length_distributions.iteritems():
+            save(distribution, 'word_length_distribution_{}'.format(weighting))
 
     def initialize_phoneme_chains(self):
         self.word_lengths = {'weighted': {}, 'unweighted': {}}
@@ -65,8 +65,7 @@ class DatabaseInitializer(object):
                                     .setdefault(weighting, {})\
                                     .setdefault(scoring_method, limit)
 
-        with open('data/secondary_data/default_limits.pkl', 'wb') as output:
-            cPickle.dump(updated_limits, output, -1)
+        save(updated_limits, 'default_limits')
 
     def finish(self):
         self.tables.finish()

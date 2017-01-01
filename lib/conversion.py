@@ -7,7 +7,7 @@ def snake_to_kebab(string):
     return string.replace('_', '-')
 
 def to_sig_figs(num, figs):
-		return round(num, -int(floor(log10(num))) + (figs - 1))
+    return round(num, -int(floor(log10(num))) + (figs - 1))
 
 def array_to_string(word):
     return ' '.join(word)

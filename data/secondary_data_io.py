@@ -1,12 +1,9 @@
 import cPickle
 
-def save_word_length_distributions(distributions):
-    for weighting, distribution in distributions.iteritems():
-        with open('data/secondary_data/word_length_distribution_{}.pkl'.\
-            format(weighting), 'wb') as output:
-            cPickle.dump(distribution, output, -1)
+def load(filename):
+    with open('data/secondary_data/{}.pkl'.format(filename), 'rb') as data:
+        return cPickle.load(data)
 
-def load_word_length_distribution(weighting):
-    with open('data/secondary_data/word_length_distribution_{}.pkl'.\
-        format(weighting), 'rb') as word_length_distribution:
-        return cPickle.load(word_length_distribution)
+def save(data, filename):
+    with open('data/secondary_data/{}.pkl'.format(filename), 'wb') as output:
+        cPickle.dump(data, output, -1)

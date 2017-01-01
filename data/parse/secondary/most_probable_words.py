@@ -1,8 +1,8 @@
 import os
 import sys
 sys.path.insert(1, os.path.join(sys.path[0], '..', '..'))
-import cPickle
 
+from data.secondary_data_io import load
 from lib.conversion import array_to_string
 from lib.score import get_score
 from lib.options import POOL_MAX, MAX_WORD_LENGTH, option_value_string_to_boolean
@@ -12,8 +12,7 @@ class MostProbableWords(object):
     def __init__(self, word_lengths, length_consideration, options):
         positioning, stressing, weighting, self.scoring_method = options
 
-        with open('data/secondary_data/default_limits.pkl', 'rb') as data:
-            default_limits = cPickle.load(data)
+        default_limits = load('default_limits')
 
         self.most_probable_words = []
         self.word_lengths = word_lengths[weighting][stressing]

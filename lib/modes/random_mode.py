@@ -8,7 +8,7 @@ from lib.conversion import array_to_string, to_sig_figs
 from lib.score import get_score
 from lib.options import option_value_boolean_to_string, MAX_WORD_LENGTH
 from data.load_data import load_phonemes
-from data.secondary_data_io import load_word_length_distribution
+from data.secondary_data_io import load
 
 class RandomMode(object):
     def __init__(self, options):
@@ -27,7 +27,7 @@ class RandomMode(object):
 
         weighting = option_value_boolean_to_string('weighting', self.unweighted)
         self.next_phonemes_options = load_phonemes(weighting, self.unstressed)
-        self.word_length_distributions = load_word_length_distribution(weighting)
+        self.word_length_distributions = load('word_length_distribution_{}'.format(weighting))
 
         self.selector = self.api_selector if self.interface == 'api' else self.cli_selector
         self.count_successes = 0
