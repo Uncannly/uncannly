@@ -5,3 +5,5 @@ gevent
 psycopg2
 cfenv
 pyscss
+nose
+nose_focus

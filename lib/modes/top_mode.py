@@ -5,24 +5,24 @@ sys.path.insert(1, os.path.join(sys.path[0], '..'))
 
 from lib.present import for_web, for_terminal
 from lib.conversion import string_to_array
-from lib.options import TOO_FEW_MESSAGE, NO_WORDS_MESSAGE
+from lib.options import TOO_FEW_MESSAGE, NO_WORDS_MESSAGE, POOL_DEFAULT
 from data.load_data import load_scores
 
 # pylint: disable=too-many-instance-attributes,too-few-public-methods
 class TopMode(object):
     def __init__(self, options):
-        self.interface = options['interface']
-        self.pool = options['pool']
-        self.selection = options['selection']
-        self.scoring_method = options['scoring_method']
-        self.score_threshold = options['score_threshold']
-        self.unweighted = options['unweighted']
-        self.unstressed = options['unstressed']
-        self.exclude_real = options['exclude_real']
-        self.ignore_position = options['ignore_position']
-        self.ignore_length = options['ignore_length']
-        self.min_length = options['min_length']
-        self.max_length = options['max_length']
+        self.interface = options.get('interface', 'api')
+        self.pool = options.get('pool', POOL_DEFAULT)
+        self.selection = options.get('selection')
+        self.scoring_method = options.get('scoring_method')
+        self.score_threshold = options.get('score_threshold')
+        self.unweighted = options.get('unweighted')
+        self.unstressed = options.get('unstressed')
+        self.exclude_real = options.get('exclude_real')
+        self.ignore_position = options.get('ignore_position')
+        self.ignore_length = options.get('ignore_length')
+        self.min_length = options.get('min_length')
+        self.max_length = options.get('max_length')
 
     def get(self):
 
