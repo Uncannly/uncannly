@@ -7,6 +7,11 @@ def deploy():
 	if linted == 1:
 	    return sys.stdout.write('Linting errors; see pylint.log')
 
+	sys.stdout.write("***********************Testing************************\n")
+	tested = os.system('nosetests')
+	if tested == 1:
+	    return sys.stdout.write('Some tests failed.')
+
 	sys.stdout.write("*************Updating Production Database*************\n")
 	updated_production_database = os.system('python data/initialize_database.py --production')
 	if updated_production_database == 1:
