@@ -1,5 +1,5 @@
 import unittest
-from mock import MagicMock, patch, mock
+from mock import patch
 
 from nose_focus import focus
 
@@ -17,9 +17,9 @@ def load_scores_patch(*args):
         ('OW1 L IH0 M', 0.3)
     ]
 
-@mock.patch('lib.modes.top_mode.load_scores', load_scores_patch)
-@mock.patch('lib.modes.top_mode.for_web', for_web_patch)
-@mock.patch('lib.modes.top_mode.POOL_DEFAULT', 3)
+@patch('lib.modes.top_mode.load_scores', load_scores_patch)
+@patch('lib.modes.top_mode.for_web', for_web_patch)
+@patch('lib.modes.top_mode.POOL_DEFAULT', 3)
 class TopModeTest(unittest.TestCase):
     def test_happy_path(self):
         assert TopMode({}).get() == [
