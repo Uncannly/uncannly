@@ -1,7 +1,5 @@
 import random
-import os
 import sys
-sys.path.insert(1, os.path.join(sys.path[0], '..'))
 
 from lib.present import for_web, for_terminal
 from lib.conversion import array_to_string, to_sig_figs

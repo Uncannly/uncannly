@@ -3,40 +3,38 @@
 {% macro otherOptions(mode, readme, max_word_length, kebab_to_space) -%}
 
 <div>
-	{{ basicOption(mode, readme, 'unweighted', kebab_to_space) }}
-	{{ basicOption(mode, readme, 'unstressed', kebab_to_space) }}
-	{{ basicOption(mode, readme, 'exclude-real', kebab_to_space) }}
+    {{ basicOption(mode, readme, 'unweighted', kebab_to_space) }}
+    {{ basicOption(mode, readme, 'unstressed', kebab_to_space) }}
+    {{ basicOption(mode, readme, 'exclude-real', kebab_to_space) }}
 </div>
 
 <div>
 
-	{{ basicOption(mode, readme, 'ignore-position', kebab_to_space) }}
-	{{ basicOption(mode, readme, 'ignore-length', kebab_to_space) }}
+    {{ basicOption(mode, readme, 'ignore-position', kebab_to_space) }}
+    {{ basicOption(mode, readme, 'ignore-length', kebab_to_space) }}
 
-	<label 
-    title="{{ readme.min_length }}"
-    class="extra-margin"
-  >
-    <input 
-      type="number" 
-      max="{{ max_word_length }}" 
-      min="1" 
-      step="1" 
-      class="min-length" 
-    >minimum length
-  </label>
+    <label 
+        title="{{ readme.min_length }}"
+        class="extra-margin">
+        <input 
+            type="number" 
+            max="{{ max_word_length }}" 
+            min="1" 
+            step="1" 
+            class="min-length">
+        minimum length
+    </label>
 
-  <label 
-    title="{{ readme.max_length }}"
-  >
-    <input 
-      type="number" 
-      max="{{ max_word_length }}" 
-      min="1" 
-      step="1" 
-      class="max-length" 
-    >maximum length
-  </label>
+    <label 
+        title="{{ readme.max_length }}">
+        <input 
+            type="number" 
+            max="{{ max_word_length }}" 
+            min="1" 
+            step="1" 
+            class="max-length">
+        maximum length
+    </label>
 
 </div>
 

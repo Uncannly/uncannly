@@ -1,10 +1,13 @@
 import unittest
 from mock import patch
 
+# pylint: disable=unused-import
 from nose_focus import focus
+# pylint: enable=unused-import
 
 from lib.modes.top_mode import TopMode
 
+# pylint: disable=unused-argument
 def for_web_patch(result, *args):
     word, score = result
     return ' '.join(word), score
@@ -16,7 +19,9 @@ def load_scores_patch(*args):
         ('ER1 G OW0', 0.5),
         ('OW1 L IH0 M', 0.3)
     ]
+# pylint: enable=unused-argument
 
+# pylint: disable=no-self-use
 @patch('lib.modes.top_mode.load_scores', load_scores_patch)
 @patch('lib.modes.top_mode.for_web', for_web_patch)
 @patch('lib.modes.top_mode.POOL_DEFAULT', 3)
@@ -32,7 +37,7 @@ class TopModeTest(unittest.TestCase):
         subject = TopMode({'selection': 2})
 
         randomization_evident = False
-        for i in range(0, 100):
+        for _ in range(0, 100):
             results = subject.get()
             if results[0] != ('ER1', 0.5):
                 randomization_evident = True
@@ -53,3 +58,4 @@ class TopModeTest(unittest.TestCase):
             ('AY1 K', 0.2),
             'Fewer words met criteria than the specified return count.\n'
         ]
+# pylint: enable=no-self-use

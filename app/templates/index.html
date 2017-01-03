@@ -6,34 +6,33 @@
 
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <title>Uncann.ly</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans">  
-    <script src="https://use.fontawesome.com/620c216b67.js"></script>
-    <script 
-      data-main={{url_for('static', filename='app.js')}} 
-      src={{url_for('static', filename='vendor/require.js')}}
-    >
-    </script>
-  </head>
-  <body>
-    <h1>Uncann.ly</h1>
-    <span>find the phonetically most probable English words</span>
-    <img src={{url_for('static', filename='img/uncannly_logo_transparent.png')}}></img>
+    <head>
+        <meta charset="utf-8">
+        <title>Uncann.ly</title>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans">  
+        <script src="https://use.fontawesome.com/620c216b67.js"></script>
+        <script 
+          data-main={{url_for('static', filename='app.js')}} 
+          src={{url_for('static', filename='vendor/require.js')}}>
+        </script>
+    </head>
+    <body>
+        <h1>Uncann.ly</h1>
+        <span>find the phonetically most probable English words</span>
+        <img src={{url_for('static', filename='img/uncannly_logo_transparent.png')}}></img>
 
-    <ul class="nav nav-tabs">
-      <li class="mode-nav-item active" id="random-tab"><span>random</span></li>
-      <li class="mode-nav-item" id="top-tab"><span>top</span></li>
-    </ul>
+        <ul class="nav nav-tabs">
+            <li class="mode-nav-item active" id="random-tab"><span>random</span></li>
+            <li class="mode-nav-item" id="top-tab"><span>top</span></li>
+        </ul>
 
-    {{ modes('random', readme, pool_default, pool_max, max_word_length, kebab_to_space) }}
+        {{ modes('random', readme, pool_default, pool_max, max_word_length, kebab_to_space) }}
 
-    {{ modes('top', readme, pool_default, pool_max, max_word_length, kebab_to_space) }}
-    
-    <script>
-      window.noWordsMessage = `{{ no_words_message }}`
-      window.tooFewMessage = `{{ too_few_message }}`
-    </script>
-  </body>
+        {{ modes('top', readme, pool_default, pool_max, max_word_length, kebab_to_space) }}
+        
+        <script>
+            window.noWordsMessage = `{{ no_words_message }}`
+            window.tooFewMessage = `{{ too_few_message }}`
+        </script>
+    </body>
 </html>

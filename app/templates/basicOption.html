@@ -2,11 +2,10 @@
 
 <input type="checkbox" class="{{ option }}" id="{{ mode }}-{{ option }}">
 <label 
-  class="fancy-checkbox own-line"
-	title="{{ readme.get(option.replace('-', '_')) }}" 
-	for="{{ mode }}-{{ option }}"
->
-	{{ kebab_to_space(option) }}
+    class="fancy-checkbox own-line"
+    title="{{ readme.get(option.replace('-', '_')) }}" 
+    for="{{ mode }}-{{ option }}">
+    {{ kebab_to_space(option) }}
 </label>
 
 {%- endmacro %}

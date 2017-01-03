@@ -1,7 +1,3 @@
-import os
-import sys
-sys.path.insert(1, os.path.join(sys.path[0], '..', '..'))
-
 from data.secondary_data_io import load
 from lib.conversion import array_to_string
 from lib.score import get_score
