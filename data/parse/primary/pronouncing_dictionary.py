@@ -39,7 +39,7 @@ class PronouncingDictionary(object):
         self._normalize_stress_pattern_distributions()
         self._normalize_syllable_chains()
 
-        return self.words, self.phoneme_chains, self.word_lengths
+        return self.words, self.phoneme_chains, self.word_lengths, self.syllable_chains
 
     def _parse_word(self, line):
         [word, word_pronunciation] = line.strip().split('\t')

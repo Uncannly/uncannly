@@ -36,6 +36,10 @@ class Tables(object):
         self.database.execute(sql_string)
         sys.stdout.write('Words table populated.\n\n')
 
+    # def syllables(self, syllables):
+    #     sql_array = []
+        
+
     def phonemes(self, word_lengths_weighted, word_lengths_unweighted, stressing):
         sql_array = []
         max_word_length = len(word_lengths_weighted)
