@@ -91,6 +91,11 @@ def cli(mode):
         '--max-length', '-mx', type=int,
         help=README.get('max_length')
     )
+    parser.add_argument(
+        '--ignore-syllables', '-xy',
+        action='store_true',
+        help=README.get('ignore_syllables')
+    )
 
     args = parser.parse_args()
     get_by_mode(mode=mode, interface='cli', args=vars(args))

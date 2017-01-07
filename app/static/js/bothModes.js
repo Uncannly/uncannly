@@ -5,7 +5,12 @@ const scoringMethods = [
 ];
 
 const otherOptions = [
-    'unweighted', 'unstressed', 'exclude-real', 'ignore-position', 'ignore-length'
+    'unweighted',
+    'unstressed',
+    'exclude-real',
+    'ignore-position',
+    'ignore-length',
+    'ignore-syllables'
 ];
 
 const addRefreshListener = function(mode) {

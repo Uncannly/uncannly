@@ -59,12 +59,19 @@ README = {
     'unstressed': 'Ignore stress levels of vowels.',
     'exclude_real': 'Do not include words probable by pronunciation that do exist.',
     'ignore_position': (
-        'Do not consider position within the word when choosing the next phoneme.'
+        'Do not consider phoneme or syllable position within the word when choosing the next one. '
     ),
     'ignore_length': (
-        'Do not consider length of the word when choosing the next phoneme.'
+        'Do not consider length of the word in phonemes or syllables when choosing the next one. '
         'I will say more on this later.'
     ),
-    'max_length': 'The maximum length (in phonemes) of words to return.',
-    'min_length': 'The minimum length (in phonemes) of words to return.'
+    'max_length': 'The maximum length (in phonemes or syllables) of words to return.',
+    'min_length': 'The minimum length (in phonemes or syllables) of words to return.',
+
+    'ignore_syllables': (
+        'Use phonemes instead of syllables as the unit of sound to generate words by. '
+        'This will result in less natural words, as Uncannly will not understand '
+        'stress patterns. It will also not be drawing from preestablished consonant clusters. '
+        'However it will tend to give more original words. '
+    )
 }

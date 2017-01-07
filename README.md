@@ -145,15 +145,33 @@ CLI shortcut: `-xr`
 
 ### ignore position
 
-Do not consider position within the word when choosing the next phoneme.
+Do not consider phoneme or syllable position within the word when choosing the next one.
 
 CLI shortcut: `-xp`
 
 ### ignore length
 
-Do not consider length of the word when choosing the next phoneme. I will say more on this later.
+Do not consider length of the word in phonemes or syllables when choosing the next one. I will say more on this later.
 
 CLI shortcut: `-xl`
+
+### maximum length
+
+The maximum length (in phonemes or syllables) of words to return.
+
+CLI shortcut: `-mx`
+
+### minimum length
+
+The minimum length (in phonemes or syllables) of words to return.
+
+CLI shortcut: `-mn`
+
+### ignore syllables
+
+Use phonemes instead of syllables as the unit of sound to generate words by. This will result in less natural words, as Uncannly will not understand stress patterns. It will also not be drawing from preestablished consonant clusters. However it will tend to give more original words. 
+
+CLI shortcut: `-xy`
 
 ## Examples
 

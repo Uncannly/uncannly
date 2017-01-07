@@ -35,8 +35,6 @@ class PronouncingDictionary(object):
         sys.stdout.write('Absolute phoneme chains created.\n')
         sys.stdout.write('Absolute word length distributions created.\n')
 
-        save(self.syllable_chains, 'syllable_chains')
-
         self._normalize_word_lengths()
         self._normalize_stress_pattern_distributions()
         self._normalize_syllable_chains()
@@ -144,17 +142,11 @@ class PronouncingDictionary(object):
                             next_syllable_stress_level = 'ignore_stress' if stressing == 'unstressed' else stress_level(next_syllable)  
                             # so... you could unstress this syllable if you wanted to save a little space
                             # particularly it is confusing when under the 'ignore_stress' key...
-                            # print "**SYLLABLE STRESS LEVEL", syllable_stress_level, "**NEXT SYLLABLE STRESS LEVEL", next_syllable_stress_level
 
                             self.syllable_chains[weighting][length][position].setdefault(syllable_stress_level, {})\
                                 .setdefault(next_syllable_stress_level, {}).setdefault(syllable, {}).setdefault(next_syllable, 0)
                             self.syllable_chains[weighting][length][position][syllable_stress_level]\
                                 [next_syllable_stress_level][syllable][next_syllable] += increment
-
-                            # if weighting == 'weighted' and stressing == 'stressed' and ignore_length == False and ignore_position == False and syllable_length == 3:
-                            # print 'syllables:', syllables
-                            # print 'chains:', self.syllable_chains
-                            # raw_input()
 
     def _normalize_stress_pattern_distributions(self):
         normalized_stress_pattern_distributions = {}
@@ -165,7 +157,8 @@ class PronouncingDictionary(object):
             for x in sorted_stress_pattern_distributions:
                 normalized_stress_pattern_distributions[weighting].append( (x[0], x[1] / total) )
   
-        save(normalized_stress_pattern_distributions, 'normalized_stress_pattern_distributions')
+        save(normalized_stress_pattern_distributions, 'stress_pattern_distributions')
+        sys.stdout.write('Stress pattern distributions normalized.\n')
 
     def _normalize_syllable_chains(self):
         normalized_syllable_chains = {}
@@ -198,7 +191,8 @@ class PronouncingDictionary(object):
                                         [syllable_stress_level][next_syllable_stress_level]\
                                         [syllable][next_syllable] = probability / total
 
-        save(normalized_syllable_chains, 'normalized_syllable_chains')
+        save(normalized_syllable_chains, 'syllable_chains')
+        sys.stdout.write('Syllable chains normalized.\n')
 
 def parse_syllables(phonemes):
     syllables = []
