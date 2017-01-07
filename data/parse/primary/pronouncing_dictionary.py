@@ -26,7 +26,7 @@ class PronouncingDictionary(object):
         for line in self.pronouncing_dictionary:
             parsed_line = self._parse_word(line)
             self._increment_phoneme_chain(parsed_line)
-            self._increment_stress_and_syllable_chains(parsed_line)
+            self._increment_stress_pattern_distributions_and_syllable_chains(parsed_line)
             count += 1
             if count % 10000 == 0:
                 sys.stdout.write('{} words out of {} parsed.\n'.format(count, total))
@@ -109,7 +109,7 @@ class PronouncingDictionary(object):
                 self.word_lengths[weighting][word_length] /= float(absolute_total_weight)
         sys.stdout.write('Word length distributions normalized.\n')
 
-    def _increment_stress_and_syllable_chains(self, parsed_line):
+    def _increment_stress_pattern_distributions_and_syllable_chains(self, parsed_line):
         phonemes, frequency = parsed_line
         phonemes = phonemes['stressed']
         syllables = parse_syllables(phonemes)
@@ -172,10 +172,10 @@ class PronouncingDictionary(object):
         for weighting in OPTION_VALUES['weighting']:
             normalized_syllable_chains.setdefault(weighting, [])
 
-            for length in range(0, len(self.syllable_chains[weighting]) - 1):
+            for length in range(0, len(self.syllable_chains[weighting])):
                 sparse(normalized_syllable_chains[weighting], length, [])
 
-                for position in range(0, len(self.syllable_chains[weighting][length])): # this just does not make sense... we need to iterate one further, but wouldnt this be out of range???
+                for position in range(0, len(self.syllable_chains[weighting][length])):
                     sparse(normalized_syllable_chains[weighting][length], position, {})
 
                     for syllable_stress_level in self.syllable_chains[weighting][length][position].keys():
