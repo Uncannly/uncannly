@@ -1,9 +1,8 @@
 # from __future__ import print_function
+import sys
 
 from data.secondary_data_io import load
-from lib.options import option_value_boolean_to_string
-import random
-import sys
+# from lib.options import option_value_boolean_to_string
 
 # stress_pattern_distributions = load('normalized_stress_pattern_distributions')
 # normalized_syllable_chains = load('normalized_syllable_chains')
@@ -33,7 +32,8 @@ import sys
 #         before_transition_stress = stress_pattern[i]
 #         after_transition_stress = stress_pattern[i + 1]
 
-#         chosen_bucket = normalized_syllable_chains['weighted'][syllable_length - 2][i + 1][before_transition_stress][after_transition_stress]
+#         chosen_bucket = normalized_syllable_chains['weighted'][syllable_length - 2]\
+#            [i + 1][before_transition_stress][after_transition_stress]
 
 #         if previous_syllable is None:
 #             previous_syllable_bucket = chosen_bucket[tuple(['START_WORD'])]
@@ -57,6 +57,7 @@ import sys
 
 #     sys.stdout.write(''.join(word) + '\n')
 
+# pylint: disable=too-few-public-methods,no-self-use
 class RandomModeSyllables(object):
     def __init__(self, options):
         self.interface = options['interface']
@@ -72,7 +73,7 @@ class RandomModeSyllables(object):
         self.min_length = options['min_length']
         self.max_length = options['max_length']
 
-        weighting = option_value_boolean_to_string('weighting', self.unweighted)
+        # weighting = option_value_boolean_to_string('weighting', self.unweighted)
         # self.syllable_chains = load_phonemes(weighting, self.unstressed)
         self.stress_pattern_distributions = load('stress_pattern_distributions')
 
@@ -86,3 +87,4 @@ class RandomModeSyllables(object):
         message = 'Not yet implemented. Please ignore syllables.'
         sys.stdout.write(message + '\n')
         return [(message, 0)]
+# pylint: enable=too-few-public-methods,no-self-use

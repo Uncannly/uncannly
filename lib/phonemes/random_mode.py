@@ -1,4 +1,3 @@
-import random
 import sys
 
 from lib.present import for_web, for_terminal

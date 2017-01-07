@@ -107,6 +107,7 @@ class PronouncingDictionary(object):
                 self.word_lengths[weighting][word_length] /= float(absolute_total_weight)
         sys.stdout.write('Word length distributions normalized.\n')
 
+    # pylint: disable=too-many-locals,line-too-long,invalid-name
     def _increment_stress_pattern_distributions_and_syllable_chains(self, parsed_line):
         phonemes, frequency = parsed_line
         phonemes = phonemes['stressed']
@@ -123,23 +124,22 @@ class PronouncingDictionary(object):
 
             self.stress_pattern_distributions.setdefault(weighting, {}).setdefault(tupled_stress_pattern, 0)
             self.stress_pattern_distributions[weighting][tupled_stress_pattern] += increment
-            
+
             for ignore_length in [False, True]:
                 length = 0 if ignore_length else syllable_length - 2 # for syllables, only off by 1, bc start_word and end_word aren't each their own thing, but they are each halfway on one syllable so .5 + .5 = 1 ... except that now i forced start word to be its own syllable too... except since these are technically syllable transitions, an extra one because onto it then offof it
                 sparse(self.syllable_chains[weighting], length, [])
-                
+
                 for syllable_position in range(0, syllable_length - 1):
                     syllable = syllables[syllable_position]
                     next_syllable = syllables[syllable_position + 1]
-                    # print '**SYLLABLE', syllable, '**NEXT SYLLABLE', next_syllable
-                   
+
                     for ignore_position in [False, True]:
                         position = 0 if ignore_position else syllable_position + 1
                         sparse(self.syllable_chains[weighting][length], position, {})
 
                         for stressing in OPTION_VALUES['stressing']:
-                            syllable_stress_level = 'ignore_stress' if stressing == 'unstressed' else stress_level(syllable)                            
-                            next_syllable_stress_level = 'ignore_stress' if stressing == 'unstressed' else stress_level(next_syllable)  
+                            syllable_stress_level = 'ignore_stress' if stressing == 'unstressed' else stress_level(syllable)
+                            next_syllable_stress_level = 'ignore_stress' if stressing == 'unstressed' else stress_level(next_syllable)
                             # so... you could unstress this syllable if you wanted to save a little space
                             # particularly it is confusing when under the 'ignore_stress' key...
 
@@ -147,19 +147,21 @@ class PronouncingDictionary(object):
                                 .setdefault(next_syllable_stress_level, {}).setdefault(syllable, {}).setdefault(next_syllable, 0)
                             self.syllable_chains[weighting][length][position][syllable_stress_level]\
                                 [next_syllable_stress_level][syllable][next_syllable] += increment
+    # pylint: enable=too-many-locals
 
     def _normalize_stress_pattern_distributions(self):
         normalized_stress_pattern_distributions = {}
         for weighting in OPTION_VALUES['weighting']:
             sorted_stress_pattern_distributions = sorted(self.stress_pattern_distributions[weighting].items(), key=operator.itemgetter(1), reverse=True)
             normalized_stress_pattern_distributions.setdefault(weighting, [])
-            total = float(sum([x[1] for x in sorted_stress_pattern_distributions]))
-            for x in sorted_stress_pattern_distributions:
-                normalized_stress_pattern_distributions[weighting].append( (x[0], x[1] / total) )
-  
+            total = float(sum([stress_pattern[1] for stress_pattern in sorted_stress_pattern_distributions]))
+            for stress_pattern in sorted_stress_pattern_distributions:
+                normalized_stress_pattern_distributions[weighting].append( (stress_pattern[0], stress_pattern[1] / total) )
+
         save(normalized_stress_pattern_distributions, 'stress_pattern_distributions')
         sys.stdout.write('Stress pattern distributions normalized.\n')
 
+    # pylint: disable=too-many-nested-blocks
     def _normalize_syllable_chains(self):
         normalized_syllable_chains = {}
         for weighting in OPTION_VALUES['weighting']:
@@ -193,6 +195,7 @@ class PronouncingDictionary(object):
 
         save(normalized_syllable_chains, 'syllable_chains')
         sys.stdout.write('Syllable chains normalized.\n')
+    # pylint: enable=too-many-nested-blocks,line-too-long,invalid-name
 
 def parse_syllables(phonemes):
     syllables = []

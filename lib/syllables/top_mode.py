@@ -1,6 +1,8 @@
 import sys
 from lib.options import POOL_DEFAULT
 
+# pylint: disable=too-few-public-methods,no-self-use
+
 class TopModeSyllables(object):
     def __init__(self, options):
         self.interface = options.get('interface', 'api')
@@ -21,3 +23,4 @@ class TopModeSyllables(object):
         message = 'Not yet implemented. Please ignore syllables.'
         sys.stdout.write(message + '\n')
         return [(message, 0)]
+# pylint: enable=too-few-public-methods,no-self-use

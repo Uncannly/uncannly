@@ -4,13 +4,10 @@ def is_vowel(phoneme):
     return phoneme in IPA['vowels'].keys()
 
 def ipa(word):
-    output = []
-    for phoneme in word:
-        ipa = IPA['vowels'].get(phoneme)
-        if ipa is None:
-            ipa = IPA['consonants'].get(phoneme)
-        output.append(ipa)
-    return ''.join(output)
+    return ''.join([_ipa_symbols(phoneme) for phoneme in word])
+
+def _ipa_symbols(phoneme):
+    return IPA['vowels'].get(phoneme) or IPA['consonants'].get(phoneme)
 
 def destress(word):
     for character in "012":
@@ -49,7 +46,7 @@ IPA = {
         'L':  'l',
         'M':  'm',
         'N':  'n',
-        'NG': 'ŋ', 
+        'NG': 'ŋ',
         'P':  'p',
         'R':  'r',
         'S':  's',
