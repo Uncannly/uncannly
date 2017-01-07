@@ -6,7 +6,10 @@ def is_vowel(phoneme):
 def ipa(word):
     output = []
     for phoneme in word:
-        output.append(IPA['vowels'].get(phoneme, IPA['consonants'][phoneme]))
+        ipa = IPA['vowels'].get(phoneme)
+        if ipa is None:
+            ipa = IPA['consonants'].get(phoneme)
+        output.append(ipa)
     return ''.join(output)
 
 def destress(word):
