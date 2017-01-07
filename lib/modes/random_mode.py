@@ -5,6 +5,7 @@ from lib.present import for_web, for_terminal
 from lib.conversion import array_to_string, to_sig_figs
 from lib.score import get_score
 from lib.options import option_value_boolean_to_string, MAX_WORD_LENGTH
+from lib.cumulative_distribution import choose_next
 from data.load_data import load_phonemes
 from data.secondary_data_io import load
 
@@ -163,11 +164,3 @@ class RandomMode(object):
             return True
         else:
             return [x[0] for x in words]
-
-def choose_next(iterator, method, method_args):
-    random_number = random.random()
-    accumulated_probability = 0
-    for item, probability in iterator:
-        accumulated_probability += probability
-        if accumulated_probability > random_number:
-            return method(item, probability=probability, method_args=method_args)
