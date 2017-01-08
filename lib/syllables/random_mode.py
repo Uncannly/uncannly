@@ -30,52 +30,49 @@ class RandomModeSyllables(object):
         self.count_successes = 0
         self.count_fails = 0
 
-        # self.reset()
+        self.reset()
 
     def get(self):
         output = []
-        stress_pattern_distributions = load('stress_pattern_distributions')
         normalized_syllable_chains = load('syllable_chains')
 
         count = 0
 
         while count < self.pool:
-            stress_pattern = choose_next(stress_pattern_distributions['weighted'])
-            stress_pattern = ['start_word'] + list(stress_pattern) + ['end_word']
-            syllable_length = len(stress_pattern)
-
-            word = []
-            previous_syllable = None
+            syllable_length = len(self.stress_pattern)
 
             for i in range(0, syllable_length - 1):
-                before_transition_stress = stress_pattern[i]
-                after_transition_stress = stress_pattern[i + 1]
-
                 chosen_bucket = normalized_syllable_chains['weighted'][syllable_length - 2]\
-                   [i + 1][before_transition_stress][after_transition_stress]
+                   [i + 1][self.stress_pattern[i]][self.stress_pattern[i + 1]]
 
-                if previous_syllable is None:
-                    previous_syllable_bucket = chosen_bucket[tuple(['START_WORD'])]
+                if self.syllable is None:
+                    syllable_bucket = chosen_bucket[tuple(['START_WORD'])]
                 else:
-                    previous_syllable_bucket = chosen_bucket.get(previous_syllable, None)
+                    syllable_bucket = chosen_bucket.get(self.syllable, None)
 
-                if previous_syllable_bucket is None:
+                if syllable_bucket is None:
                     # word = ['This shouldnt happen but we couldnt connect buckets']
-                    word = []
+                    self.word = []
                     break
 
-                next_syllable = choose_next(previous_syllable_bucket.iteritems())
+                self.syllable = choose_next(syllable_bucket.iteritems())
 
-                word.append(next_syllable)
-                previous_syllable = next_syllable
+                self.word.append(self.syllable)
 
-            final_word = str(word) + '\n'
-            answer = for_web_syllables(word, self.exclude_real)
+            final_word = str(self.word) + '\n'
+            answer = for_web_syllables(self.word, self.exclude_real)
             if answer:
                 output.append( (answer, 0) )
                 count += 1
             sys.stdout.write(final_word)
+            self.reset()
 
         return output
+
+    def reset(self):
+        stress_pattern = choose_next(self.stress_pattern_distributions['weighted'])
+        self.stress_pattern = ['start_word'] + list(stress_pattern) + ['end_word']
+        self.word = []
+        self.syllable = None
 
 # pylint: enable=too-few-public-methods,too-many-locals
