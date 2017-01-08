@@ -1,6 +1,6 @@
 import sys
 
-from lib.ipa import ipa, destress
+from lib.ipa import ipa, destress, stress_level, stress_symbol
 from lib.conversion import array_to_string
 from data.load_data import load_words
 
@@ -30,6 +30,10 @@ def for_web_syllables(word, exclude_real):
     word_output = ''
     for_checking_word = []
     for syllable in word:
+        stress = stress_level(syllable)
+        if stress == 'primary' or stress == 'secondary':
+            word_output += stress_symbol(stress)
+
         for phoneme in syllable:
             if phoneme != 'END_WORD':
                 word_output += ipa([phoneme])

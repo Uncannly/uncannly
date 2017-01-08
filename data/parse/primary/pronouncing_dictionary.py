@@ -3,7 +3,7 @@ import operator
 
 from data.parse.primary.open_helper import open_primary_data_file
 from data.secondary_data_io import save
-from lib.ipa import destress, is_vowel
+from lib.ipa import destress, parse_syllables, stress_level
 from lib.options import OPTION_VALUES
 from lib.conversion import sparse
 
@@ -196,29 +196,5 @@ class PronouncingDictionary(object):
         save(normalized_syllable_chains, 'syllable_chains')
         sys.stdout.write('Syllable chains normalized.\n')
     # pylint: enable=too-many-nested-blocks,line-too-long,invalid-name
-
-def parse_syllables(phonemes):
-    syllables = []
-    syllable = []
-    for phoneme in phonemes:
-        syllable.append(phoneme)
-        if is_vowel(phoneme) or phoneme == 'END_WORD' or phoneme == 'START_WORD':
-            syllables.append(tuple(syllable))
-            syllable = []
-
-    return tuple(syllables)
-
-def stress_level(syllable):
-    vowel = syllable[-1]
-    if '0' in vowel:
-        return 'tertiary'
-    elif '2' in vowel:
-        return 'secondary'
-    elif '1' in vowel:
-        return 'primary'
-    elif vowel == 'END_WORD':
-        return 'end_word'
-    elif vowel == 'START_WORD':
-        return 'start_word'
 
 # pylint: enable=too-few-public-methods

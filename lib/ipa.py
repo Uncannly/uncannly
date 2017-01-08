@@ -15,6 +15,33 @@ def destress(word):
             word = word.replace(character, '')
     return word
 
+def parse_syllables(phonemes):
+    syllables = []
+    syllable = []
+    for phoneme in phonemes:
+        syllable.append(phoneme)
+        if is_vowel(phoneme) or phoneme == 'END_WORD' or phoneme == 'START_WORD':
+            syllables.append(tuple(syllable))
+            syllable = []
+
+    return tuple(syllables)
+
+def stress_level(syllable):
+    vowel = syllable[-1]
+    if '0' in vowel:
+        return 'tertiary'
+    elif '2' in vowel:
+        return 'secondary'
+    elif '1' in vowel:
+        return 'primary'
+    elif vowel == 'END_WORD':
+        return 'end_word'
+    elif vowel == 'START_WORD':
+        return 'start_word'
+
+def stress_symbol(level):
+    return 'ˈ' if level == 'primary' else 'ˌ'
+
 IPA = {
     'vowels': {
         'AA': 'ɑ',  'AA1': 'ɑː',  'AA2': 'ɑ',  'AA0': 'ə',
