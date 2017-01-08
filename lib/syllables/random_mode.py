@@ -3,6 +3,7 @@ import random
 
 from data.secondary_data_io import load
 from lib.present import for_web_syllables
+from lib.cumulative_distribution import choose_next
 # from lib.options import option_value_boolean_to_string
 
 # pylint: disable=too-few-public-methods,too-many-locals
@@ -39,14 +40,7 @@ class RandomModeSyllables(object):
         count = 0
 
         while count < self.pool:
-            random_number = random.random()
-            accumulated_probability = 0
-            for potential_stress_pattern, probability in stress_pattern_distributions['weighted']:
-                accumulated_probability += probability
-                if accumulated_probability > random_number:
-                    stress_pattern = potential_stress_pattern
-                    break
-
+            stress_pattern = choose_next(stress_pattern_distributions['weighted'])
             stress_pattern = ['start_word'] + list(stress_pattern) + ['end_word']
             syllable_length = len(stress_pattern)
 
@@ -70,13 +64,7 @@ class RandomModeSyllables(object):
                     word = []
                     break
 
-                random_number = random.random()
-                accumulated_probability = 0
-                for potential_next_syllable, probability in previous_syllable_bucket.iteritems():
-                    accumulated_probability += probability
-                    if accumulated_probability > random_number:
-                        next_syllable = potential_next_syllable
-                        break
+                next_syllable = choose_next(previous_syllable_bucket.iteritems())
 
                 word.append(next_syllable)
                 previous_syllable = next_syllable

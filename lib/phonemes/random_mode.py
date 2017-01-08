@@ -127,18 +127,11 @@ class RandomModePhonemes(object):
         length = None
         while length is None:
             distributions = enumerate(self.word_length_distributions[1:])
-            length = choose_next(distributions, self.bind_length, None)
+            length = choose_next(distributions)
+            if (self.min_length is not None and length < self.min_length) or \
+                (self.max_length is not None and length > self.max_length):
+                length = None
         return length
-
-    # pylint: disable=unused-argument
-    def bind_length(self, length, probability=None, method_args=None):
-        if self.min_length is not None and length < self.min_length:
-            pass
-        elif self.max_length is not None and length > self.max_length:
-            pass
-        else:
-            return length
-    # pylint: enable=unused-argument
 
     def fail(self):
         message = (
