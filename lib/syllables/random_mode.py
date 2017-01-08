@@ -5,7 +5,7 @@ from data.secondary_data_io import load
 from lib.present import for_web_syllables
 # from lib.options import option_value_boolean_to_string
 
-# pylint: disable=too-few-public-methods,too-many-locals,no-self-use
+# pylint: disable=too-few-public-methods,too-many-locals
 class RandomModeSyllables(object):
     def __init__(self, options):
         self.interface = options['interface']
@@ -36,7 +36,9 @@ class RandomModeSyllables(object):
         stress_pattern_distributions = load('stress_pattern_distributions')
         normalized_syllable_chains = load('syllable_chains')
 
-        for _ in range(0, 25):
+        count = 0
+
+        while count < self.pool:
             random_number = random.random()
             accumulated_probability = 0
             for potential_stress_pattern, probability in stress_pattern_distributions['weighted']:
@@ -83,8 +85,9 @@ class RandomModeSyllables(object):
             answer = for_web_syllables(word, self.exclude_real)
             if answer:
                 output.append( (answer, 0) )
+                count += 1
             sys.stdout.write(final_word)
 
         return output
 
-# pylint: enable=too-few-public-methods,too-many-locals,no-self-use
+# pylint: enable=too-few-public-methods,too-many-locals
