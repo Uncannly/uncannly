@@ -3,6 +3,8 @@ import random
 
 from data.secondary_data_io import load
 from lib.present import for_web_syllables
+from lib.conversion import to_sig_figs
+from lib.score import get_score
 from lib.cumulative_distribution import choose_next
 # from lib.options import option_value_boolean_to_string
 
@@ -55,14 +57,17 @@ class RandomModeSyllables(object):
                     self.word = []
                     break
 
-                self.syllable = choose_next(syllable_bucket.iteritems())
+                choose_next(syllable_bucket.iteritems(), self.test, syllable_length)
 
-                self.word.append(self.syllable)
+                if self.syllable is None:
+                    break
+                else:
+                    self.word.append(self.syllable)
 
             final_word = str(self.word) + '\n'
             answer = for_web_syllables(self.word, self.exclude_real)
             if answer:
-                output.append( (answer, 0) )
+                output.append( (answer, to_sig_figs(self.score, 6)) )
                 count += 1
             sys.stdout.write(final_word)
             self.reset()
@@ -74,5 +79,10 @@ class RandomModeSyllables(object):
         self.stress_pattern = ['start_word'] + list(stress_pattern) + ['end_word']
         self.word = []
         self.syllable = None
+        self.score = 1.0
+
+    def test(self, syllable, probability, method_args):
+        self.score = get_score(self.score, self.scoring_method, probability, method_args)
+        self.syllable = None if self.score < self.score_threshold else syllable
 
 # pylint: enable=too-few-public-methods,too-many-locals
