@@ -5,7 +5,7 @@ from data.secondary_data_io import load
 from lib.present import for_web_syllables
 # from lib.options import option_value_boolean_to_string
 
-# pylint: disable=too-few-public-methods
+# pylint: disable=too-few-public-methods,too-many-locals,no-self-use
 class RandomModeSyllables(object):
     def __init__(self, options):
         self.interface = options['interface']
@@ -80,9 +80,11 @@ class RandomModeSyllables(object):
                 previous_syllable = next_syllable
 
             final_word = str(word) + '\n'
-            output.append( (for_web_syllables(word), 0) )
+            answer = for_web_syllables(word, self.exclude_real)
+            if answer:
+                output.append( (answer, 0) )
             sys.stdout.write(final_word)
 
         return output
 
-# pylint: enable=too-few-public-methods
+# pylint: enable=too-few-public-methods,too-many-locals,no-self-use
