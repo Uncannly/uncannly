@@ -26,6 +26,14 @@ def for_terminal(word_and_score, unstressed, exclude_real, suppress_immediate):
             sys.stdout.write(word + ' [' + str(score) + ']\n')
         return word_and_score
 
+def for_web_syllables(word):
+    word_output = ''
+    for syllable in word:
+        for phoneme in syllable:
+            if phoneme != 'END_WORD':
+                word_output += ipa([phoneme])
+    return word_output
+
 def _present_word(word, score, exclude_real, existing_word):
     if existing_word:
         return False if exclude_real else ('{} ({})'.format(word, existing_word), score)
