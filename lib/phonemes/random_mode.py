@@ -3,7 +3,7 @@ import sys
 from lib.present import for_web, for_terminal
 from lib.conversion import array_to_string, to_sig_figs
 from lib.score import get_score
-from lib.options import option_value_boolean_to_string, MAX_WORD_LENGTH
+from lib.options import option_value_boolean_to_string, MAX_WORD_LENGTH, MAX_FAILS
 from lib.cumulative_distribution import choose_next
 from data.load_data import load_phonemes
 from data.secondary_data_io import load
@@ -64,7 +64,7 @@ class RandomModePhonemes(object):
 
     def maybe_fail(self):
         self.count_fails += 1
-        if self.count_fails > 1000000:
+        if self.count_fails > MAX_FAILS:
             return self.fail()
         self.reset()
 

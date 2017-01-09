@@ -27,6 +27,8 @@ def for_terminal(word_and_score, unstressed, exclude_real, suppress_immediate):
         return word_and_score
 
 def for_web_syllables(word, exclude_real):
+    if word == []:
+        return None
     word_output = ''
     for_checking_word = []
     for syllable in word:

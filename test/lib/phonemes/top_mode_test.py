@@ -1,9 +1,10 @@
 import unittest
+# pylint: disable=import-error
 from mock import patch
 
 # pylint: disable=unused-import
 from nose_focus import focus
-# pylint: enable=unused-import
+# pylint: enable=unused-import,import-error
 
 from lib.phonemes.top_mode import TopModePhonemes
 

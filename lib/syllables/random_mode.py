@@ -36,9 +36,8 @@ class RandomModeSyllables(object):
 
     def get(self):
         output = []
-        count = 0
 
-        while count < self.pool:
+        while self.count_successes < self.pool and self.count_fails < 1000:
             syllable_length = len(self.stress_pattern)
             length_bucket = 0 if self.ignore_length else syllable_length - 2
 
@@ -69,11 +68,17 @@ class RandomModeSyllables(object):
             answer = for_web_syllables(self.word, self.exclude_real)
             if answer:
                 output.append( (answer, to_sig_figs(self.score, 6)) )
-                count += 1
+                self.count_successes += 1
+            else:
+                self.count_fails += 1
             sys.stdout.write(final_word)
             self.reset()
 
-        if self.selection:
+        if self.count_fails >= 1000:
+            output = [((
+                '1000000 times consecutively failed to find a word above the score '
+                'threshold. Please try lowering it.', 0))]
+        elif self.selection:
             output.sort(key=lambda x: -x[1])
             output = output[:self.selection]
         return output
