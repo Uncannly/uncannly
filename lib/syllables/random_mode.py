@@ -73,6 +73,9 @@ class RandomModeSyllables(object):
             sys.stdout.write(final_word)
             self.reset()
 
+        if self.selection:
+            output.sort(key=lambda x: -x[1])
+            output = output[:self.selection]
         return output
 
     def reset(self):
@@ -85,7 +88,7 @@ class RandomModeSyllables(object):
                 stress_pattern = None
         self.stress_pattern = ['start_word'] + list(stress_pattern) + ['end_word']
         if self.unstressed:
-            self.stress_pattern = ['ignore_stress' for syllable in self.stress_pattern]
+            self.stress_pattern = ['ignore_stress' for _ in self.stress_pattern]
         self.word = []
         self.syllable = None
         self.score = 1.0
