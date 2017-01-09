@@ -40,10 +40,13 @@ class RandomModeSyllables(object):
 
         while count < self.pool:
             syllable_length = len(self.stress_pattern)
+            length_bucket = 0 if self.ignore_length else syllable_length - 2
 
-            for i in range(0, syllable_length - 1):
-                chosen_bucket = self.syllable_chains[syllable_length - 2]\
-                   [i + 1][self.stress_pattern[i]][self.stress_pattern[i + 1]]
+            for current_position in range(0, syllable_length - 1):
+                position_bucket = 0 if self.ignore_position else current_position + 1
+                chosen_bucket = self.syllable_chains[length_bucket]\
+                   [position_bucket][self.stress_pattern[current_position]]\
+                   [self.stress_pattern[current_position + 1]]
 
                 if self.syllable is None:
                     syllable_bucket = chosen_bucket[tuple(['START_WORD'])]
@@ -55,7 +58,7 @@ class RandomModeSyllables(object):
                     self.word = []
                     break
 
-                choose_next(syllable_bucket.iteritems(), self.test, syllable_length)
+                choose_next(syllable_bucket.iteritems(), self.test, current_position + 1)
 
                 if self.syllable is None:
                     break
