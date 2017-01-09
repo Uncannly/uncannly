@@ -27,6 +27,6 @@ TOO_FEW_MESSAGE = 'Fewer words met criteria than the specified return count.\n'
 NO_WORDS_MESSAGE = 'No words met criteria.\n'
 
 POOL_DEFAULT = 25
-POOL_MAX = 1000
+POOL_MAX = 500
 
 MAX_WORD_LENGTH = 20

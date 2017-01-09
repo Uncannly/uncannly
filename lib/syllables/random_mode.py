@@ -2,11 +2,12 @@ import sys
 import random
 
 from data.secondary_data_io import load
+from data.load_data import load_syllables
 from lib.present import for_web_syllables
 from lib.conversion import to_sig_figs
 from lib.score import get_score
 from lib.cumulative_distribution import choose_next
-# from lib.options import option_value_boolean_to_string
+from lib.options import option_value_boolean_to_string
 
 # pylint: disable=too-few-public-methods,too-many-locals
 class RandomModeSyllables(object):
@@ -24,8 +25,8 @@ class RandomModeSyllables(object):
         self.min_length = options['min_length']
         self.max_length = options['max_length']
 
-        # weighting = option_value_boolean_to_string('weighting', self.unweighted)
-        # self.syllable_chains = load_phonemes(weighting, self.unstressed)
+        self.weighting = option_value_boolean_to_string('weighting', self.unweighted)
+        self.syllable_chains = load_syllables(self.weighting, self.unstressed)
         self.stress_pattern_distributions = load('stress_pattern_distributions')
 
         # self.selector = self.api_selector if self.interface == 'api' else self.cli_selector
@@ -36,15 +37,13 @@ class RandomModeSyllables(object):
 
     def get(self):
         output = []
-        normalized_syllable_chains = load('syllable_chains')
-
         count = 0
 
         while count < self.pool:
             syllable_length = len(self.stress_pattern)
 
             for i in range(0, syllable_length - 1):
-                chosen_bucket = normalized_syllable_chains['weighted'][syllable_length - 2]\
+                chosen_bucket = self.syllable_chains[syllable_length - 2]\
                    [i + 1][self.stress_pattern[i]][self.stress_pattern[i + 1]]
 
                 if self.syllable is None:
@@ -75,7 +74,7 @@ class RandomModeSyllables(object):
         return output
 
     def reset(self):
-        stress_pattern = choose_next(self.stress_pattern_distributions['weighted'])
+        stress_pattern = choose_next(self.stress_pattern_distributions[self.weighting])
         self.stress_pattern = ['start_word'] + list(stress_pattern) + ['end_word']
         self.word = []
         self.syllable = None

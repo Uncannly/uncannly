@@ -1,4 +1,4 @@
 ---
 applications:
 - name: uncannly
-  memory: 512M
+  memory: 128M

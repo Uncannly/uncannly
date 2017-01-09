@@ -193,7 +193,7 @@ class PronouncingDictionary(object):
                                         [syllable_stress_level][next_syllable_stress_level]\
                                         [syllable][next_syllable] = probability / total
 
-        save(normalized_syllable_chains, 'syllable_chains')
+        self.syllable_chains = normalized_syllable_chains
         sys.stdout.write('Syllable chains normalized.\n')
     # pylint: enable=too-many-nested-blocks,line-too-long,invalid-name
 

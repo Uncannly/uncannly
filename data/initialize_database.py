@@ -27,6 +27,12 @@ class DatabaseInitializer(object):
             save(distribution, 'word_length_distribution_{}'.format(weighting))
         sys.stdout.write('Word length distributions saved.\n')
         self.tables.words(words)
+
+        # this should become "initialize syllable chains"
+        # because it does not have to do with words
+        # and it should use self.syllable_chains like phonemes does above
+        # and extract the normalization stuff from pronouncing dictionrary
+        # into absolute chain or something akin to it
         self.tables.syllables(syllable_chains)
 
     def initialize_phoneme_chains(self):

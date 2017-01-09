@@ -15,6 +15,10 @@ class Tables(object):
             "create table phonemes (word_length int, word_position int, \
               phoneme varchar, unstressed boolean, next_phonemes_weighted varchar, \
               next_phonemes_unweighted varchar)",
+            "drop table if exists syllables",
+            "create table syllables (word_length int, word_position int, \
+              stressing varchar, next_stressing varchar, syllable varchar, \
+              next_syllables_weighted varchar, next_syllables_unweighted varchar)",
             "drop table if exists scores",
             "create table scores (word varchar, score real, length int, \
               ignore_position boolean, unstressed boolean, unweighted boolean, \
@@ -36,9 +40,41 @@ class Tables(object):
         self.database.execute(sql_string)
         sys.stdout.write('Words table populated.\n\n')
 
-    # def syllables(self, syllables):
-    #     sql_array = []
-        
+    def syllables(self, syllables):
+        sql_array = []
+        syllables_unweighted = syllables['unweighted']
+        syllables = syllables['weighted']
+        for word_length in range(0, len(syllables)):
+            for word_position in range(0, len(syllables[word_length])): # do i need a + 1 here?
+                for previous_stressing, next_stressings in \
+                    syllables[word_length][word_position].iteritems():
+                    for next_stressing, previous_syllables in next_stressings.iteritems():
+                        for previous_syllable, next_syllables in previous_syllables.iteritems():
+                            next_syllables_unweighted = syllables_unweighted[word_length]\
+                                [word_position][previous_stressing][next_stressing]\
+                                [previous_syllable]
+                            next_syllables_unweighted = \
+                                {str(k).replace("'", '"'): v for k, v in next_syllables_unweighted.iteritems()}
+                            next_syllables = {str(k).replace("'", '"'): v for k, v in next_syllables.iteritems()}
+                            sql_array.append("('{}', '{}', '{}', '{}', '{}', '{}', '{}')"\
+                                .format(word_length,
+                                        word_position,
+                                        previous_stressing,
+                                        next_stressing,
+                                        str(previous_syllable).replace("'", "''"),
+                                        json.dumps(next_syllables).replace('"', "''"),
+                                        json.dumps(next_syllables_unweighted).replace('"', "''")))
+            if word_length == 0:
+                sys.stdout.write('Syllable chain table all positions for ignore length updated.\n')
+            else:
+                sys.stdout.write(('Syllable chain table all positions for length '
+                                  '{} updated.\n').format(word_length))
+        sql_string = (
+            "insert into syllables (word_length, word_position, stressing, next_stressing, "
+            "syllable, next_syllables_weighted, next_syllables_unweighted) values "
+        )
+        sql_string += ", ".join(sql_array)
+        self.database.execute(sql_string)
 
     def phonemes(self, word_lengths_weighted, word_lengths_unweighted, stressing):
         sql_array = []
