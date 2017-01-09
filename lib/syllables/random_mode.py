@@ -76,7 +76,13 @@ class RandomModeSyllables(object):
         return output
 
     def reset(self):
-        stress_pattern = choose_next(self.stress_pattern_distributions[self.weighting])
+        stress_pattern = None
+        while stress_pattern is None:
+            stress_pattern = choose_next(self.stress_pattern_distributions[self.weighting])
+            length = len(stress_pattern)
+            if (self.min_length is not None and length < self.min_length) or \
+                (self.max_length is not None and length > self.max_length):
+                stress_pattern = None
         self.stress_pattern = ['start_word'] + list(stress_pattern) + ['end_word']
         if self.unstressed:
             self.stress_pattern = ['ignore_stress' for syllable in self.stress_pattern]
