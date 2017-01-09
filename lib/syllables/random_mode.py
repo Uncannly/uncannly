@@ -1,5 +1,4 @@
 import sys
-import random
 
 from data.secondary_data_io import load
 from data.load_data import load_syllables

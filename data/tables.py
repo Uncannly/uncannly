@@ -54,8 +54,10 @@ class Tables(object):
                                 [word_position][previous_stressing][next_stressing]\
                                 [previous_syllable]
                             next_syllables_unweighted = \
-                                {str(k).replace("'", '"'): v for k, v in next_syllables_unweighted.iteritems()}
-                            next_syllables = {str(k).replace("'", '"'): v for k, v in next_syllables.iteritems()}
+                                {str(k).replace("'", '"'): v for k, v \
+                                in next_syllables_unweighted.iteritems()}
+                            next_syllables = {str(k).replace("'", '"'): v for k, v \
+                                in next_syllables.iteritems()}
                             sql_array.append("('{}', '{}', '{}', '{}', '{}', '{}', '{}')"\
                                 .format(word_length,
                                         word_position,
