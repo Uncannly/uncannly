@@ -22,7 +22,7 @@ class Tables(object):
             "drop table if exists scores",
             "create table scores (word varchar, score real, length int, \
               ignore_position boolean, unstressed boolean, unweighted boolean, \
-              method_mean boolean, method_addition boolean)",
+              method_mean boolean, method_addition boolean, ignore_syllables boolean)",
             ""
         ]
         sql_string = ";".join(sql_array)
@@ -119,12 +119,12 @@ class Tables(object):
             sql_array = []
             for word, score, length in most_probable_words:
                 sql_array.append(
-                    "('{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}')".\
+                    "('{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}')".\
                     format(word, score, length, *boolean_options)
                 )
             sql_string = (
                 "insert into scores (word, score, length, ignore_position, "
-                "unstressed, unweighted, method_mean, method_addition) "
+                "unstressed, unweighted, method_mean, method_addition, ignore_syllables) "
                 "values "
             )
             sql_string += ", ".join(sql_array)
@@ -134,9 +134,9 @@ class Tables(object):
         self.database.disconnect()
 
 def string_to_boolean(options):
-    positioning, stressing, weighting, scoring_method = options
+    positioning, stressing, weighting, scoring_method, ignore_syllables = options
     ignore_position = option_value_string_to_boolean(positioning)
     unstressed = option_value_string_to_boolean(stressing)
     unweighted = option_value_string_to_boolean(weighting)
     method_mean, method_addition = SCORING_METHODS[scoring_method]
-    return ignore_position, unstressed, unweighted, method_mean, method_addition
+    return ignore_position, unstressed, unweighted, method_mean, method_addition, ignore_syllables

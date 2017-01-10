@@ -4,7 +4,7 @@ from lib.score import get_score
 from lib.options import POOL_MAX, MAX_WORD_LENGTH, option_value_string_to_boolean
 
 # pylint: disable=too-many-instance-attributes
-class MostProbableWords(object):
+class MostProbableWordsPhonemes(object):
     def __init__(self, word_lengths, length_consideration, options):
         positioning, stressing, weighting, self.scoring_method = options
 
@@ -16,12 +16,15 @@ class MostProbableWords(object):
         self.ignore_length = option_value_string_to_boolean(length_consideration)
         self.limit = 1.0 if not default_limits else default_limits\
             .get(length_consideration, {}).get(positioning, {}).get(stressing, {})\
-            .get(weighting, {}).get(self.scoring_method, 1.0)
+            .get(weighting, {}).get(self.scoring_method).get('ignore_syllables', 1.0)
+        if self.limit == 0:
+            self.limit = 1.0
         self.upper_limit = None
         self.lower_limit = None
         self.count = 0
         self.word_length = None
 
+    # pylint: disable=too-many-branches
     def get(self):
         good_count = False
         while not good_count:
@@ -45,6 +48,13 @@ class MostProbableWords(object):
                     self.limit -= (self.limit - self.lower_limit) / 2
                 else:
                     self.limit /= 2
+
+                if self.limit == 0:
+                    print (
+                        'With these parameters, it is not possible '
+                        'to find enough words to meet the pool max.'
+                    )
+                    good_count = True
             elif len(self.most_probable_words) > POOL_MAX * 10:
                 self.lower_limit = self.limit
                 if self.upper_limit:
@@ -52,12 +62,12 @@ class MostProbableWords(object):
                 else:
                     self.limit *= 2
             else:
-                # print 'the correct limit was', self.limit
                 good_count = True
 
         self.most_probable_words.sort(key=lambda x: -x[1])
 
         return self.most_probable_words[:POOL_MAX], self.limit
+    # pylint: enable=too-many-branches
 
     def get_next_phoneme(self, word, score):
         self.count += 1

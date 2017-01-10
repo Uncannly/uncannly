@@ -8,16 +8,24 @@ from lib.conversion import sparse
 def load_words():
     return Database.fetch("select * from words;")
 
-def load_scores(scoring_method, ignore_length, ignore_position, unstressed, unweighted):
+# pylint: disable=too-many-arguments
+def load_scores(scoring_method,
+                ignore_length,
+                ignore_position,
+                unstressed,
+                unweighted,
+                ignore_syllables):
     method_mean, method_addition = SCORING_METHODS[scoring_method]
     length = ' = ' if ignore_length else ' != '
     sql = "select word, score from scores where length{}0 and \
         ignore_position = {} and unstressed = {} and unweighted = {} \
-        and method_mean = {} and method_addition = {};".format(
-            length, ignore_position, unstressed, unweighted, method_mean, method_addition
+        and method_mean = {} and method_addition = {} and ignore_syllables = {};".format(
+            length, ignore_position, unstressed, unweighted,
+            method_mean, method_addition, ignore_syllables
         )
 
     return Database.fetch(sql)
+# plyint: enable=too-many-arguments
 
 def load_phonemes(weighting, unstressed):
     sql = "select word_length, word_position, phoneme, next_phonemes_{} \

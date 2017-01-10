@@ -29,7 +29,8 @@ class TopModePhonemes(object):
                                           self.ignore_length,
                                           self.ignore_position,
                                           self.unstressed,
-                                          self.unweighted)
+                                          self.unweighted,
+                                          self.ignore_syllables)
         most_probable_words.sort(key=lambda x: -x[1])
         most_probable_words = most_probable_words[0:int(self.pool)]
 

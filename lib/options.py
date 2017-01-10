@@ -2,7 +2,8 @@ OPTION_VALUES = {
     'stressing': ('unstressed', 'stressed'),
     'weighting': ('unweighted', 'weighted'),
     'positioning': ('ignore_position', 'use_position'),
-    'length_consideration': ('ignore_length', 'use_length')
+    'length_consideration': ('ignore_length', 'use_length'),
+    'syllable_use': ('ignore_syllables', 'use_syllables')
 }
 
 def option_value_boolean_to_string(option, boolean):
