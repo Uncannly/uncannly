@@ -18,11 +18,12 @@ class DatabaseInitializer(object):
         self.tables.schema()
         self.phoneme_chains = None
         self.word_lengths = None
+        self.syllable_chains = None
 
     def initialize_words(self):
         word_frequencies = frequency_list.parse()
         sys.stdout.write('Frequency list parsed.\n\n')
-        words, self.phoneme_chains, word_length_distributions, syllable_chains = \
+        words, self.phoneme_chains, word_length_distributions, self.syllable_chains = \
             PronouncingDictionary(word_frequencies).parse()
         for weighting, distribution in word_length_distributions.iteritems():
             save(distribution, 'word_length_distribution_{}'.format(weighting))
@@ -34,7 +35,7 @@ class DatabaseInitializer(object):
         # and it should use self.syllable_chains like phonemes does above
         # and extract the normalization stuff from pronouncing dictionrary
         # into absolute chain or something akin to it
-        self.tables.syllables(syllable_chains)
+        self.tables.syllables(self.syllable_chains)
 
     def initialize_phoneme_chains(self):
         self.word_lengths = {'weighted': {}, 'unweighted': {}}
@@ -72,12 +73,17 @@ class DatabaseInitializer(object):
                                     options = positioning, stressing, weighting, scoring_method
                                     if ignore_syllables:
                                         scorer = MostProbableWordsPhonemes
+                                        word_scores = scorer(
+                                            self.word_lengths,
+                                            length_consideration,
+                                            options)
                                     else:
                                         scorer = MostProbableWordsSyllables
-                                    word_scores = scorer(
-                                        self.word_lengths,
-                                        length_consideration,
-                                        options)
+                                        word_scores = scorer(
+                                            self.syllable_chains,
+                                            length_consideration,
+                                            options)
+                                    
                                     scores, limit = word_scores.get()
                                     self.tables.scores(scores, options + tuple([ignore_syllables]))
                                     updated_limits\
