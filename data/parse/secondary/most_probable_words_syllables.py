@@ -10,22 +10,23 @@ class MostProbableWordsSyllables(object):
         self.ignore_length = option_value_string_to_boolean(length_consideration)
         self.unstressed = option_value_string_to_boolean(self.stressing)
 
-        default_limits = load('default_limits')
-
-        self.most_probable_words = []
         self.stressing_patterns = [x[0] for x in load('stress_pattern_distributions')[self.weighting]]
-        self.count = 0
         self.syllable_chains = syllable_chains
+
+        self.count = 0
+        self.most_probable_words = []
+
+        default_limits = load('default_limits')
         self.limit = 1.0 if not default_limits else default_limits\
             .get(length_consideration, {}).get(positioning, {}).get(self.stressing, {})\
             .get(self.weighting, {}).get(self.scoring_method).get('use_syllables', 1.0)
-
         self.upper_limit = None
         self.lower_limit = None
 
-        # self.position_bucket_errors = 0 # cool these have stopped happening
-        # self.length_bucket_errors = 0 fixed these
+        self.target_length = None
+
         self.syllable_bucket_errors = 0
+        self.syllable_non_bucket_errors = 0
 
     def get(self):
         good_count = False
@@ -33,34 +34,22 @@ class MostProbableWordsSyllables(object):
             self.most_probable_words = []
             self.count = 0
 
-            # stressed
             if not self.unstressed:
                 for stress_pattern in self.stressing_patterns:
-                    self.length = len(stress_pattern)
-
+                    self.target_length = len(stress_pattern) # interesting... this was nothing, and +1 did not affect the error counts....
                     self.stress_pattern = ['start_word'] + list(stress_pattern) + ['end_word']
-
-                    # print 'about to do everything for stressing pattern', self.stress_pattern
                     self.get_next_syllable([tuple(['START_WORD'])], 1.0)
-
-            # unstressed
             elif self.unstressed:
-                for length in range(1, max([len(x) for x in self.stressing_patterns])):
-                    if len(self.syllable_chains[self.weighting][length]) == 0: # dont happen to be words of this syllable length, so even the 0 "ignore length" bucket was not populated
-                        # print 'this should replace the check down there in the recursive get'
-                        pass
-                    else:
-                        self.length = length
-
-                        self.stress_pattern = ['ignore_stress'] * length
-                        self.stress_pattern = list(self.stress_pattern) + ['end_word']
-                        # print 'about to do everything for unstressed pattern of length', self.stress_pattern
+                for target_length in range(1, max([len(x) for x in self.stressing_patterns])):
+                    # dont happen to be words of this syllable length, 
+                    # so even the 0 "ignore length" bucket was not populated
+                    if len(self.syllable_chains[self.weighting][target_length]) > 0:
+                        self.target_length = target_length
+                        self.stress_pattern = ['ignore_stress'] * target_length + ['end_word']
                         self.get_next_syllable([tuple(['START_WORD'])], 1.0)
-
 
             if len(self.most_probable_words) < POOL_MAX:
                 self.upper_limit = self.limit
-                print 'gotta lower limit', self.limit
                 if self.lower_limit:
                     self.limit -= (self.limit - self.lower_limit) / 2
                 else:
@@ -73,7 +62,6 @@ class MostProbableWordsSyllables(object):
                     )
                     good_count = True
             elif len(self.most_probable_words) > POOL_MAX * 10:
-                print 'gotta raise limit', self.limit
                 self.lower_limit = self.limit
                 if self.upper_limit:
                     self.limit += (self.upper_limit - self.limit) / 2
@@ -84,10 +72,9 @@ class MostProbableWordsSyllables(object):
 
         # and we get 500 - 1000 syllable bucket errors whenever it is STRESSED
         if self.syllable_bucket_errors > 0:
-            print 'error report!', self.syllable_bucket_errors
+            print 'error report!', self.syllable_bucket_errors, 'versus', self.syllable_non_bucket_errors
 
         self.most_probable_words.sort(key=lambda x: -x[1])
-
         return self.most_probable_words[:POOL_MAX], self.limit
 
     def get_next_syllable(self, word, score):
@@ -96,71 +83,49 @@ class MostProbableWordsSyllables(object):
             return
 
         current_length = len(word)
-        current_syllable = word[current_length - 1]
 
-        if current_length > MAX_WORD_LENGTH:
-            pass
-        else:
-            length = 0 if self.ignore_length else self.length
-            syllable_length = len(self.stress_pattern)
-
-            if self.ignore_length:
-                length_bucket = 0
-            else:
-                length_bucket = syllable_length - 1 if self.unstressed else syllable_length - 2 # probably a way to improve this... only subtract 1 for unstressed because you only add end_word, not start_word...
-
+        if current_length <= MAX_WORD_LENGTH:
+            length_bucket = 0 if self.ignore_length else self.target_length
+            position_bucket = 0 if self.ignore_position else current_length
             current_stress = self.stress_pattern[current_length - 1]
             next_stress = self.stress_pattern[current_length]
+            current_syllable = word[current_length - 1]
 
-            position_bucket = 0 if self.ignore_position else current_length # + 1
-            if position_bucket > len(self.syllable_chains[self.weighting][length_bucket]):
-                position_bucket = 0
-                print 'i dont quite understand why this is happening or this solution'
-                print 'position error bucket path', self.weighting, length_bucket, position_bucket, current_stress, next_stress, current_syllable
-
-
-            if self.unstressed and next_stress == 'end_word': # this one is maybe a real thing. others are just oopses
+            if self.unstressed and next_stress == 'end_word':
+                # this one is a real thing maybe. syllable bucket error is def bad
                 chosen_bucket = self.syllable_chains[self.weighting]\
                     [length_bucket]\
-                   [position_bucket]\
-                   [current_stress]\
-                   ['ignore_stress']\
-                   [current_syllable]
+                    [position_bucket]\
+                    [current_stress]\
+                    ['ignore_stress']\
+                    [current_syllable]
             elif current_syllable not in self.syllable_chains[self.weighting]\
                 [length_bucket]\
-               [position_bucket]\
-               [current_stress]\
-               [next_stress].keys():
-                # print 'how often is it not in keys?'
-                # print   self.syllable_chains[self.weighting]\
-                #     [length_bucket]\
-                #    [position_bucket]\
-                #    [current_stress]\
-                #    [next_stress].keys()
-                # raw_input()
+                [position_bucket]\
+                [current_stress]\
+                [next_stress].keys():
                 self.syllable_bucket_errors += 1
+                # print 'syllable error bucket path', self.weighting, length_bucket, position_bucket, current_stress, next_stress, current_syllable
                 chosen_bucket = None
             else:
+                # this is proving how the proportion of ones without errors is 
+                # not overwhelmingly large. it's like 20% of them are wrong, 
+                # which is non-negligible, we have to figure this out
+                self.syllable_non_bucket_errors += 1
                 chosen_bucket = self.syllable_chains[self.weighting]\
                     [length_bucket]\
-                   [position_bucket]\
-                   [current_stress]\
-                   [next_stress]\
-                   [current_syllable]
+                    [position_bucket]\
+                    [current_stress]\
+                    [next_stress]\
+                    [current_syllable]
 
-            # print 'alright, bout to iterate over these iteritmes in this bucket', chosen_bucket.keys()
-            if chosen_bucket is None:
-                pass
-            else:
+            if chosen_bucket is not None:
                 for next_syllable, probability in chosen_bucket.iteritems():
-                    # print 'this syllable is', next_syllable, 'probability', probability
                     score = get_score(score, self.scoring_method, probability, current_length)
                     if score < self.limit:
-                        # print 'over the limit', score, self.limit
                         pass
                     elif next_stress == 'end_word' or next_syllable[-1] == 'END_WORD':
-                        # print 'ended on syllable', next_syllable
-                        afraid_word = word[1:]
+                        afraid_word = word[1:] # this is always just start word. i tried switching things up so that we kick off "get" with an empty array but it got off and scary... try again in a separate commit
                         if next_syllable[-1] == 'END_WORD':
                             afraid_word.append(next_syllable[:-1])
                         else:
@@ -171,7 +136,6 @@ class MostProbableWordsSyllables(object):
                             (stringified_word, score, current_length)
                         )
                     else:
-                        # print 'recursive callllll'
                         grown_word = word[:]
                         grown_word.append(next_syllable)
                         self.get_next_syllable(grown_word, score)

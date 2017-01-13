@@ -53,7 +53,7 @@ class RandomModeSyllables(object):
                     syllable_bucket = chosen_bucket.get(self.syllable, None)
 
                 if syllable_bucket is None:
-                    # word = ['This shouldnt happen but we couldnt connect buckets']
+                    word = ['This shouldnt happen but we couldnt connect buckets']
                     self.word = []
                     break
 

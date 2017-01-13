@@ -77,9 +77,7 @@ class MostProbableWordsPhonemes(object):
         word_length = len(word)
         current_phoneme = word[word_length - 1]
 
-        if word_length > MAX_WORD_LENGTH:
-            pass
-        else:
+        if word_length <= MAX_WORD_LENGTH:
             word_position = 0 if self.ignore_position else word_length
             next_phonemes = self.word_lengths[self.word_length][word_position]
             for next_phoneme, probability in next_phonemes[current_phoneme]:
