@@ -72,14 +72,12 @@ class DatabaseInitializer(object):
                                         'syllable_use', ignore_syllables)
                                     options = positioning, stressing, weighting, scoring_method
                                     if ignore_syllables:
-                                        scorer = MostProbableWordsPhonemes
-                                        word_scores = scorer(
+                                        word_scores = MostProbableWordsPhonemes(
                                             self.word_lengths,
                                             length_consideration,
                                             options)
                                     else:
-                                        scorer = MostProbableWordsSyllables
-                                        word_scores = scorer(
+                                        word_scores = MostProbableWordsSyllables(
                                             self.syllable_chains,
                                             length_consideration,
                                             options)

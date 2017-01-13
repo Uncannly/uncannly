@@ -86,26 +86,31 @@ def cli_select_random(words, selection, unstressed, exclude_real):
         sys.stdout.write(NO_WORDS_MESSAGE)
 
 def api_select_top(words, selection, unstressed, exclude_real):
-    print words
     output = []
     i = 0
     no_words_returned = True
+
     attempts = 0
     while len(output) < selection:
+
+        # this whole section was not necessary before syllables. why does this happen?
         attempts += 1
         if attempts > 100000:
-            return output
-            
+            break
+
         if i == len(words):
             output.append(TOO_FEW_MESSAGE)
             break
+
+        # this is also a syllables-related siutation
         print words[i][0]
         if len(words[i][0]) == 0:
             print 'it happened....'
+
         else:
-            print words[i][1]
+            # print words[i][1]
             arrayified_word = (string_to_array(words[i][0]), words[i][1])
-            print arrayified_word
+            # print arrayified_word
             i += 1
             result = for_web(arrayified_word, unstressed, exclude_real)
             if result:
