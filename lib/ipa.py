@@ -7,7 +7,7 @@ def ipa(word):
     return ''.join([_ipa_symbols(phoneme) for phoneme in word])
 
 def _ipa_symbols(phoneme):
-    return IPA['vowels'].get(phoneme) or IPA['consonants'].get(phoneme)
+    return IPA['vowels'].get(phoneme) or IPA['consonants'].get(phoneme) or ''
 
 def destress(word):
     for character in "012":
