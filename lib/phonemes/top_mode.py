@@ -49,7 +49,7 @@ class TopModePhonemes(object):
                 pass
             elif self.max_length is not None and length > self.max_length:
                 pass
-            elif word in words:
+            elif (word, score) in words:
                 pass
             else:
                 words.append((word, score))
