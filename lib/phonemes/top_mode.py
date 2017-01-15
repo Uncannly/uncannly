@@ -90,22 +90,22 @@ def api_select_top(words, selection, unstressed, exclude_real):
     i = 0
     no_words_returned = True
 
-    attempts = 0
+    # attempts = 0
     while len(output) < selection:
 
         # this whole section was not necessary before syllables. why does this happen?
-        attempts += 1
-        if attempts > 100000:
-            break
+        # attempts += 1
+        # if attempts > 100000:
+        #     break
 
         if i == len(words):
             output.append(TOO_FEW_MESSAGE)
             break
 
-        # this is also a syllables-related siutation
-        print words[i][0]
-        if len(words[i][0]) == 0:
-            print 'it happened....'
+        # # this is also a syllables-related siutation
+        # # print words[i][0]
+        # if len(words[i][0]) == 0:
+        #     print 'it happened....'
 
         else:
             # print words[i][1]

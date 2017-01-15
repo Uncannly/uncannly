@@ -1,7 +1,7 @@
 import sys
 
 from lib.ipa import ipa, destress, stress_level, stress_symbol
-from lib.conversion import array_to_string
+from lib.conversion import array_to_string, to_sig_figs
 from data.load_data import load_words
 
 WORDS = load_words()
@@ -47,6 +47,18 @@ def for_web_syllables(word, exclude_real):
         else:
             word_output += ' (' + existing_word + ')'
     return word_output
+
+def for_terminal_syllables(word, score, exclude_real, unstressed):
+    word = ' '.join([' '.join(syllable) for syllable in word])[:-9]
+    existing_word = _already_in_dictionary(word, unstressed)
+    if existing_word:
+        if exclude_real:
+            return None
+        else:
+            word += ' (' + existing_word + ')'
+    score = to_sig_figs(score, 6)
+    sys.stdout.write(word + ' [' + str(score) + ']\n')
+    return True
 
 def _present_word(word, score, exclude_real, existing_word):
     if existing_word:

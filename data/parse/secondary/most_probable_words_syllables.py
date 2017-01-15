@@ -10,7 +10,8 @@ class MostProbableWordsSyllables(object):
         self.ignore_length = option_value_string_to_boolean(length_consideration)
         self.unstressed = option_value_string_to_boolean(self.stressing)
 
-        self.stressing_patterns = [x[0] for x in load('stress_pattern_distributions')[self.weighting]]
+        self.stressing_patterns = \
+            [x[0] for x in load('stress_pattern_distributions')[self.weighting]]
         self.syllable_chains = syllable_chains
 
         self.count = 0
@@ -28,6 +29,7 @@ class MostProbableWordsSyllables(object):
         self.syllable_bucket_errors = 0
         self.syllable_non_bucket_errors = 0
 
+    # pylint: disable=too-many-branches,too-many-locals
     def get(self):
         good_count = False
         while not good_count:
@@ -41,7 +43,7 @@ class MostProbableWordsSyllables(object):
                     self.get_next_syllable([tuple(['START_WORD'])], 1.0)
             elif self.unstressed:
                 for target_length in range(1, max([len(x) for x in self.stressing_patterns])):
-                    # dont happen to be words of this syllable length, 
+                    # dont happen to be words of this syllable length,
                     # so even the 0 "ignore length" bucket was not populated
                     if len(self.syllable_chains[self.weighting][target_length]) > 0:
                         self.target_length = target_length
@@ -70,12 +72,9 @@ class MostProbableWordsSyllables(object):
             else:
                 good_count = True
 
-        # and we get 500 - 1000 syllable bucket errors whenever it is STRESSED
-        if self.syllable_bucket_errors > 0:
-            print 'error report!', self.syllable_bucket_errors, 'versus', self.syllable_non_bucket_errors
-
         self.most_probable_words.sort(key=lambda x: -x[1])
         return self.most_probable_words[:POOL_MAX], self.limit
+    # pylint: enable=too-many-branches
 
     def get_next_syllable(self, word, score):
         self.count += 1
@@ -92,7 +91,6 @@ class MostProbableWordsSyllables(object):
             current_syllable = word[-1]
 
             if self.unstressed and next_stress == 'end_word':
-                # this one is a real thing maybe. syllable bucket error is def bad
                 chosen_bucket = self.syllable_chains[self.weighting]\
                     [length_bucket]\
                     [position_bucket]\
@@ -104,14 +102,11 @@ class MostProbableWordsSyllables(object):
                 [position_bucket]\
                 [current_stress]\
                 [next_stress].keys():
-                self.syllable_bucket_errors += 1
-                # print 'syllable error bucket path', self.weighting, length_bucket, position_bucket, current_stress, next_stress, current_syllable
                 chosen_bucket = None
+                # this is because the syllable chosen, while it of course exists
+                # in the first stress level, may not happen to exist for the transition
+                # from that stress level to the next one in the given stressing pattern
             else:
-                # this is proving how the proportion of ones without errors is 
-                # not overwhelmingly large. it's like 20% of them are wrong, 
-                # which is non-negligible, we have to figure this out
-                self.syllable_non_bucket_errors += 1
                 chosen_bucket = self.syllable_chains[self.weighting]\
                     [length_bucket]\
                     [position_bucket]\
@@ -125,7 +120,10 @@ class MostProbableWordsSyllables(object):
                     if score < self.limit:
                         pass
                     elif next_stress == 'end_word' or next_syllable[-1] == 'END_WORD':
-                        afraid_word = word[1:] # this is always just start word. i tried switching things up so that we kick off "get" with an empty array but it got off and scary... try again in a separate commit
+                        afraid_word = word[1:]
+                        # this is always just start word. i tried switching things up
+                        # so that we kick off "get" with an empty array but it
+                        # got off and scary... try again in a separate commit
                         if next_syllable[-1] == 'END_WORD':
                             afraid_word.append(next_syllable[:-1])
                         else:
@@ -139,4 +137,4 @@ class MostProbableWordsSyllables(object):
                         grown_word = word[:]
                         grown_word.append(next_syllable)
                         self.get_next_syllable(grown_word, score)
-# pylint: enable=too-few-public-methods,no-self-use
+# pylint: enable=too-few-public-methods,no-self-use,too-many-locals

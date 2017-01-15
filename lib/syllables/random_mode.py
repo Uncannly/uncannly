@@ -1,8 +1,6 @@
-import sys
-
 from data.secondary_data_io import load
 from data.load_data import load_syllables
-from lib.present import for_web_syllables
+from lib.present import for_web_syllables, for_terminal_syllables
 from lib.conversion import to_sig_figs
 from lib.score import get_score
 from lib.cumulative_distribution import choose_next
@@ -28,12 +26,12 @@ class RandomModeSyllables(object):
         self.syllable_chains = load_syllables(self.weighting, self.unstressed)
         self.stress_pattern_distributions = load('stress_pattern_distributions')
 
-        # self.selector = self.api_selector if self.interface == 'api' else self.cli_selector
         self.count_successes = 0
         self.count_fails = 0
 
         self.reset()
 
+    # pylint: disable=too-many-branches
     def get(self):
         output = []
 
@@ -53,7 +51,10 @@ class RandomModeSyllables(object):
                     syllable_bucket = chosen_bucket.get(self.syllable, None)
 
                 if syllable_bucket is None:
-                    word = ['This shouldnt happen but we couldnt connect buckets']
+                    # this is because the syllable chosen, while it of course
+                    # exists in the first stress level, may not happen to exist
+                    # for the transition from that stress level to the next one
+                    # in the given stressing pattern
                     self.word = []
                     break
 
@@ -64,14 +65,22 @@ class RandomModeSyllables(object):
                 else:
                     self.word.append(self.syllable)
 
-            final_word = str(self.word) + '\n'
-            answer = for_web_syllables(self.word, self.exclude_real)
-            if answer:
-                output.append( (answer, to_sig_figs(self.score, 6)) )
-                self.count_successes += 1
-            else:
-                self.count_fails += 1
-            sys.stdout.write(final_word)
+            if self.interface == 'api':
+                api_answer = for_web_syllables(self.word, self.exclude_real)
+                if api_answer:
+                    output.append( (api_answer, to_sig_figs(self.score, 6)) )
+                    self.count_successes += 1
+                else:
+                    self.count_fails += 1
+            elif self.interface == 'cli':
+                cli_answer = for_terminal_syllables(self.word,
+                                                    self.score,
+                                                    self.exclude_real,
+                                                    self.unstressed)
+                if cli_answer:
+                    self.count_successes += 1
+                else:
+                    self.count_fails += 1
             self.reset()
 
         if self.count_fails >= 1000:
@@ -82,6 +91,7 @@ class RandomModeSyllables(object):
             output.sort(key=lambda x: -x[1])
             output = output[:self.selection]
         return output
+    # pylint: enable=too-many-branches
 
     def reset(self):
         stress_pattern = None

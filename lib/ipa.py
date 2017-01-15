@@ -10,7 +10,6 @@ def _ipa_symbols(phoneme):
     phoneme = IPA['vowels'].get(phoneme) or IPA['consonants'].get(phoneme)
     if phoneme is None:
         print 'something went wrong with syllables top mode, because this should not happen'
-        raw_input()
         return ''
     else:
         return phoneme

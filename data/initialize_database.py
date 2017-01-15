@@ -71,17 +71,13 @@ class DatabaseInitializer(object):
                                     syllable_use = option_value_boolean_to_string(
                                         'syllable_use', ignore_syllables)
                                     options = positioning, stressing, weighting, scoring_method
-                                    if ignore_syllables:
-                                        word_scores = MostProbableWordsPhonemes(
-                                            self.word_lengths,
-                                            length_consideration,
-                                            options)
-                                    else:
-                                        word_scores = MostProbableWordsSyllables(
-                                            self.syllable_chains,
-                                            length_consideration,
-                                            options)
-                                    
+
+                                    getter = MostProbableWordsPhonemes \
+                                        if ignore_syllables else MostProbableWordsSyllables
+                                    source = self.word_lengths if ignore_syllables else \
+                                        self.syllable_chains
+                                    word_scores = getter(source, length_consideration, options)
+
                                     scores, limit = word_scores.get()
                                     self.tables.scores(scores, options + tuple([ignore_syllables]))
                                     updated_limits\
