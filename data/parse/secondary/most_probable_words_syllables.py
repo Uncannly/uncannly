@@ -36,7 +36,7 @@ class MostProbableWordsSyllables(object):
 
             if not self.unstressed:
                 for stress_pattern in self.stressing_patterns:
-                    self.target_length = len(stress_pattern) # interesting... this was nothing, and +1 did not affect the error counts....
+                    self.target_length = len(stress_pattern)
                     self.stress_pattern = ['start_word'] + list(stress_pattern) + ['end_word']
                     self.get_next_syllable([tuple(['START_WORD'])], 1.0)
             elif self.unstressed:
@@ -89,7 +89,7 @@ class MostProbableWordsSyllables(object):
             position_bucket = 0 if self.ignore_position else current_length
             current_stress = self.stress_pattern[current_length - 1]
             next_stress = self.stress_pattern[current_length]
-            current_syllable = word[current_length - 1]
+            current_syllable = word[-1]
 
             if self.unstressed and next_stress == 'end_word':
                 # this one is a real thing maybe. syllable bucket error is def bad
