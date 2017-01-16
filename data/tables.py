@@ -118,6 +118,9 @@ class Tables(object):
         else:
             sql_array = []
             for word, score, length in most_probable_words:
+                # meaning that if it is syllables mode, make nice as per above
+                if not boolean_options[-1]:
+                    word = str(word).replace("'", "''")
                 sql_array.append(
                     "('{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}')".\
                     format(word, score, length, *boolean_options)

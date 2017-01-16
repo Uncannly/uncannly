@@ -74,7 +74,6 @@ class MostProbableWordsSyllables(object):
 
         self.most_probable_words.sort(key=lambda x: -x[1])
         return self.most_probable_words[:POOL_MAX], self.limit
-    # pylint: enable=too-many-branches
 
     def get_next_syllable(self, word, score):
         self.count += 1
@@ -125,16 +124,15 @@ class MostProbableWordsSyllables(object):
                         # so that we kick off "get" with an empty array but it
                         # got off and scary... try again in a separate commit
                         if next_syllable[-1] == 'END_WORD':
-                            afraid_word.append(next_syllable[:-1])
+                            if len(next_syllable) > 1:
+                                afraid_word.append(next_syllable[:-1])
                         else:
                             afraid_word.append(next_syllable)
-                        stringified_word = [' '.join(syllable) for syllable in afraid_word]
-                        stringified_word = ' '.join(stringified_word)
                         self.most_probable_words.append(
-                            (stringified_word, score, current_length)
+                            (afraid_word, score, current_length)
                         )
                     else:
                         grown_word = word[:]
                         grown_word.append(next_syllable)
                         self.get_next_syllable(grown_word, score)
-# pylint: enable=too-few-public-methods,no-self-use,too-many-locals
+# pylint: enable=too-few-public-methods,no-self-use,too-many-locals,too-many-branches

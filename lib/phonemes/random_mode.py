@@ -151,8 +151,9 @@ class RandomModePhonemes(object):
 
         if self.interface == 'cli':
             if self.selection:
-                for word, _ in words:
-                    sys.stdout.write(word + '\n')
+                for word_and_score, _ in words:
+                    word, score = word_and_score
+                    sys.stdout.write(word + ' [' + str(score) + ']\n')
             return True
         else:
             return [x[0] for x in words]

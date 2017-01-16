@@ -1,7 +1,8 @@
+import sys
+
 from data.secondary_data_io import load
 from data.load_data import load_syllables
 from lib.present import for_web_syllables, for_terminal_syllables
-from lib.conversion import to_sig_figs
 from lib.score import get_score
 from lib.cumulative_distribution import choose_next
 from lib.options import option_value_boolean_to_string
@@ -63,21 +64,28 @@ class RandomModeSyllables(object):
                 if self.syllable is None:
                     break
                 else:
-                    self.word.append(self.syllable)
+                    if self.syllable[-1] == 'END_WORD':
+                        if len(self.syllable) > 1:
+                            self.word.append(self.syllable[:-1])
+                    else:
+                        self.word.append(self.syllable)
 
             if self.interface == 'api':
-                api_answer = for_web_syllables(self.word, self.exclude_real)
+                api_answer = for_web_syllables((self.word, self.score),
+                                               self.unstressed,
+                                               self.exclude_real)
                 if api_answer:
-                    output.append( (api_answer, to_sig_figs(self.score, 6)) )
+                    output.append(api_answer)
                     self.count_successes += 1
                 else:
                     self.count_fails += 1
             elif self.interface == 'cli':
-                cli_answer = for_terminal_syllables(self.word,
-                                                    self.score,
+                cli_answer = for_terminal_syllables((self.word, self.score),
+                                                    self.unstressed,
                                                     self.exclude_real,
-                                                    self.unstressed)
+                                                    self.selection)
                 if cli_answer:
+                    output.append(cli_answer)
                     self.count_successes += 1
                 else:
                     self.count_fails += 1
@@ -90,6 +98,10 @@ class RandomModeSyllables(object):
         elif self.selection:
             output.sort(key=lambda x: -x[1])
             output = output[:self.selection]
+            if self.interface == 'cli':
+                for word, score in output:
+                    sys.stdout.write(word + ' [' + str(score) + ']\n')
+                return True
         return output
     # pylint: enable=too-many-branches
 
