@@ -7,12 +7,7 @@ def ipa(word):
     return ''.join([_ipa_symbols(phoneme) for phoneme in word])
 
 def _ipa_symbols(phoneme):
-    phoneme = IPA['vowels'].get(phoneme) or IPA['consonants'].get(phoneme)
-    if phoneme is None:
-        print 'something went wrong with syllables top mode, because this should not happen'
-        return ''
-    else:
-        return phoneme
+    return IPA['vowels'].get(phoneme) or IPA['consonants'].get(phoneme)
 
 def destress(word):
     for character in "012":
@@ -46,6 +41,15 @@ def stress_level(syllable):
 
 def stress_symbol(level):
     return 'ˈ' if level == 'primary' else 'ˌ'
+
+def clean_end_word_pseudovowel(syllable):
+    if syllable[-1] == 'END_WORD':
+        if len(syllable) > 1:
+            return syllable[:-1]
+        else:
+            return None
+    else:
+        return syllable
 
 IPA = {
     'vowels': {

@@ -4,6 +4,7 @@ from lib.present import for_web_syllables, for_terminal_syllables, for_terminal_
 from lib.score import get_score
 from lib.cumulative_distribution import choose_next
 from lib.options import option_value_boolean_to_string
+from lib.ipa import clean_end_word_pseudovowel
 
 # pylint: disable=too-few-public-methods,too-many-locals
 class RandomModeSyllables(object):
@@ -62,11 +63,9 @@ class RandomModeSyllables(object):
                 if self.syllable is None:
                     break
                 else:
-                    if self.syllable[-1] == 'END_WORD':
-                        if len(self.syllable) > 1:
-                            self.word.append(self.syllable[:-1])
-                    else:
-                        self.word.append(self.syllable)
+                    syllable = clean_end_word_pseudovowel(self.syllable)
+                    if syllable:
+                        self.word.append(syllable)
 
             if self.interface == 'api':
                 api_answer = for_web_syllables((self.word, self.score),

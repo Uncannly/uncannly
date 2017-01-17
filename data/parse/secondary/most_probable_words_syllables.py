@@ -1,5 +1,6 @@
 from lib.options import MAX_WORD_LENGTH, POOL_MAX, option_value_string_to_boolean
 from lib.score import get_score
+from lib.ipa import clean_end_word_pseudovowel
 from data.secondary_data_io import load
 
 # pylint: disable=too-few-public-methods,no-self-use
@@ -123,14 +124,11 @@ class MostProbableWordsSyllables(object):
                         # this is always just start word. i tried switching things up
                         # so that we kick off "get" with an empty array but it
                         # got off and scary... try again in a separate commit
-                        if next_syllable[-1] == 'END_WORD':
-                            if len(next_syllable) > 1:
-                                afraid_word.append(next_syllable[:-1])
-                        else:
-                            afraid_word.append(next_syllable)
+                        syllable = clean_end_word_pseudovowel(next_syllable)
+                        if syllable:
+                            afraid_word.append(syllable)
                         self.most_probable_words.append(
-                            (afraid_word, score, current_length)
-                        )
+                            (afraid_word, score, current_length))
                     else:
                         grown_word = word[:]
                         grown_word.append(next_syllable)
