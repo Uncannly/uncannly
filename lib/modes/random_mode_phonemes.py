@@ -34,26 +34,26 @@ class RandomModePhonemes(object):
         self.count_successes = 0
         self.count_fails = 0
 
-        self.reset()
+        self._reset()
 
     def get(self):
         words = []
 
         while True:
             word_length = len(self.word) + 1
-            self.next_phoneme(word_length)
+            self._next_phoneme(word_length)
 
             if word_length > MAX_WORD_LENGTH:
-                self.reset()
+                self._reset()
             elif self.phoneme is None:
-                failure = self.maybe_fail()
+                failure = self._maybe_fail()
                 if failure:
                     return failure
             elif self.phoneme == 'END_WORD':
                 if self.min_length is not None and word_length < self.min_length:
-                    self.reset()
+                    self._reset()
                 else:
-                    success = self.maybe_succeed(words)
+                    success = self._maybe_succeed(words)
                     if success:
                         return success
             else:
@@ -61,17 +61,17 @@ class RandomModePhonemes(object):
                     self.must_end = True
 
                 if self.max_length is not None and word_length > self.max_length:
-                    self.reset()
+                    self._reset()
                 else:
                     self.word.append(self.phoneme)
 
-    def maybe_fail(self):
+    def _maybe_fail(self):
         self.count_fails += 1
         if self.count_fails > MAX_FAILS:
-            return self.fail()
-        self.reset()
+            return self._fail()
+        self._reset()
 
-    def maybe_succeed(self, words):
+    def _maybe_succeed(self, words):
         if self.interface == 'cli':
             self.word = array_to_string(self.word)
         selected_word = self.selector(self.word,
@@ -84,10 +84,10 @@ class RandomModePhonemes(object):
             words.append(selected_word)
             self.count_successes += 1
             if self.count_successes == self.pool:
-                return self.succeed(words)
-        self.reset()
+                return self._succeed(words)
+        self._reset()
 
-    def next_phoneme(self, word_length):
+    def _next_phoneme(self, word_length):
         position = 0 if self.ignore_position else word_length
         if position >= self.length:
             self.length = 0
@@ -101,13 +101,13 @@ class RandomModePhonemes(object):
         if self.must_end and 'END_WORD' in [x[0] for x in next_phonemes[self.phoneme]]:
             self.phoneme = 'END_WORD'
         else:
-            choose_next(next_phonemes[self.phoneme], self.test, word_length)
+            choose_next(next_phonemes[self.phoneme], self._test, word_length)
 
-    def test(self, phoneme, probability, method_args):
+    def _test(self, phoneme, probability, method_args):
         self.score = get_score(self.score, self.scoring_method, probability, method_args)
         self.phoneme = None if self.score < self.score_threshold else phoneme
 
-    def reset(self):
+    def _reset(self):
         if self.ignore_length:
             length = 0
         else:
@@ -131,7 +131,7 @@ class RandomModePhonemes(object):
                 length = None
         return length
 
-    def fail(self):
+    def _fail(self):
         message = (
             '1000000 times consecutively failed to find a word above the score '
             'threshold. Please try lowering it.'
@@ -142,7 +142,7 @@ class RandomModePhonemes(object):
         else:
             return [message]
 
-    def succeed(self, words):
+    def _succeed(self, words):
         if self.selection:
             words.sort(key=lambda x: -x[1])
             words = words[:self.selection]

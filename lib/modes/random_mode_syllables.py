@@ -33,7 +33,7 @@ class RandomModeSyllables(object):
         self.count_successes = 0
         self.count_fails = 0
 
-        self.reset()
+        self._reset()
 
     # pylint: disable=too-many-branches
     def get(self):
@@ -62,7 +62,7 @@ class RandomModeSyllables(object):
                     self.word = None
                     break
 
-                choose_next(syllable_bucket.iteritems(), self.test, current_position + 1)
+                choose_next(syllable_bucket.iteritems(), self._test, current_position + 1)
 
                 if self.syllable is None:
                     break
@@ -85,7 +85,7 @@ class RandomModeSyllables(object):
                     self.count_fails += 1
             else:
                 self.count_fails += 1
-            self.reset()
+            self._reset()
 
         if self.count_fails >= 1000:
             output = [((
@@ -100,7 +100,7 @@ class RandomModeSyllables(object):
         return output
     # pylint: enable=too-many-branches
 
-    def reset(self):
+    def _reset(self):
         stress_pattern = None
         while stress_pattern is None:
             stress_pattern = choose_next(self.stress_pattern_distributions[self.weighting])
@@ -115,7 +115,7 @@ class RandomModeSyllables(object):
         self.syllable = None
         self.score = 1.0
 
-    def test(self, syllable, probability, method_args):
+    def _test(self, syllable, probability, method_args):
         self.score = get_score(self.score, self.scoring_method, probability, method_args)
         self.syllable = None if self.score < self.score_threshold else syllable
 
