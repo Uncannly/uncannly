@@ -6,29 +6,30 @@ from data.load_data import load_words
 
 WORDS = load_words()
 
-def for_web(word, score, unstressed, exclude_real, ignore_syllables):
+def select_for_web(word, score, unstressed, exclude_real, ignore_syllables):
     web_helper = _web_phonemes if ignore_syllables else _web_syllables
     output, check = web_helper(word)
 
     existing_word = _already_in_dictionary(check, unstressed)
-    return _present_word(output, score, exclude_real, existing_word)
+    return _format_or_reject(output, score, exclude_real, existing_word)
 
 # pylint: disable=too-many-arguments
-def for_terminal(word, score, unstressed, exclude_real, ignore_syllables, suppress_immediate):
+def select_and_maybe_present_for_terminal(word, score, unstressed, exclude_real,\
+    ignore_syllables, suppress_immediate_presentation):
     if not ignore_syllables:
         word = ' '.join([' '.join(syllable) for syllable in word])
     existing_word = _already_in_dictionary(word, unstressed)
-    word_and_score = _present_word(word, score, exclude_real, existing_word)
+    word_and_score = _format_or_reject(word, score, exclude_real, existing_word)
     if not word:
         return False
     else:
         word, score = word_and_score
-        if not suppress_immediate:
+        if not suppress_immediate_presentation:
             _write_to_terminal(word, score)
         return word, score
 # pylint: enable=too-many-arguments
 
-def for_terminal_delayed_presentation(words):
+def terminal_delayed_presentation(words):
     for word, score in words:
         _write_to_terminal(word, score)
 
@@ -51,7 +52,7 @@ def _web_syllables(word):
 def _write_to_terminal(word, score):
     sys.stdout.write(word + ' [' + str(to_sig_figs(score, 6)) + ']\n')
 
-def _present_word(word, score, exclude_real, existing_word):
+def _format_or_reject(word, score, exclude_real, existing_word):
     score = to_sig_figs(score, 6)
     if existing_word:
         return False if exclude_real else ('{} ({})'.format(word, existing_word), score)

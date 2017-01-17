@@ -1,6 +1,7 @@
 import sys
 
-from lib.present import for_web, for_terminal, for_terminal_delayed_presentation
+from lib.select_and_present import select_for_web, select_and_maybe_present_for_terminal,\
+    terminal_delayed_presentation
 from lib.conversion import array_to_string
 from lib.score import get_score
 from lib.options import option_value_boolean_to_string, MAX_WORD_LENGTH, MAX_FAILS
@@ -99,16 +100,16 @@ class RandomModePhonemes(object):
         self.phoneme = None if self.score < self.score_threshold else phoneme
 
     def cli_selector(self):
-        return for_terminal(array_to_string(self.word),
-                            self.score,
-                            self.unstressed,
-                            self.exclude_real,
-                            self.ignore_syllables,
-                            self.selection)
+        return select_and_maybe_present_for_terminal(array_to_string(self.word),
+                                                     self.score,
+                                                     self.unstressed,
+                                                     self.exclude_real,
+                                                     self.ignore_syllables,
+                                                     self.selection)
 
     def api_selector(self):
-        return for_web(self.word, self.score, self.unstressed,
-                       self.exclude_real, self.ignore_syllables)
+        return select_for_web(self.word, self.score, self.unstressed,
+                              self.exclude_real, self.ignore_syllables)
 
     def reset(self):
         if self.ignore_length:
@@ -152,7 +153,7 @@ class RandomModePhonemes(object):
 
         if self.interface == 'cli':
             if self.selection:
-                for_terminal_delayed_presentation(words)
+                terminal_delayed_presentation(words)
             return True
         else:
             return words

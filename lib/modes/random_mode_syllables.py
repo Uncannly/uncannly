@@ -1,6 +1,7 @@
 from data.secondary_data_io import load
 from data.load_data import load_syllables
-from lib.present import for_web, for_terminal, for_terminal_delayed_presentation
+from lib.select_and_present import select_for_web, select_and_maybe_present_for_terminal,\
+    terminal_delayed_presentation
 from lib.score import get_score
 from lib.cumulative_distribution import choose_next
 from lib.options import option_value_boolean_to_string
@@ -69,23 +70,23 @@ class RandomModeSyllables(object):
                         self.word.append(syllable)
 
             if self.interface == 'api':
-                api_answer = for_web(self.word,
-                                     self.score,
-                                     self.unstressed,
-                                     self.exclude_real,
-                                     self.ignore_syllables)
+                api_answer = select_for_web(self.word,
+                                            self.score,
+                                            self.unstressed,
+                                            self.exclude_real,
+                                            self.ignore_syllables)
                 if api_answer:
                     output.append(api_answer)
                     self.count_successes += 1
                 else:
                     self.count_fails += 1
             elif self.interface == 'cli':
-                cli_answer = for_terminal(self.word,
-                                          self.score,
-                                          self.unstressed,
-                                          self.exclude_real,
-                                          self.ignore_syllables,
-                                          self.selection)
+                cli_answer = select_and_maybe_present_for_terminal(self.word,
+                                                                   self.score,
+                                                                   self.unstressed,
+                                                                   self.exclude_real,
+                                                                   self.ignore_syllables,
+                                                                   self.selection)
                 if cli_answer:
                     output.append(cli_answer)
                     self.count_successes += 1
@@ -101,7 +102,7 @@ class RandomModeSyllables(object):
             output.sort(key=lambda x: -x[1])
             output = output[:self.selection]
             if self.interface == 'cli':
-                for_terminal_delayed_presentation(output)
+                terminal_delayed_presentation(output)
                 return True
         return output
     # pylint: enable=too-many-branches
