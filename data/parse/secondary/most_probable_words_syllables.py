@@ -1,7 +1,5 @@
-import sys
-
 from lib.options import MAX_WORD_LENGTH, POOL_MAX, option_value_string_to_boolean
-from lib.score import get_score
+from lib.score import get_score, update_limits
 from lib.ipa import clean_end_word_pseudovowel
 from data.secondary_data_io import load
 
@@ -53,27 +51,9 @@ class MostProbableWordsSyllables(object):
                         self.stress_pattern = ['ignore_stress'] * target_length + ['end_word']
                         self.get_next_syllable([tuple(['START_WORD'])], 1.0)
 
-            if len(self.most_probable_words) < POOL_MAX:
-                self.upper_limit = self.limit
-                if self.lower_limit:
-                    self.limit -= (self.limit - self.lower_limit) / 2
-                else:
-                    self.limit /= 2
-
-                if self.limit == 0:
-                    sys.stdout.write(
-                        'With these parameters, it is not possible '
-                        'to find enough words to meet the pool max.'
-                    )
-                    good_count = True
-            elif len(self.most_probable_words) > POOL_MAX * 10:
-                self.lower_limit = self.limit
-                if self.upper_limit:
-                    self.limit += (self.upper_limit - self.limit) / 2
-                else:
-                    self.limit *= 2
-            else:
-                good_count = True
+            good_count, self.limit, self.lower_limit, self.upper_limit = \
+                update_limits(len(self.most_probable_words),
+                              self.limit, self.lower_limit, self.upper_limit)
 
         self.most_probable_words.sort(key=lambda x: -x[1])
         return self.most_probable_words[:POOL_MAX], self.limit

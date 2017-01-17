@@ -1,3 +1,7 @@
+import sys
+
+from lib.options import POOL_MAX
+
 def get_score(score, scoring_method, probability, word_length):
     if scoring_method == 'integral_product':
         score = score * probability
@@ -15,3 +19,29 @@ def get_score(score, scoring_method, probability, word_length):
         score = ((score * (word_length)) + probability) / (word_length + 1)
 
     return score
+
+def update_limits(count, limit, lower_limit, upper_limit):
+    good_count = False
+    if count < POOL_MAX:
+        upper_limit = limit
+        if lower_limit:
+            limit -= (limit - lower_limit) / 2
+        else:
+            limit /= 2
+
+        if limit == 0:
+            sys.stdout.write(
+                'With these parameters, it is not possible '
+                'to find enough words to meet the pool max.'
+            )
+            good_count = True
+    elif count > POOL_MAX * 10:
+        lower_limit = limit
+        if upper_limit:
+            limit += (upper_limit - limit) / 2
+        else:
+            limit *= 2
+    else:
+        good_count = True
+
+    return good_count, limit, lower_limit, upper_limit

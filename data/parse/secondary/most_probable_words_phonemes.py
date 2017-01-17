@@ -1,8 +1,6 @@
-import sys
-
 from data.secondary_data_io import load
 from lib.conversion import array_to_string
-from lib.score import get_score
+from lib.score import get_score, update_limits
 from lib.options import POOL_MAX, MAX_WORD_LENGTH, option_value_string_to_boolean
 
 # pylint: disable=too-many-instance-attributes
@@ -44,27 +42,9 @@ class MostProbableWordsPhonemes(object):
             # print 'total words searched: ', self.count
             # print 'total words qualified: ', len(self.most_probable_words)
 
-            if len(self.most_probable_words) < POOL_MAX:
-                self.upper_limit = self.limit
-                if self.lower_limit:
-                    self.limit -= (self.limit - self.lower_limit) / 2
-                else:
-                    self.limit /= 2
-
-                if self.limit == 0:
-                    sys.stdout.write(
-                        'With these parameters, it is not possible '
-                        'to find enough words to meet the pool max.'
-                    )
-                    good_count = True
-            elif len(self.most_probable_words) > POOL_MAX * 10:
-                self.lower_limit = self.limit
-                if self.upper_limit:
-                    self.limit += (self.upper_limit - self.limit) / 2
-                else:
-                    self.limit *= 2
-            else:
-                good_count = True
+            good_count, self.limit, self.lower_limit, self.upper_limit = \
+                update_limits(len(self.most_probable_words), self.limit,
+                              self.lower_limit, self.upper_limit)
 
         self.most_probable_words.sort(key=lambda x: -x[1])
 
