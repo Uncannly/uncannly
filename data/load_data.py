@@ -24,7 +24,10 @@ def load_scores(scoring_method,
             method_mean, method_addition, ignore_syllables
         )
 
-    return Database.fetch(sql)
+    results = Database.fetch(sql)
+    if not ignore_syllables:
+        results = [(ast.literal_eval(word), score) for (word, score) in results]
+    return results
 # plyint: enable=too-many-arguments
 
 def load_phonemes(weighting, unstressed):

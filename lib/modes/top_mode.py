@@ -1,6 +1,5 @@
 import sys
 import random
-import ast
 
 from lib.present import for_web, for_terminal, for_web_syllables
 from lib.conversion import string_to_array
@@ -42,7 +41,11 @@ class TopMode(object):
 
         words = []
         for word, score in most_probable_words:
-            length = len(string_to_array(word))
+            if self.ignore_syllables:
+                length = len(string_to_array(word))
+            else:
+                length = len(word)
+
             if score < self.score_threshold:
                 break
             elif self.min_length is not None and length < self.min_length:
@@ -70,9 +73,7 @@ def cli_select_top(words, selection, unstressed, exclude_real, ignore_syllables)
                 if i == len(words):
                     return sys.stdout.write(TOO_FEW_MESSAGE)
 
-                score = words[i][1]
-                word = words[i][0] if ignore_syllables else ast.literal_eval(words[i][0])
-
+                word, score = words[i]
                 presented = for_terminal(word, score, unstressed,
                                          exclude_real, ignore_syllables, False)
 
@@ -85,11 +86,7 @@ def cli_select_random(words, selection, unstressed, exclude_real, ignore_syllabl
         for _ in xrange(selection):
             presented = False
             while not presented:
-                word = random.choice(words)
-
-                score = word[1]
-                word = word[0] if ignore_syllables else ast.literal_eval(word[0])
-
+                word, score = random.choice(words)
                 presented = for_terminal(word, score, unstressed,
                                          exclude_real, ignore_syllables, False)
     else:
@@ -105,12 +102,10 @@ def api_select_top(words, selection, unstressed, exclude_real, ignore_syllables)
             output.append(TOO_FEW_MESSAGE)
             break
         else:
-            score = words[i][1]
+            word, score = words[i]
             if ignore_syllables:
-                word = string_to_array(words[i][0])
-                result = for_web(word, score, unstressed, exclude_real)
+                result = for_web(string_to_array(word), score, unstressed, exclude_real)
             else:
-                word = ast.literal_eval(words[i][0])
                 result = for_web_syllables(word, score, unstressed, exclude_real)
 
             i += 1
@@ -129,13 +124,13 @@ def api_select_random(words, selection, unstressed, exclude_real, ignore_syllabl
 
     while len(output) < selection:
         i = int(random.random() * len(words))
-        score = words[i][1]
+
+        word, score = words[i]
         if ignore_syllables:
-            word = string_to_array(words[i][0])
-            result = for_web(word, score, unstressed, exclude_real)
+            result = for_web(string_to_array(word), score, unstressed, exclude_real)
         else:
-            word = ast.literal_eval(words[i][0])
             result = for_web_syllables(word, score, unstressed, exclude_real)
+
         if result:
             output.append(result)
 
