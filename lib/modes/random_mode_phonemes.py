@@ -111,14 +111,14 @@ class RandomModePhonemes(object):
         if self.ignore_length:
             length = 0
         else:
-            length = self.random_length()
+            length = self._random_length()
         self.word = []
         self.phoneme = 'START_WORD'
         self.score = 1.0
         self.length = length
         self.must_end = False
 
-    def random_length(self):
+    def _random_length(self):
         # i mean, or we could slice the distributions and re-normalize.
         # that especially would make more sense once we end up implementing the
         # continuous re-evaluation style.
@@ -133,23 +133,19 @@ class RandomModePhonemes(object):
 
     def _fail(self):
         message = (
-            '1000000 times consecutively failed to find a word above the score '
+            '{} times consecutively failed to find a word above the score '
             'threshold. Please try lowering it.'
-        )
+        ).format(MAX_FAILS)
         if self.interface == "cli":
             sys.stdout.write(message + '\n')
             return True
-        else:
-            return [message]
+        return [tuple([message, None])]
 
     def _succeed(self, words):
         if self.selection:
             words.sort(key=lambda x: -x[1])
             words = words[:self.selection]
-
-        if self.interface == 'cli':
-            if self.selection:
+            if self.interface == 'cli':
                 terminal_delayed_presentation(words)
-            return True
-        else:
-            return words
+                return True
+        return words

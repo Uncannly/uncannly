@@ -1,10 +1,12 @@
+import sys
+
 from data.secondary_data_io import load
 from data.load_data import load_syllables
 from lib.select_and_present import select_for_web, select_and_maybe_present_for_terminal,\
     terminal_delayed_presentation
 from lib.score import get_score
 from lib.cumulative_distribution import choose_next
-from lib.options import option_value_boolean_to_string
+from lib.options import option_value_boolean_to_string, MAX_FAILS
 from lib.ipa import clean_end_word_pseudovowel
 
 # pylint: disable=too-few-public-methods,too-many-locals
@@ -37,7 +39,7 @@ class RandomModeSyllables(object):
 
     # pylint: disable=too-many-branches
     def get(self):
-        output = []
+        words = []
 
         while self.count_successes < self.pool and self.count_fails < 1000:
             syllable_length = len(self.stress_pattern)
@@ -79,7 +81,7 @@ class RandomModeSyllables(object):
                                        self.ignore_syllables,
                                        self.selection)
                 if result:
-                    output.append(result)
+                    words.append(result)
                     self.count_successes += 1
                 else:
                     self.count_fails += 1
@@ -88,16 +90,9 @@ class RandomModeSyllables(object):
             self._reset()
 
         if self.count_fails >= 1000:
-            output = [((
-                '1000000 times consecutively failed to find a word above the score '
-                'threshold. Please try lowering it.', 0))]
-        elif self.selection:
-            output.sort(key=lambda x: -x[1])
-            output = output[:self.selection]
-            if self.interface == 'cli':
-                terminal_delayed_presentation(output)
-                return True
-        return output
+            return self._fail()
+        else:
+            return self._succeed(words)
     # pylint: enable=too-many-branches
 
     def _reset(self):
@@ -118,5 +113,24 @@ class RandomModeSyllables(object):
     def _test(self, syllable, probability, method_args):
         self.score = get_score(self.score, self.scoring_method, probability, method_args)
         self.syllable = None if self.score < self.score_threshold else syllable
+
+    def _fail(self):
+        message = (
+            '{} times consecutively failed to find a word above the score '
+            'threshold. Please try lowering it.'
+        ).format(MAX_FAILS)
+        if self.interface == "cli":
+            sys.stdout.write(message + '\n')
+            return True
+        return [tuple([message, None])]
+
+    def _succeed(self, words):
+        if self.selection:
+            words.sort(key=lambda x: -x[1])
+            words = words[:self.selection]
+            if self.interface == 'cli':
+                terminal_delayed_presentation(words)
+                return True
+        return words
 
 # pylint: enable=too-few-public-methods,too-many-locals

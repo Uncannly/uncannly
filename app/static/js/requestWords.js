@@ -39,7 +39,7 @@ const wordRow = function(word, i) {
             </i>
             <i class="fa fa-volume-up speak-word" aria-hidden="true"></i>
             <span class="word-text" id="text-${i}">${word[0]}</span>
-            <span class="word-score">${word[1]}</span>
+            <span class="word-score">${word[1] ? word[1] : ''}</span>
         </div>
     `)
 }
