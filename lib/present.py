@@ -14,7 +14,10 @@ def for_web(word, score, unstressed, exclude_real):
 
     return _present_word(ipa_word, score, exclude_real, existing_word)
 
-def for_terminal(word, score, unstressed, exclude_real, suppress_immediate):
+# pylint: disable=too-many-arguments
+def for_terminal(word, score, unstressed, exclude_real, ignore_syllables, suppress_immediate):
+    if not ignore_syllables:
+        word = ' '.join([' '.join(syllable) for syllable in word])
     existing_word = _already_in_dictionary(word, unstressed)
     word, score = _present_word(word, score, exclude_real, existing_word)
     if not word:
@@ -23,6 +26,7 @@ def for_terminal(word, score, unstressed, exclude_real, suppress_immediate):
         if not suppress_immediate:
             sys.stdout.write(word + ' [' + str(to_sig_figs(score, 6)) + ']\n')
         return word, score
+# pylint: enable=too-many-arguments
 
 def for_web_syllables(word, score, unstressed, exclude_real):
     if word == []:
@@ -39,17 +43,6 @@ def for_web_syllables(word, score, unstressed, exclude_real):
             for_checking_word.append(phoneme)
     existing_word = _already_in_dictionary(' '.join(for_checking_word), unstressed)
     return _present_word(word_output, score, exclude_real, existing_word)
-
-def for_terminal_syllables(word, score, unstressed, exclude_real, suppress_immediate):
-    word = ' '.join([' '.join(syllable) for syllable in word])
-    existing_word = _already_in_dictionary(word, unstressed)
-    word, score = _present_word(word, score, exclude_real, existing_word)
-    if not word:
-        return False
-    else:
-        if not suppress_immediate:
-            sys.stdout.write(word + ' [' + str(to_sig_figs(score, 6)) + ']\n')
-        return word, score
 
 def for_terminal_selection(words):
     for word, score in words:

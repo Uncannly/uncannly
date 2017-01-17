@@ -102,6 +102,7 @@ class RandomModePhonemes(object):
                             self.score,
                             self.unstressed,
                             self.exclude_real,
+                            True,
                             self.selection)
 
     def api_selector(self):

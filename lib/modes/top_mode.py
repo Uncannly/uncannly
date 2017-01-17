@@ -2,7 +2,7 @@ import sys
 import random
 import ast
 
-from lib.present import for_web, for_terminal, for_web_syllables, for_terminal_syllables
+from lib.present import for_web, for_terminal, for_web_syllables
 from lib.conversion import string_to_array
 from lib.options import TOO_FEW_MESSAGE, NO_WORDS_MESSAGE, POOL_DEFAULT
 from data.load_data import load_scores
@@ -62,8 +62,6 @@ class TopMode(object):
 # pylint: enable=too-many-instance-attributes,too-few-public-methods
 
 def cli_select_top(words, selection, unstressed, exclude_real, ignore_syllables):
-    resulter = for_terminal if ignore_syllables else for_terminal_syllables
-
     if len(words) > 0:
         i = 0
         for _ in xrange(selection):
@@ -75,15 +73,14 @@ def cli_select_top(words, selection, unstressed, exclude_real, ignore_syllables)
                 score = words[i][1]
                 word = words[i][0] if ignore_syllables else ast.literal_eval(words[i][0])
 
-                presented = resulter(word, score, unstressed, exclude_real, False)
+                presented = for_terminal(word, score, unstressed,
+                                         exclude_real, ignore_syllables, False)
 
                 i += 1
     else:
         sys.stdout.write(NO_WORDS_MESSAGE)
 
 def cli_select_random(words, selection, unstressed, exclude_real, ignore_syllables):
-    resulter = for_terminal if ignore_syllables else for_terminal_syllables
-
     if len(words) > 0:
         for _ in xrange(selection):
             presented = False
@@ -93,7 +90,8 @@ def cli_select_random(words, selection, unstressed, exclude_real, ignore_syllabl
                 score = word[1]
                 word = word[0] if ignore_syllables else ast.literal_eval(word[0])
 
-                presented = resulter(word, score, unstressed, exclude_real, False)
+                presented = for_terminal(word, score, unstressed,
+                                         exclude_real, ignore_syllables, False)
     else:
         sys.stdout.write(NO_WORDS_MESSAGE)
 

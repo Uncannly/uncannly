@@ -1,6 +1,6 @@
 from data.secondary_data_io import load
 from data.load_data import load_syllables
-from lib.present import for_web_syllables, for_terminal_syllables, for_terminal_selection
+from lib.present import for_web_syllables, for_terminal, for_terminal_selection
 from lib.score import get_score
 from lib.cumulative_distribution import choose_next
 from lib.options import option_value_boolean_to_string
@@ -78,11 +78,12 @@ class RandomModeSyllables(object):
                 else:
                     self.count_fails += 1
             elif self.interface == 'cli':
-                cli_answer = for_terminal_syllables(self.word,
-                                                    self.score,
-                                                    self.unstressed,
-                                                    self.exclude_real,
-                                                    self.selection)
+                cli_answer = for_terminal(self.word,
+                                          self.score,
+                                          self.unstressed,
+                                          self.exclude_real,
+                                          False,
+                                          self.selection)
                 if cli_answer:
                     output.append(cli_answer)
                     self.count_successes += 1
