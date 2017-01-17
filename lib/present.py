@@ -24,7 +24,7 @@ def for_terminal(word, score, unstressed, exclude_real, ignore_syllables, suppre
         return False
     else:
         if not suppress_immediate:
-            sys.stdout.write(word + ' [' + str(to_sig_figs(score, 6)) + ']\n')
+            _write_to_terminal(word, score)
         return word, score
 # pylint: enable=too-many-arguments
 
@@ -46,7 +46,10 @@ def for_web_syllables(word, score, unstressed, exclude_real):
 
 def for_terminal_selection(words):
     for word, score in words:
-        sys.stdout.write(word + ' [' + str(to_sig_figs(score, 6)) + ']\n')
+        _write_to_terminal(word, score)
+
+def _write_to_terminal(word, score):
+    sys.stdout.write(word + ' [' + str(to_sig_figs(score, 6)) + ']\n')
 
 def _present_word(word, score, exclude_real, existing_word):
     score = to_sig_figs(score, 6)
