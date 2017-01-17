@@ -8,7 +8,7 @@ from lib.options import TOO_FEW_MESSAGE, NO_WORDS_MESSAGE, POOL_DEFAULT
 from data.load_data import load_scores
 
 # pylint: disable=too-many-instance-attributes,too-few-public-methods
-class TopModePhonemes(object):
+class TopMode(object):
     def __init__(self, options):
         self.interface = options.get('interface', 'api')
         self.pool = options.get('pool', POOL_DEFAULT)
