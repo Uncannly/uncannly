@@ -6,7 +6,7 @@ from data.load_data import load_words
 
 WORDS = load_words()
 
-def for_web(word, score, unstressed, ignore_syllables, exclude_real):
+def for_web(word, score, unstressed, exclude_real, ignore_syllables):
     web_helper = _web_phonemes if ignore_syllables else _web_syllables
     output, check = web_helper(word)
 
@@ -27,7 +27,7 @@ def for_terminal(word, score, unstressed, exclude_real, ignore_syllables, suppre
         return word, score
 # pylint: enable=too-many-arguments
 
-def for_terminal_selection(words):
+def for_terminal_delayed_presentation(words):
     for word, score in words:
         _write_to_terminal(word, score)
 

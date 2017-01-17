@@ -105,7 +105,7 @@ def api_select_top(words, selection, unstressed, exclude_real, ignore_syllables)
             word, score = words[i]
             if ignore_syllables:
                 word = string_to_array(word)
-            result = for_web(word, score, unstressed, ignore_syllables, exclude_real)
+            result = for_web(word, score, unstressed, exclude_real, ignore_syllables)
 
             i += 1
 
@@ -127,7 +127,7 @@ def api_select_random(words, selection, unstressed, exclude_real, ignore_syllabl
         word, score = words[i]
         if ignore_syllables:
             word = string_to_array(word)
-        result = for_web(word, score, unstressed, ignore_syllables, exclude_real)
+        result = for_web(word, score, unstressed, exclude_real, ignore_syllables)
 
         if result:
             output.append(result)
