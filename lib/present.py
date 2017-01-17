@@ -6,8 +6,7 @@ from data.load_data import load_words
 
 WORDS = load_words()
 
-def for_web(word_and_score, unstressed, exclude_real):
-    word, score = word_and_score
+def for_web(word, score, unstressed, exclude_real):
     ipa_word = ipa(word)
 
     stringified_word = array_to_string(word)
@@ -15,19 +14,17 @@ def for_web(word_and_score, unstressed, exclude_real):
 
     return _present_word(ipa_word, score, exclude_real, existing_word)
 
-def for_terminal(word_and_score, unstressed, exclude_real, suppress_immediate):
-    word, score = word_and_score
+def for_terminal(word, score, unstressed, exclude_real, suppress_immediate):
     existing_word = _already_in_dictionary(word, unstressed)
-    word_and_score = _present_word(word, score, exclude_real, existing_word)
+    word, score = _present_word(word, score, exclude_real, existing_word)
     if not word:
         return False
     else:
         if not suppress_immediate:
             sys.stdout.write(word + ' [' + str(to_sig_figs(score, 6)) + ']\n')
-        return word_and_score
+        return word, score
 
-def for_web_syllables(word_and_score, unstressed, exclude_real):
-    word, score = word_and_score
+def for_web_syllables(word, score, unstressed, exclude_real):
     if word == []:
         return None
     word_output = ''
@@ -43,21 +40,19 @@ def for_web_syllables(word_and_score, unstressed, exclude_real):
     existing_word = _already_in_dictionary(' '.join(for_checking_word), unstressed)
     return _present_word(word_output, score, exclude_real, existing_word)
 
-def for_terminal_syllables(word_and_score, unstressed, exclude_real, suppress_immediate):
-    word, score = word_and_score
+def for_terminal_syllables(word, score, unstressed, exclude_real, suppress_immediate):
     word = ' '.join([' '.join(syllable) for syllable in word])
     existing_word = _already_in_dictionary(word, unstressed)
-    word_and_score = _present_word(word, score, exclude_real, existing_word)
+    word, score = _present_word(word, score, exclude_real, existing_word)
     if not word:
         return False
     else:
         if not suppress_immediate:
             sys.stdout.write(word + ' [' + str(to_sig_figs(score, 6)) + ']\n')
-        return word_and_score
+        return word, score
 
 def for_terminal_selection(words):
-    for word_and_score in words:
-        word, score = word_and_score
+    for word, score in words:
         sys.stdout.write(word + ' [' + str(to_sig_figs(score, 6)) + ']\n')
 
 def _present_word(word, score, exclude_real, existing_word):

@@ -68,7 +68,8 @@ class RandomModeSyllables(object):
                         self.word.append(syllable)
 
             if self.interface == 'api':
-                api_answer = for_web_syllables((self.word, self.score),
+                api_answer = for_web_syllables(self.word,
+                                               self.score,
                                                self.unstressed,
                                                self.exclude_real)
                 if api_answer:
@@ -77,7 +78,8 @@ class RandomModeSyllables(object):
                 else:
                     self.count_fails += 1
             elif self.interface == 'cli':
-                cli_answer = for_terminal_syllables((self.word, self.score),
+                cli_answer = for_terminal_syllables(self.word,
+                                                    self.score,
                                                     self.unstressed,
                                                     self.exclude_real,
                                                     self.selection)

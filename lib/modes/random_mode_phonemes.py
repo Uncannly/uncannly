@@ -98,16 +98,14 @@ class RandomModePhonemes(object):
         self.phoneme = None if self.score < self.score_threshold else phoneme
 
     def cli_selector(self):
-        stringified_word = array_to_string(self.word)
-        return for_terminal((stringified_word, self.score),
+        return for_terminal(array_to_string(self.word),
+                            self.score,
                             self.unstressed,
                             self.exclude_real,
                             self.selection)
 
     def api_selector(self):
-        return for_web((self.word, self.score),
-                       self.unstressed,
-                       self.exclude_real)
+        return for_web(self.word, self.score, self.unstressed, self.exclude_real)
 
     def reset(self):
         if self.ignore_length:

@@ -72,10 +72,10 @@ def cli_select_top(words, selection, unstressed, exclude_real, ignore_syllables)
                 if i == len(words):
                     return sys.stdout.write(TOO_FEW_MESSAGE)
 
-                if not ignore_syllables:
-                    words[i] = (ast.literal_eval(words[i][0]), words[i][1])
+                score = words[i][1]
+                word = words[i][0] if ignore_syllables else ast.literal_eval(words[i][0])
 
-                presented = resulter(words[i], unstressed, exclude_real, False)
+                presented = resulter(word, score, unstressed, exclude_real, False)
 
                 i += 1
     else:
@@ -89,10 +89,11 @@ def cli_select_random(words, selection, unstressed, exclude_real, ignore_syllabl
             presented = False
             while not presented:
                 word = random.choice(words)
-                if not ignore_syllables:
-                    word = (ast.literal_eval(word[0]), word[1])
 
-                presented = resulter(word, unstressed, exclude_real, False)
+                score = word[1]
+                word = word[0] if ignore_syllables else ast.literal_eval(word[0])
+
+                presented = resulter(word, score, unstressed, exclude_real, False)
     else:
         sys.stdout.write(NO_WORDS_MESSAGE)
 
@@ -106,12 +107,13 @@ def api_select_top(words, selection, unstressed, exclude_real, ignore_syllables)
             output.append(TOO_FEW_MESSAGE)
             break
         else:
+            score = words[i][1]
             if ignore_syllables:
-                arrayified_word = (string_to_array(words[i][0]), words[i][1])
-                result = for_web(arrayified_word, unstressed, exclude_real)
+                word = string_to_array(words[i][0])
+                result = for_web(word, score, unstressed, exclude_real)
             else:
-                care_about = (ast.literal_eval(words[i][0]), words[i][1])
-                result = for_web_syllables(care_about, unstressed, exclude_real)
+                word = ast.literal_eval(words[i][0])
+                result = for_web_syllables(word, score, unstressed, exclude_real)
 
             i += 1
 
@@ -129,12 +131,13 @@ def api_select_random(words, selection, unstressed, exclude_real, ignore_syllabl
 
     while len(output) < selection:
         i = int(random.random() * len(words))
+        score = words[i][1]
         if ignore_syllables:
-            arrayified_word = (string_to_array(words[i][0]), words[i][1])
-            result = for_web(arrayified_word, unstressed, exclude_real)
+            word = string_to_array(words[i][0])
+            result = for_web(word, score, unstressed, exclude_real)
         else:
-            care_about = (ast.literal_eval(words[i][0]), words[i][1])
-            result = for_web_syllables(care_about, unstressed, exclude_real)
+            word = ast.literal_eval(words[i][0])
+            result = for_web_syllables(word, score, unstressed, exclude_real)
         if result:
             output.append(result)
 
