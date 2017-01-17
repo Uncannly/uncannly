@@ -18,10 +18,11 @@ def for_terminal(word, score, unstressed, exclude_real, ignore_syllables, suppre
     if not ignore_syllables:
         word = ' '.join([' '.join(syllable) for syllable in word])
     existing_word = _already_in_dictionary(word, unstressed)
-    word, score = _present_word(word, score, exclude_real, existing_word)
+    word_and_score = _present_word(word, score, exclude_real, existing_word)
     if not word:
         return False
     else:
+        word, score = word_and_score
         if not suppress_immediate:
             _write_to_terminal(word, score)
         return word, score
