@@ -74,10 +74,9 @@ def cli_select_top(words, selection, unstressed, exclude_real, ignore_syllables)
                     return sys.stdout.write(TOO_FEW_MESSAGE)
 
                 word, score = words[i]
-                presented = select_and_maybe_present_for_terminal(word, score, unstressed,
-                                                                  exclude_real,
-                                                                  ignore_syllables,
-                                                                  suppress_immediate_presentation=False)
+                presented = select_and_maybe_present_for_terminal(
+                    word, score, unstressed, exclude_real, ignore_syllables,
+                    suppress_immediate_presentation=False)
 
                 i += 1
     else:
@@ -89,10 +88,9 @@ def cli_select_random(words, selection, unstressed, exclude_real, ignore_syllabl
             presented = False
             while not presented:
                 word, score = random.choice(words)
-                presented = select_and_maybe_present_for_terminal(word, score, unstressed,
-                                                                  exclude_real,
-                                                                  ignore_syllables,
-                                                                  suppress_immediate_presentation=False)
+                presented = select_and_maybe_present_for_terminal(
+                    word, score, unstressed, exclude_real, ignore_syllables,
+                    suppress_immediate_presentation=False)
     else:
         sys.stdout.write(NO_WORDS_MESSAGE)
 

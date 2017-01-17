@@ -13,7 +13,7 @@ def select_for_web(word, score, unstressed, exclude_real, ignore_syllables, _=No
     existing_word = _already_in_dictionary(check, unstressed)
     return _format_or_reject(output, score, exclude_real, existing_word)
 
-# pylint: disable=too-many-arguments
+# pylint: disable=too-many-arguments,invalid-name
 def select_and_maybe_present_for_terminal(word, score, unstressed, exclude_real,\
     ignore_syllables, suppress_immediate_presentation):
     if not ignore_syllables:
@@ -27,7 +27,7 @@ def select_and_maybe_present_for_terminal(word, score, unstressed, exclude_real,
         if not suppress_immediate_presentation:
             _write_to_terminal(word, score)
         return word, score
-# pylint: enable=too-many-arguments
+# pylint: enable=too-many-arguments,invalid-name
 
 def terminal_delayed_presentation(words):
     for word, score in words:
