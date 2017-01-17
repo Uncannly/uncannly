@@ -1,3 +1,5 @@
+import sys
+
 from lib.options import MAX_WORD_LENGTH, POOL_MAX, option_value_string_to_boolean
 from lib.score import get_score
 from lib.ipa import clean_end_word_pseudovowel
@@ -59,7 +61,7 @@ class MostProbableWordsSyllables(object):
                     self.limit /= 2
 
                 if self.limit == 0:
-                    print (
+                    sys.stdout.write(
                         'With these parameters, it is not possible '
                         'to find enough words to meet the pool max.'
                     )

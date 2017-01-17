@@ -1,3 +1,5 @@
+import sys
+
 from data.secondary_data_io import load
 from lib.conversion import array_to_string
 from lib.score import get_score
@@ -50,7 +52,7 @@ class MostProbableWordsPhonemes(object):
                     self.limit /= 2
 
                 if self.limit == 0:
-                    print (
+                    sys.stdout.write(
                         'With these parameters, it is not possible '
                         'to find enough words to meet the pool max.'
                     )
