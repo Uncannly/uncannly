@@ -1,7 +1,7 @@
 import sys
 import random
 
-from lib.present import for_web, for_terminal, for_web_syllables
+from lib.present import for_web, for_terminal
 from lib.conversion import string_to_array
 from lib.options import TOO_FEW_MESSAGE, NO_WORDS_MESSAGE, POOL_DEFAULT
 from data.load_data import load_scores
@@ -104,9 +104,8 @@ def api_select_top(words, selection, unstressed, exclude_real, ignore_syllables)
         else:
             word, score = words[i]
             if ignore_syllables:
-                result = for_web(string_to_array(word), score, unstressed, exclude_real)
-            else:
-                result = for_web_syllables(word, score, unstressed, exclude_real)
+                word = string_to_array(word)
+            result = for_web(word, score, unstressed, ignore_syllables, exclude_real)
 
             i += 1
 
@@ -127,9 +126,8 @@ def api_select_random(words, selection, unstressed, exclude_real, ignore_syllabl
 
         word, score = words[i]
         if ignore_syllables:
-            result = for_web(string_to_array(word), score, unstressed, exclude_real)
-        else:
-            result = for_web_syllables(word, score, unstressed, exclude_real)
+            word = string_to_array(word)
+        result = for_web(word, score, unstressed, ignore_syllables, exclude_real)
 
         if result:
             output.append(result)

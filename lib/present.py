@@ -6,13 +6,12 @@ from data.load_data import load_words
 
 WORDS = load_words()
 
-def for_web(word, score, unstressed, exclude_real):
-    ipa_word = ipa(word)
+def for_web(word, score, unstressed, ignore_syllables, exclude_real):
+    web_helper = _web_phonemes if ignore_syllables else _web_syllables
+    output, check = web_helper(word)
 
-    stringified_word = array_to_string(word)
-    existing_word = _already_in_dictionary(stringified_word, unstressed)
-
-    return _present_word(ipa_word, score, exclude_real, existing_word)
+    existing_word = _already_in_dictionary(check, unstressed)
+    return _present_word(output, score, exclude_real, existing_word)
 
 # pylint: disable=too-many-arguments
 def for_terminal(word, score, unstressed, exclude_real, ignore_syllables, suppress_immediate):
@@ -28,9 +27,14 @@ def for_terminal(word, score, unstressed, exclude_real, ignore_syllables, suppre
         return word, score
 # pylint: enable=too-many-arguments
 
-def for_web_syllables(word, score, unstressed, exclude_real):
-    if word == []:
-        return None
+def for_terminal_selection(words):
+    for word, score in words:
+        _write_to_terminal(word, score)
+
+def _web_phonemes(word):
+    return ipa(word), array_to_string(word)
+
+def _web_syllables(word):
     word_output = ''
     for_checking_word = []
     for syllable in word:
@@ -41,12 +45,7 @@ def for_web_syllables(word, score, unstressed, exclude_real):
         for phoneme in syllable:
             word_output += ipa([phoneme])
             for_checking_word.append(phoneme)
-    existing_word = _already_in_dictionary(' '.join(for_checking_word), unstressed)
-    return _present_word(word_output, score, exclude_real, existing_word)
-
-def for_terminal_selection(words):
-    for word, score in words:
-        _write_to_terminal(word, score)
+    return word_output, array_to_string(for_checking_word)
 
 def _write_to_terminal(word, score):
     sys.stdout.write(word + ' [' + str(to_sig_figs(score, 6)) + ']\n')

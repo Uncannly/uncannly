@@ -106,7 +106,7 @@ class RandomModePhonemes(object):
                             self.selection)
 
     def api_selector(self):
-        return for_web(self.word, self.score, self.unstressed, self.exclude_real)
+        return for_web(self.word, self.score, self.unstressed, True, self.exclude_real)
 
     def reset(self):
         if self.ignore_length:
