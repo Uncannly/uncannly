@@ -28,6 +28,8 @@ class RandomModeSyllables(object):
         self.syllable_chains = load_syllables(self.weighting, self.unstressed)
         self.stress_pattern_distributions = load('stress_pattern_distributions')
 
+        self.selector = select_for_web if self.interface == 'api' else \
+            select_and_maybe_present_for_terminal
         self.count_successes = 0
         self.count_fails = 0
 
@@ -69,29 +71,17 @@ class RandomModeSyllables(object):
                     if syllable:
                         self.word.append(syllable)
 
-            if self.interface == 'api':
-                api_answer = select_for_web(self.word,
-                                            self.score,
-                                            self.unstressed,
-                                            self.exclude_real,
-                                            self.ignore_syllables)
-                if api_answer:
-                    output.append(api_answer)
-                    self.count_successes += 1
-                else:
-                    self.count_fails += 1
-            elif self.interface == 'cli':
-                cli_answer = select_and_maybe_present_for_terminal(self.word,
-                                                                   self.score,
-                                                                   self.unstressed,
-                                                                   self.exclude_real,
-                                                                   self.ignore_syllables,
-                                                                   self.selection)
-                if cli_answer:
-                    output.append(cli_answer)
-                    self.count_successes += 1
-                else:
-                    self.count_fails += 1
+            result = self.selector(self.word,
+                                   self.score,
+                                   self.unstressed,
+                                   self.exclude_real,
+                                   self.ignore_syllables,
+                                   self.selection)
+            if result:
+                output.append(result)
+                self.count_successes += 1
+            else:
+                self.count_fails += 1
             self.reset()
 
         if self.count_fails >= 1000:

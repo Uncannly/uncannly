@@ -6,7 +6,7 @@ from data.load_data import load_words
 
 WORDS = load_words()
 
-def select_for_web(word, score, unstressed, exclude_real, ignore_syllables):
+def select_for_web(word, score, unstressed, exclude_real, ignore_syllables, _=None):
     web_helper = _web_phonemes if ignore_syllables else _web_syllables
     output, check = web_helper(word)
 
