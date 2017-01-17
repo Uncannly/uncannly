@@ -29,7 +29,8 @@ class RandomModePhonemes(object):
         self.next_phonemes_options = load_phonemes(weighting, self.unstressed)
         self.word_length_distributions = load('word_length_distribution_{}'.format(weighting))
 
-        self.selector = self.api_selector if self.interface == 'api' else self.cli_selector
+        self.selector = select_for_web if self.interface == 'api' else \
+            select_and_maybe_present_for_terminal
         self.count_successes = 0
         self.count_fails = 0
 
@@ -71,7 +72,14 @@ class RandomModePhonemes(object):
         self.reset()
 
     def maybe_succeed(self, words):
-        selected_word = self.selector()
+        if self.interface == 'cli':
+            self.word = array_to_string(self.word)
+        selected_word = self.selector(self.word,
+                                      self.score,
+                                      self.unstressed,
+                                      self.exclude_real,
+                                      self.ignore_syllables,
+                                      self.selection)
         if selected_word:
             words.append(selected_word)
             self.count_successes += 1
@@ -98,18 +106,6 @@ class RandomModePhonemes(object):
     def test(self, phoneme, probability, method_args):
         self.score = get_score(self.score, self.scoring_method, probability, method_args)
         self.phoneme = None if self.score < self.score_threshold else phoneme
-
-    def cli_selector(self):
-        return select_and_maybe_present_for_terminal(array_to_string(self.word),
-                                                     self.score,
-                                                     self.unstressed,
-                                                     self.exclude_real,
-                                                     self.ignore_syllables,
-                                                     self.selection)
-
-    def api_selector(self):
-        return select_for_web(self.word, self.score, self.unstressed,
-                              self.exclude_real, self.ignore_syllables)
 
     def reset(self):
         if self.ignore_length:

@@ -59,7 +59,7 @@ class RandomModeSyllables(object):
                     # exists in the first stress level, may not happen to exist
                     # for the transition from that stress level to the next one
                     # in the given stressing pattern
-                    self.word = []
+                    self.word = None
                     break
 
                 choose_next(syllable_bucket.iteritems(), self.test, current_position + 1)
@@ -71,15 +71,18 @@ class RandomModeSyllables(object):
                     if syllable:
                         self.word.append(syllable)
 
-            result = self.selector(self.word,
-                                   self.score,
-                                   self.unstressed,
-                                   self.exclude_real,
-                                   self.ignore_syllables,
-                                   self.selection)
-            if result:
-                output.append(result)
-                self.count_successes += 1
+            if self.word:
+                result = self.selector(self.word,
+                                       self.score,
+                                       self.unstressed,
+                                       self.exclude_real,
+                                       self.ignore_syllables,
+                                       self.selection)
+                if result:
+                    output.append(result)
+                    self.count_successes += 1
+                else:
+                    self.count_fails += 1
             else:
                 self.count_fails += 1
             self.reset()

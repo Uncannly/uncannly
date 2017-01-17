@@ -68,7 +68,7 @@ def cli_select_top(words, selection, unstressed, exclude_real, ignore_syllables)
     if len(words) > 0:
         i = 0
         for _ in xrange(selection):
-            presented = False
+            presented = None
             while not presented:
                 if i == len(words):
                     return sys.stdout.write(TOO_FEW_MESSAGE)
@@ -85,7 +85,7 @@ def cli_select_top(words, selection, unstressed, exclude_real, ignore_syllables)
 def cli_select_random(words, selection, unstressed, exclude_real, ignore_syllables):
     if len(words) > 0:
         for _ in xrange(selection):
-            presented = False
+            presented = None
             while not presented:
                 word, score = random.choice(words)
                 presented = select_and_maybe_present_for_terminal(

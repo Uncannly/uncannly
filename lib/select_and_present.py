@@ -20,8 +20,8 @@ def select_and_maybe_present_for_terminal(word, score, unstressed, exclude_real,
         word = ' '.join([' '.join(syllable) for syllable in word])
     existing_word = _already_in_dictionary(word, unstressed)
     word_and_score = _format_or_reject(word, score, exclude_real, existing_word)
-    if not word:
-        return False
+    if word_and_score is None:
+        return None
     else:
         word, score = word_and_score
         if not suppress_immediate_presentation:
@@ -55,7 +55,7 @@ def _write_to_terminal(word, score):
 def _format_or_reject(word, score, exclude_real, existing_word):
     score = to_sig_figs(score, 6)
     if existing_word:
-        return False if exclude_real else ('{} ({})'.format(word, existing_word), score)
+        return None if exclude_real else ('{} ({})'.format(word, existing_word), score)
     else:
         return word, score
 
