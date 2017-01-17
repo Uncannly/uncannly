@@ -1,8 +1,6 @@
-import sys
-
 from data.secondary_data_io import load
 from data.load_data import load_syllables
-from lib.present import for_web_syllables, for_terminal_syllables
+from lib.present import for_web_syllables, for_terminal_syllables, for_terminal_selection
 from lib.score import get_score
 from lib.cumulative_distribution import choose_next
 from lib.options import option_value_boolean_to_string
@@ -99,8 +97,7 @@ class RandomModeSyllables(object):
             output.sort(key=lambda x: -x[1])
             output = output[:self.selection]
             if self.interface == 'cli':
-                for word, score in output:
-                    sys.stdout.write(word + ' [' + str(score) + ']\n')
+                for_terminal_selection(output)
                 return True
         return output
     # pylint: enable=too-many-branches

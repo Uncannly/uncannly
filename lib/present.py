@@ -1,7 +1,7 @@
 import sys
 
 from lib.ipa import ipa, destress, stress_level, stress_symbol
-from lib.conversion import array_to_string
+from lib.conversion import array_to_string, to_sig_figs
 from data.load_data import load_words
 
 WORDS = load_words()
@@ -23,7 +23,7 @@ def for_terminal(word_and_score, unstressed, exclude_real, suppress_immediate):
         return False
     else:
         if not suppress_immediate:
-            sys.stdout.write(word + ' [' + str(score) + ']\n')
+            sys.stdout.write(word + ' [' + str(to_sig_figs(score, 6)) + ']\n')
         return word_and_score
 
 def for_web_syllables(word_and_score, unstressed, exclude_real):
@@ -52,10 +52,16 @@ def for_terminal_syllables(word_and_score, unstressed, exclude_real, suppress_im
         return False
     else:
         if not suppress_immediate:
-            sys.stdout.write(word + ' [' + str(score) + ']\n')
+            sys.stdout.write(word + ' [' + str(to_sig_figs(score, 6)) + ']\n')
         return word_and_score
 
+def for_terminal_selection(words):
+    for word_and_score in words:
+        word, score = word_and_score
+        sys.stdout.write(word + ' [' + str(to_sig_figs(score, 6)) + ']\n')
+
 def _present_word(word, score, exclude_real, existing_word):
+    score = to_sig_figs(score, 6)
     if existing_word:
         return False if exclude_real else ('{} ({})'.format(word, existing_word), score)
     else:

@@ -1,7 +1,7 @@
 import sys
 
-from lib.present import for_web, for_terminal
-from lib.conversion import array_to_string, to_sig_figs
+from lib.present import for_web, for_terminal, for_terminal_selection
+from lib.conversion import array_to_string
 from lib.score import get_score
 from lib.options import option_value_boolean_to_string, MAX_WORD_LENGTH, MAX_FAILS
 from lib.cumulative_distribution import choose_next
@@ -71,7 +71,7 @@ class RandomModePhonemes(object):
     def maybe_succeed(self, words):
         selected_word = self.selector()
         if selected_word:
-            words.append((selected_word, self.score))
+            words.append(selected_word)
             self.count_successes += 1
             if self.count_successes == self.pool:
                 return self.succeed(words)
@@ -99,13 +99,13 @@ class RandomModePhonemes(object):
 
     def cli_selector(self):
         stringified_word = array_to_string(self.word)
-        return for_terminal((stringified_word, to_sig_figs(self.score, 6)),
+        return for_terminal((stringified_word, self.score),
                             self.unstressed,
                             self.exclude_real,
                             self.selection)
 
     def api_selector(self):
-        return for_web((self.word, to_sig_figs(self.score, 6)),
+        return for_web((self.word, self.score),
                        self.unstressed,
                        self.exclude_real)
 
@@ -151,9 +151,7 @@ class RandomModePhonemes(object):
 
         if self.interface == 'cli':
             if self.selection:
-                for word_and_score, _ in words:
-                    word, score = word_and_score
-                    sys.stdout.write(word + ' [' + str(score) + ']\n')
+                for_terminal_selection(words)
             return True
         else:
-            return [x[0] for x in words]
+            return words
