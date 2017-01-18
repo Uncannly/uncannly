@@ -34,13 +34,12 @@ class RandomModeSyllables(object):
             select_and_maybe_present_for_terminal
         self.count_successes = 0
         self.count_fails = 0
+        self.words = []
 
         self._reset()
 
     # pylint: disable=too-many-branches
     def get(self):
-        words = []
-
         while True:
             word_length = len(self.stress_pattern)
             length_bucket = 0 if self.ignore_length else word_length - 2
@@ -71,7 +70,7 @@ class RandomModeSyllables(object):
                         self.word.append(syllable)
 
             if self.word:
-                success = self._maybe_succeed(words)
+                success = self._maybe_succeed()
                 if success:
                     return success
             else:
@@ -87,7 +86,7 @@ class RandomModeSyllables(object):
             return self._fail()
         self._reset()
 
-    def _maybe_succeed(self, words):
+    def _maybe_succeed(self):
         selected_word = self.selector(self.word,
                                       self.score,
                                       self.unstressed,
@@ -95,10 +94,10 @@ class RandomModeSyllables(object):
                                       self.ignore_syllables,
                                       self.selection)
         if selected_word:
-            words.append(selected_word)
+            self.words.append(selected_word)
             self.count_successes += 1
             if self.count_successes == self.pool:
-                return self._succeed(words)
+                return self._succeed()
         self._reset()
 
     def _reset(self):
@@ -130,12 +129,12 @@ class RandomModeSyllables(object):
             return True
         return [tuple([message, None])]
 
-    def _succeed(self, words):
+    def _succeed(self):
         if self.selection:
-            words.sort(key=lambda x: -x[1])
-            words = words[:self.selection]
+            self.words.sort(key=lambda x: -x[1])
+            self.words = self.words[:self.selection]
             if self.interface == 'cli':
-                terminal_delayed_presentation(words)
+                terminal_delayed_presentation(self.words)
                 return True
-        return words
+        return self.words
 # pylint: enable=too-few-public-methods,too-many-locals

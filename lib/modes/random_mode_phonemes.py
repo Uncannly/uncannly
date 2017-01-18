@@ -34,13 +34,12 @@ class RandomModePhonemes(object):
             select_and_maybe_present_for_terminal
         self.count_successes = 0
         self.count_fails = 0
+        self.words = []
 
         self._reset()
 
 
     def get(self):
-        words = []
-
         while True:
             word_length = len(self.word) + 1
             self._next_phoneme(word_length)
@@ -55,7 +54,7 @@ class RandomModePhonemes(object):
                 if self.min_length is not None and word_length < self.min_length:
                     self._reset()
                 else:
-                    success = self._maybe_succeed(words)
+                    success = self._maybe_succeed()
                     if success:
                         return success
             else:
@@ -73,7 +72,7 @@ class RandomModePhonemes(object):
             return self._fail()
         self._reset()
 
-    def _maybe_succeed(self, words):
+    def _maybe_succeed(self):
         if self.interface == 'cli':
             self.word = array_to_string(self.word)
         selected_word = self.selector(self.word,
@@ -83,10 +82,10 @@ class RandomModePhonemes(object):
                                       self.ignore_syllables,
                                       self.selection)
         if selected_word:
-            words.append(selected_word)
+            self.words.append(selected_word)
             self.count_successes += 1
             if self.count_successes == self.pool:
-                return self._succeed(words)
+                return self._succeed()
         self._reset()
 
     def _next_phoneme(self, word_length):
@@ -143,11 +142,11 @@ class RandomModePhonemes(object):
             return True
         return [tuple([message, None])]
 
-    def _succeed(self, words):
+    def _succeed(self):
         if self.selection:
-            words.sort(key=lambda x: -x[1])
-            words = words[:self.selection]
+            self.words.sort(key=lambda x: -x[1])
+            self.words = self.words[:self.selection]
             if self.interface == 'cli':
-                terminal_delayed_presentation(words)
+                terminal_delayed_presentation(self.words)
                 return True
-        return words
+        return self.words
