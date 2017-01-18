@@ -41,11 +41,11 @@ class RandomModeSyllables(object):
     def get(self):
         words = []
 
-        while self.count_successes < self.pool and self.count_fails < 1000:
-            syllable_length = len(self.stress_pattern)
-            length_bucket = 0 if self.ignore_length else syllable_length - 2
+        while True:
+            word_length = len(self.stress_pattern)
+            length_bucket = 0 if self.ignore_length else word_length - 2
 
-            for current_position in range(0, syllable_length - 1):
+            for current_position in range(0, word_length - 1):
                 position_bucket = 0 if self.ignore_position else current_position + 1
                 chosen_bucket = self.syllable_chains[length_bucket]\
                    [position_bucket][self.stress_pattern[current_position]]\
@@ -71,26 +71,35 @@ class RandomModeSyllables(object):
                         self.word.append(syllable)
 
             if self.word:
-                result = self.selector(self.word,
-                                       self.score,
-                                       self.unstressed,
-                                       self.exclude_real,
-                                       self.ignore_syllables,
-                                       self.selection)
-                if result:
-                    words.append(result)
-                    self.count_successes += 1
-                else:
-                    self.count_fails += 1
+                success = self._maybe_succeed(words)
+                if success:
+                    return success
             else:
-                self.count_fails += 1
+                failure = self._maybe_fail()
+                if failure:
+                    return failure
             self._reset()
-
-        if self.count_fails >= 1000:
-            return self._fail()
-        else:
-            return self._succeed(words)
     # pylint: enable=too-many-branches
+
+    def _maybe_fail(self):
+        self.count_fails += 1
+        if self.count_fails > MAX_FAILS:
+            return self._fail()
+        self._reset()
+
+    def _maybe_succeed(self, words):
+        selected_word = self.selector(self.word,
+                                      self.score,
+                                      self.unstressed,
+                                      self.exclude_real,
+                                      self.ignore_syllables,
+                                      self.selection)
+        if selected_word:
+            words.append(selected_word)
+            self.count_successes += 1
+            if self.count_successes == self.pool:
+                return self._succeed(words)
+        self._reset()
 
     def _reset(self):
         stress_pattern = None
@@ -129,5 +138,4 @@ class RandomModeSyllables(object):
                 terminal_delayed_presentation(words)
                 return True
         return words
-
 # pylint: enable=too-few-public-methods,too-many-locals
