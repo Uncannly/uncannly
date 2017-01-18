@@ -1,6 +1,5 @@
 from lib.modes.top_mode import TopMode
-from lib.modes.random_mode_phonemes import RandomModePhonemes
-from lib.modes.random_mode_syllables import RandomModeSyllables
+from lib.modes.random_mode import RandomMode
 from lib.conversion import kebab_to_snake
 from lib.options import SCORING_METHODS, POOL_DEFAULT
 
@@ -38,8 +37,5 @@ def get_by_mode(mode, interface, args):
     get_args['min_length'] = int(args['min_length']) if args['min_length'] else None
     get_args['max_length'] = int(args['max_length']) if args['max_length'] else None
 
-    if args['ignore_syllables'] or args['ignore_syllables'] == '':
-        getter = TopMode if mode == 'top' else RandomModePhonemes
-    else:
-        getter = TopMode if mode == 'top' else RandomModeSyllables
+    getter = TopMode if mode == 'top' else RandomMode
     return getter(get_args).get()

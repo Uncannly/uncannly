@@ -2,6 +2,7 @@ import json
 import ast
 
 from data.database import Database
+from data.secondary_data_io import load
 from lib.options import SCORING_METHODS
 from lib.conversion import sparse
 
@@ -65,3 +66,13 @@ def load_syllables(weighting, unstressed):
         output[length][position][stressing][next_stressing][syllable] = next_syllables
 
     return output
+
+def load_chains(weighting, unstressed, ignore_syllables):
+    loader = load_phonemes if ignore_syllables else load_syllables
+    return loader(weighting, unstressed)
+
+def load_distributions(weighting, ignore_syllables):
+    if ignore_syllables:
+        return load('word_length_distribution_{}'.format(weighting))
+    else:
+        return load('stress_pattern_distributions')[weighting]
