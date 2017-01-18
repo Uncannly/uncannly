@@ -26,9 +26,9 @@ class RandomModeSyllables(object):
         self.min_length = options['min_length']
         self.max_length = options['max_length']
 
-        self.weighting = option_value_boolean_to_string('weighting', self.unweighted)
-        self.syllable_chains = load_syllables(self.weighting, self.unstressed)
-        self.stress_pattern_distributions = load('stress_pattern_distributions')
+        weighting = option_value_boolean_to_string('weighting', self.unweighted)
+        self.syllable_chains = load_syllables(weighting, self.unstressed)
+        self.stress_pattern_distributions = load('stress_pattern_distributions')[weighting]
 
         self.selector = select_for_web if self.interface == 'api' else \
             select_and_maybe_present_for_terminal
@@ -98,7 +98,7 @@ class RandomModeSyllables(object):
     def _reset(self):
         stress_pattern = None
         while stress_pattern is None:
-            stress_pattern = choose_next(self.stress_pattern_distributions[self.weighting])
+            stress_pattern = choose_next(self.stress_pattern_distributions)
             length = len(stress_pattern)
             if (self.min_length is not None and length < self.min_length) or \
                 (self.max_length is not None and length > self.max_length):

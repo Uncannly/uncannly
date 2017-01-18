@@ -27,7 +27,7 @@ class RandomModePhonemes(object):
         self.max_length = options['max_length']
 
         weighting = option_value_boolean_to_string('weighting', self.unweighted)
-        self.next_phonemes_options = load_phonemes(weighting, self.unstressed)
+        self.phoneme_chains = load_phonemes(weighting, self.unstressed)
         self.word_length_distributions = load('word_length_distribution_{}'.format(weighting))
 
         self.selector = select_for_web if self.interface == 'api' else \
@@ -92,12 +92,12 @@ class RandomModePhonemes(object):
         position = 0 if self.ignore_position else word_length
         if position >= self.length:
             self.length = 0
-        if len(self.next_phonemes_options[self.length]) == 0:
+        if len(self.phoneme_chains[self.length]) == 0:
             self.length = 0
-        if len(self.next_phonemes_options[self.length][position]) == 0:
+        if len(self.phoneme_chains[self.length][position]) == 0:
             position = 0
 
-        next_phonemes = self.next_phonemes_options[self.length][position]
+        next_phonemes = self.phoneme_chains[self.length][position]
 
         if self.must_end and 'END_WORD' in [x[0] for x in next_phonemes[self.phoneme]]:
             self.phoneme = 'END_WORD'
