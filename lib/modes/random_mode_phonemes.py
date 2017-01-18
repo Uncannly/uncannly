@@ -1,13 +1,14 @@
 import sys
 
+from data.secondary_data_io import load
+from data.load_data import load_phonemes
 from lib.select_and_present import select_for_web, select_and_maybe_present_for_terminal,\
     terminal_delayed_presentation
-from lib.conversion import array_to_string
 from lib.score import get_score
-from lib.options import option_value_boolean_to_string, MAX_WORD_LENGTH, MAX_FAILS
 from lib.cumulative_distribution import choose_next
-from data.load_data import load_phonemes
-from data.secondary_data_io import load
+from lib.options import option_value_boolean_to_string, MAX_WORD_LENGTH, MAX_FAILS
+from lib.conversion import array_to_string
+
 
 class RandomModePhonemes(object):
     def __init__(self, options):
