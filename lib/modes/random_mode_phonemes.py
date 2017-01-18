@@ -9,7 +9,7 @@ from lib.cumulative_distribution import choose_next
 from lib.options import option_value_boolean_to_string, MAX_WORD_LENGTH, MAX_FAILS
 from lib.conversion import array_to_string
 
-
+# pylint: disable=too-few-public-methods
 class RandomModePhonemes(object):
     def __init__(self, options):
         self.interface = options['interface']
@@ -38,30 +38,29 @@ class RandomModePhonemes(object):
 
         self._reset()
 
-
     def get(self):
         while True:
-            word_length = len(self.word) + 1
-            self._next_phoneme(word_length)
+            current_position = len(self.word) + 1
+            self._next_phoneme(current_position)
 
-            if word_length > MAX_WORD_LENGTH:
+            if current_position > MAX_WORD_LENGTH:
                 self._reset()
             elif self.phoneme is None:
                 failure = self._maybe_fail()
                 if failure:
                     return failure
             elif self.phoneme == 'END_WORD':
-                if self.min_length is not None and word_length < self.min_length:
+                if self.min_length is not None and current_position < self.min_length:
                     self._reset()
                 else:
                     success = self._maybe_succeed()
                     if success:
                         return success
             else:
-                if self.max_length is not None and word_length == self.max_length:
+                if self.max_length is not None and current_position == self.max_length:
                     self.must_end = True
 
-                if self.max_length is not None and word_length > self.max_length:
+                if self.max_length is not None and current_position > self.max_length:
                     self._reset()
                 else:
                     self.word.append(self.phoneme)
@@ -110,13 +109,13 @@ class RandomModePhonemes(object):
 
     def _reset(self):
         if self.ignore_length:
-            length = 0
+            self.length = 0
         else:
-            length = self._random_length()
+            self.length = self._random_length()
+
         self.word = []
         self.phoneme = 'START_WORD'
         self.score = 1.0
-        self.length = length
         self.must_end = False
 
     def _random_length(self):
@@ -150,3 +149,4 @@ class RandomModePhonemes(object):
                 terminal_delayed_presentation(self.words)
                 return True
         return self.words
+# pylint: enable=too-few-public-methods
