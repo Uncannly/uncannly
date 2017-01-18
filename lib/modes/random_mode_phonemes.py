@@ -37,6 +37,7 @@ class RandomModePhonemes(object):
 
         self._reset()
 
+
     def get(self):
         words = []
 
