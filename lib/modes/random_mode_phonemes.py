@@ -87,8 +87,8 @@ class RandomModePhonemes(object):
                 return self._succeed()
         self._reset()
 
-    def _next_phoneme(self, word_length):
-        position = 0 if self.ignore_position else word_length
+    def _next_phoneme(self, current_position):
+        position = 0 if self.ignore_position else current_position
         if position >= self.length:
             self.length = 0
         if len(self.phoneme_chains[self.length]) == 0:
@@ -101,7 +101,7 @@ class RandomModePhonemes(object):
         if self.must_end and 'END_WORD' in [x[0] for x in next_phonemes[self.phoneme]]:
             self.phoneme = 'END_WORD'
         else:
-            choose_next(next_phonemes[self.phoneme], self._test, word_length)
+            choose_next(next_phonemes[self.phoneme], self._test, current_position)
 
     def _test(self, phoneme, probability, method_args):
         self.score = get_score(self.score, self.scoring_method, probability, method_args)
