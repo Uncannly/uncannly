@@ -2,7 +2,7 @@ import sys
 
 from data.parse.primary import frequency_list
 from data.parse.primary.pronouncing_dictionary import PronouncingDictionary
-from data.parse.secondary import absolute_chain
+from data.parse.secondary import absolute_chain_phonemes, absolute_chain_syllables
 from data.parse.secondary.most_probable_words_phonemes import MostProbableWordsPhonemes
 from data.parse.secondary.most_probable_words_syllables import MostProbableWordsSyllables
 from data.database import Database
@@ -30,20 +30,19 @@ class DatabaseInitializer(object):
         sys.stdout.write('Word length distributions saved.\n')
         self.tables.words(words)
 
-        # this should become "initialize syllable chains"
-        # because it does not have to do with words
-        # and it should use self.syllable_chains like phonemes does above
-        # and extract the normalization stuff from pronouncing dictionrary
-        # into absolute chain or something akin to it
+    def initialize_syllable_chains(self):
+        self.syllable_chains = absolute_chain_syllables.parse(self.syllable_chains)
+        sys.stdout.write('Syllable chains normalized.\n')
         self.tables.syllables(self.syllable_chains)
+        sys.stdout.write('Syllable chain table populated.\n')
 
     def initialize_phoneme_chains(self):
         self.word_lengths = {'weighted': {}, 'unweighted': {}}
         for stressing in OPTION_VALUES['stressing']:
             self.word_lengths['weighted'][stressing] = \
-              absolute_chain.parse(self.phoneme_chains['weighted'][stressing])
+              absolute_chain_phonemes.parse(self.phoneme_chains['weighted'][stressing])
             self.word_lengths['unweighted'][stressing] = \
-              absolute_chain.parse(self.phoneme_chains['unweighted'][stressing])
+              absolute_chain_phonemes.parse(self.phoneme_chains['unweighted'][stressing])
             sys.stdout.write('Phoneme chains {} normalized.\n'.format(stressing))
 
             self.tables.phonemes(
@@ -107,6 +106,7 @@ class DatabaseInitializer(object):
 
 DATABASE_INITIALIZER = DatabaseInitializer()
 DATABASE_INITIALIZER.initialize_words()
+DATABASE_INITIALIZER.initialize_syllable_chains()
 DATABASE_INITIALIZER.initialize_phoneme_chains()
 DATABASE_INITIALIZER.initialize_scores()
 DATABASE_INITIALIZER.finish()
