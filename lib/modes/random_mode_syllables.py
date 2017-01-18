@@ -51,10 +51,7 @@ class RandomModeSyllables(object):
                    [position_bucket][self.stress_pattern[current_position]]\
                    [self.stress_pattern[current_position + 1]]
 
-                if self.syllable is None:
-                    syllable_bucket = chosen_bucket[tuple(['START_WORD'])]
-                else:
-                    syllable_bucket = chosen_bucket.get(self.syllable, None)
+                syllable_bucket = chosen_bucket.get(self.syllable, None)
 
                 if syllable_bucket is None:
                     # this is because the syllable chosen, while it of course
@@ -107,7 +104,7 @@ class RandomModeSyllables(object):
         if self.unstressed:
             self.stress_pattern = ['ignore_stress' for _ in self.stress_pattern]
         self.word = []
-        self.syllable = None
+        self.syllable = tuple(['START_WORD'])
         self.score = 1.0
 
     def _test(self, syllable, probability, method_args):
