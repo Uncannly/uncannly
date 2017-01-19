@@ -5,8 +5,8 @@ from lib.options import POOL_MAX, MAX_WORD_LENGTH, option_value_string_to_boolea
 
 # pylint: disable=too-many-instance-attributes
 class MostProbableWordsPhonemes(object):
-    def __init__(self, word_lengths, length_consideration, options):
-        positioning, stressing, weighting, self.scoring_method = options
+    def __init__(self, word_lengths, options):
+        positioning, stressing, weighting, self.scoring_method, length_consideration = options
 
         default_limits = load('default_limits')
 

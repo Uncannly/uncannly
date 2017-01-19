@@ -1,7 +1,9 @@
 import sys
 import json
 
-from lib.options import option_value_string_to_boolean, SCORING_METHODS
+from lib.options import option_value_string_to_boolean, option_value_boolean_to_string, \
+    SCORING_METHODS
+from lib.conversion import snake_to_space
 
 class Tables(object):
     def __init__(self, database):
@@ -111,7 +113,10 @@ class Tables(object):
         self.database.execute(sql_string)
 
     def scores(self, most_probable_words, options):
-        boolean_options = string_to_boolean(options)
+        positioning, stressing, weighting, scoring_method, length_consideration, \
+            ignore_syllables = options
+        boolean_options = string_to_boolean(positioning, stressing, weighting,
+            scoring_method, ignore_syllables)
 
         if len(most_probable_words) == 0:
             return
@@ -133,11 +138,19 @@ class Tables(object):
             sql_string += ", ".join(sql_array)
             self.database.execute(sql_string)
 
+            syllable_use = option_value_boolean_to_string('syllable_use', ignore_syllables)
+            sys.stdout.write('Most probable words {} {} {} {} {} {} done.\n'.format(
+                snake_to_space(stressing),
+                snake_to_space(weighting),
+                snake_to_space(length_consideration),
+                snake_to_space(positioning),
+                snake_to_space(scoring_method),
+                snake_to_space(syllable_use)))
+
     def finish(self):
         self.database.disconnect()
 
-def string_to_boolean(options):
-    positioning, stressing, weighting, scoring_method, ignore_syllables = options
+def string_to_boolean(positioning, stressing, weighting, scoring_method, ignore_syllables):
     ignore_position = option_value_string_to_boolean(positioning)
     unstressed = option_value_string_to_boolean(stressing)
     unweighted = option_value_string_to_boolean(weighting)

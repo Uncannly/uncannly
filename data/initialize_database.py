@@ -9,7 +9,6 @@ from data.database import Database
 from data.tables import Tables
 from data.secondary_data_io import save
 from lib.options import OPTION_VALUES, SCORING_METHODS, option_value_boolean_to_string
-from lib.conversion import snake_to_space
 
 class DatabaseInitializer(object):
     def __init__(self):
@@ -69,13 +68,14 @@ class DatabaseInitializer(object):
                                     ]
                                     syllable_use = option_value_boolean_to_string(
                                         'syllable_use', ignore_syllables)
-                                    options = positioning, stressing, weighting, scoring_method
+                                    options = positioning, stressing, weighting, \
+                                        scoring_method, length_consideration
 
                                     getter = MostProbableWordsPhonemes \
                                         if ignore_syllables else MostProbableWordsSyllables
                                     source = self.word_lengths if ignore_syllables else \
                                         self.syllable_chains
-                                    word_scores = getter(source, length_consideration, options)
+                                    word_scores = getter(source, options)
 
                                     scores, limit = word_scores.get()
                                     self.tables.scores(scores, options + tuple([ignore_syllables]))
@@ -86,14 +86,6 @@ class DatabaseInitializer(object):
                                         .setdefault(weighting, {})\
                                         .setdefault(scoring_method, {})\
                                         .setdefault(syllable_use, limit)
-                                    sys.stdout.write((
-                                        'Most probable words {} {} {} {} {} {} done.\n'
-                                        ).format(snake_to_space(stressing),
-                                                 snake_to_space(weighting),
-                                                 snake_to_space(length_consideration),
-                                                 snake_to_space(positioning),
-                                                 snake_to_space(scoring_method),
-                                                 snake_to_space(syllable_use)))
 
         sys.stdout.write('Most probable words table populated.\n\n')
         save(updated_limits, 'default_limits')
