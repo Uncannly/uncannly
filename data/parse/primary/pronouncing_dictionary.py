@@ -1,7 +1,6 @@
 import sys
 
 from data.parse.primary.open_helper import open_primary_data_file
-from data.secondary_data_io import save
 from lib.ipa import destress, parse_syllables, stress_level
 from lib.options import OPTION_VALUES
 from lib.conversion import sparse
@@ -52,6 +51,7 @@ class PronouncingDictionary(object):
 
         return phonemes, frequency
 
+    # pylint: disable=invalid-name
     def _increment_word_length_distributions_and_phoneme_chains(self, parsed_line):
         phonemes, frequency = parsed_line
         word_length = len(phonemes['stressed'])
@@ -89,7 +89,7 @@ class PronouncingDictionary(object):
                             self.phoneme_chains[weighting][stressing][length][position]\
                                 [phoneme][next_phoneme] += increment
 
-    # pylint: disable=too-many-locals,line-too-long,invalid-name
+    # pylint: disable=too-many-locals,line-too-long
     def _increment_stress_pattern_distributions_and_syllable_chains(self, parsed_line):
         phonemes, frequency = parsed_line
         phonemes = phonemes['stressed']
@@ -129,4 +129,4 @@ class PronouncingDictionary(object):
                                 .setdefault(next_syllable_stress_level, {}).setdefault(syllable, {}).setdefault(next_syllable, 0)
                             self.syllable_chains[weighting][length][position][syllable_stress_level]\
                                 [next_syllable_stress_level][syllable][next_syllable] += increment
-# pylint: enable=too-many-locals,too-few-public-methods
+# pylint: enable=too-many-locals,too-few-public-methods,invalid-name

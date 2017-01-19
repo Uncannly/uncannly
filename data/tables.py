@@ -110,11 +110,12 @@ class Tables(object):
         sql_string += ", ".join(sql_array)
         self.database.execute(sql_string)
 
+    # pylint: disable=too-many-locals
     def scores(self, most_probable_words, options):
         positioning, stressing, weighting, scoring_method, length_consideration, \
             ignore_syllables = options
         boolean_options = string_to_boolean(positioning, stressing, weighting,
-            scoring_method, ignore_syllables)
+                                            scoring_method, ignore_syllables)
 
         if len(most_probable_words) == 0:
             return
@@ -144,6 +145,7 @@ class Tables(object):
                 snake_to_space(positioning),
                 snake_to_space(scoring_method),
                 snake_to_space(syllable_use)))
+    # pylint: enable=too-many-locals
 
     def finish(self):
         self.database.disconnect()

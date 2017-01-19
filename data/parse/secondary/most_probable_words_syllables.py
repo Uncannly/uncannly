@@ -6,7 +6,8 @@ from data.secondary_data_io import load
 # pylint: disable=too-few-public-methods,no-self-use
 class MostProbableWordsSyllables(object):
     def __init__(self, syllable_chains, options):
-        positioning, self.stressing, self.weighting, self.scoring_method, length_consideration = options
+        positioning, self.stressing, self.weighting, self.scoring_method, \
+            length_consideration = options
         self.ignore_position = option_value_string_to_boolean(positioning)
         self.ignore_length = option_value_string_to_boolean(length_consideration)
         self.unstressed = option_value_string_to_boolean(self.stressing)

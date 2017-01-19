@@ -3,11 +3,12 @@ import operator
 from lib.options import OPTION_VALUES
 from lib.conversion import sparse
 
+# pylint: disable=invalid-name
 def stress_pattern_distributions(stress_pattern_distributions_absolute):
     normalized_stress_pattern_distributions = {}
     for weighting in OPTION_VALUES['weighting']:
         sorted_stress_pattern_distributions = sorted(
-            stress_pattern_distributions_absolute[weighting].items(), 
+            stress_pattern_distributions_absolute[weighting].items(),
             key=operator.itemgetter(1), reverse=True)
         normalized_stress_pattern_distributions.setdefault(weighting, [])
         total = float(sum([stress_pattern[1] for stress_pattern \
@@ -61,7 +62,8 @@ def word_length_distributions(word_length_distributions_absolute):
     for weighting in OPTION_VALUES['weighting']:
         absolute_total_weight = word_length_distributions_absolute[weighting][0]
         for word_length in range(0, len(word_length_distributions_absolute[weighting])):
-            word_length_distributions_absolute[weighting][word_length] /= float(absolute_total_weight)
+            word_length_distributions_absolute[weighting][word_length] \
+                /= float(absolute_total_weight)
 
     return word_length_distributions_absolute
 
@@ -84,3 +86,4 @@ def _next_phonemes(next_counts):
 
 def _normalize(phoneme, next_counts, total_next):
     return phoneme, float(next_counts[phoneme]) / float(total_next)
+# pylint: enable=invalid-name

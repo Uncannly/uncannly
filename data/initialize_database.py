@@ -34,6 +34,7 @@ class DatabaseInitializer(object):
         self.tables.words(words)
         sys.stdout.write('Words table populated.\n\n')
 
+    # pylint: disable=invalid-name
     def initialize_word_length_distributions(self):
         normalized_word_length_distributions = normalize.word_length_distributions(
             self.word_length_distributions)
@@ -49,6 +50,7 @@ class DatabaseInitializer(object):
 
         save(normalized_stress_pattern_distributions, 'stress_pattern_distributions')
         sys.stdout.write('Stress pattern distributions saved.\n\n')
+    # pylint: enable=invalid-name
 
     def initialize_syllable_chains(self):
         self.syllable_chains = normalize.syllable_chains(self.syllable_chains)
