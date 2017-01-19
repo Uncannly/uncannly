@@ -156,7 +156,7 @@ class RandomMode(object):
             if self.unstressed:
                 self.stress_pattern = ['ignore_stress' for _ in self.stress_pattern]
             self.length = len(self.stress_pattern)
- 
+
         self.word = []
         self.unit = 'START_WORD' if self.ignore_syllables else tuple(['START_WORD'])
         self.score = 1.0
