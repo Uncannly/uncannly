@@ -31,7 +31,17 @@ def load_scores(scoring_method,
     return results
 # plyint: enable=too-many-arguments
 
-def load_phonemes(weighting, unstressed):
+def load_chains(weighting, unstressed, ignore_syllables):
+    loader = _load_phonemes if ignore_syllables else _load_syllables
+    return loader(weighting, unstressed)
+
+def load_distributions(weighting, ignore_syllables):
+    if ignore_syllables:
+        return load('word_length_distribution_{}'.format(weighting))
+    else:
+        return load('stress_pattern_distributions')[weighting]
+
+def _load_phonemes(weighting, unstressed):
     sql = "select word_length, word_position, phoneme, next_phonemes_{} \
         from phonemes where unstressed = {};".format(weighting, unstressed)
     results = Database.fetch(sql)
@@ -45,7 +55,7 @@ def load_phonemes(weighting, unstressed):
 
     return output
 
-def load_syllables(weighting, unstressed):
+def _load_syllables(weighting, unstressed):
     stressing = ' = ' if unstressed else ' != '
     sql = "select word_length, word_position, stressing, next_stressing, syllable, \
         next_syllables_{} from syllables where stressing{}'ignore_stress';"\
@@ -66,13 +76,3 @@ def load_syllables(weighting, unstressed):
         output[length][position][stressing][next_stressing][syllable] = next_syllables
 
     return output
-
-def load_chains(weighting, unstressed, ignore_syllables):
-    loader = load_phonemes if ignore_syllables else load_syllables
-    return loader(weighting, unstressed)
-
-def load_distributions(weighting, ignore_syllables):
-    if ignore_syllables:
-        return load('word_length_distribution_{}'.format(weighting))
-    else:
-        return load('stress_pattern_distributions')[weighting]
