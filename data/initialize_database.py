@@ -39,8 +39,7 @@ class DatabaseInitializer(object):
             self.word_length_distributions)
         sys.stdout.write('Word length distributions normalized.\n')
 
-        for weighting, distribution in normalized_word_length_distributions.iteritems():
-            save(distribution, 'word_length_distribution_{}'.format(weighting))
+        save(normalized_word_length_distributions, 'word_length_distributions')
         sys.stdout.write('Word length distributions saved.\n\n')
 
     def initialize_stress_pattern_distributions(self):

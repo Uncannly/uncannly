@@ -36,10 +36,8 @@ def load_chains(weighting, unstressed, ignore_syllables):
     return loader(weighting, unstressed)
 
 def load_distributions(weighting, ignore_syllables):
-    if ignore_syllables:
-        return load('word_length_distribution_{}'.format(weighting))
-    else:
-        return load('stress_pattern_distributions')[weighting]
+    distribution = 'word_length' if ignore_syllables else 'stress_pattern'
+    return load('{}_distributions'.format(distribution))[weighting]
 
 def _load_phonemes(weighting, unstressed):
     sql = "select word_length, word_position, phoneme, next_phonemes_{} \
