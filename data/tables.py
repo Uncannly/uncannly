@@ -29,7 +29,6 @@ class Tables(object):
         ]
         sql_string = ";".join(sql_array)
         self.database.execute(sql_string)
-        sys.stdout.write('Tables created.\n\n')
 
     def words(self, words):
         sql_array = []
@@ -40,7 +39,6 @@ class Tables(object):
         sql_string = "insert into words (word, pronunciation, frequency) values "
         sql_string += ", ".join(sql_array)
         self.database.execute(sql_string)
-        sys.stdout.write('Words table populated.\n\n')
 
     def syllables(self, syllables):
         sql_array = []

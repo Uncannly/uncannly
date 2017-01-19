@@ -2,7 +2,7 @@ import sys
 
 from data.parse.primary import frequency_list
 from data.parse.primary.pronouncing_dictionary import PronouncingDictionary
-from data.parse.secondary import absolute_chain_phonemes, absolute_chain_syllables
+from data.parse.secondary import normalize
 from data.parse.secondary.most_probable_words_phonemes import MostProbableWordsPhonemes
 from data.parse.secondary.most_probable_words_syllables import MostProbableWordsSyllables
 from data.database import Database
@@ -13,8 +13,11 @@ from lib.options import OPTION_VALUES, SCORING_METHODS, option_value_boolean_to_
 class DatabaseInitializer(object):
     def __init__(self):
         sys.stdout.write('Initializing database.\n\n')
+
         self.tables = Tables(Database())
         self.tables.schema()
+        sys.stdout.write('Tables created.\n\n')
+
         self.phoneme_chains = None
         self.word_lengths = None
         self.syllable_chains = None
@@ -22,27 +25,47 @@ class DatabaseInitializer(object):
     def initialize_words(self):
         word_frequencies = frequency_list.parse()
         sys.stdout.write('Frequency list parsed.\n\n')
-        words, self.phoneme_chains, word_length_distributions, self.syllable_chains = \
+
+        words, self.phoneme_chains, self.word_length_distributions, \
+            self.syllable_chains, self.stress_pattern_distributions = \
             PronouncingDictionary(word_frequencies).parse()
-        for weighting, distribution in word_length_distributions.iteritems():
-            save(distribution, 'word_length_distribution_{}'.format(weighting))
-        sys.stdout.write('Word length distributions saved.\n')
+        sys.stdout.write('Pronouncing dictionary parsed into absolute chains and distributions.\n')
+
         self.tables.words(words)
+        sys.stdout.write('Words table populated.\n\n')
+
+    def initialize_word_length_distributions(self):
+        normalized_word_length_distributions = normalize.word_length_distributions(
+            self.word_length_distributions)
+        sys.stdout.write('Word length distributions normalized.\n')
+
+        for weighting, distribution in normalized_word_length_distributions.iteritems():
+            save(distribution, 'word_length_distribution_{}'.format(weighting))
+        sys.stdout.write('Word length distributions saved.\n\n')
+
+    def initialize_stress_pattern_distributions(self):
+        normalized_stress_pattern_distributions = normalize.stress_pattern_distributions(
+            self.stress_pattern_distributions)
+        sys.stdout.write('Stress pattern distributions normalized.\n')
+
+        save(normalized_stress_pattern_distributions, 'stress_pattern_distributions')
+        sys.stdout.write('Stress pattern distributions saved.\n\n')
 
     def initialize_syllable_chains(self):
-        self.syllable_chains = absolute_chain_syllables.parse(self.syllable_chains)
+        self.syllable_chains = normalize.syllable_chains(self.syllable_chains)
         sys.stdout.write('Syllable chains normalized.\n')
+
         self.tables.syllables(self.syllable_chains)
-        sys.stdout.write('Syllable chain table populated.\n')
+        sys.stdout.write('Syllable chain table populated.\n\n')
 
     def initialize_phoneme_chains(self):
         self.word_lengths = {'weighted': {}, 'unweighted': {}}
         for stressing in OPTION_VALUES['stressing']:
             self.word_lengths['weighted'][stressing] = \
-              absolute_chain_phonemes.parse(self.phoneme_chains['weighted'][stressing])
+                normalize.phoneme_chains(self.phoneme_chains['weighted'][stressing])
             self.word_lengths['unweighted'][stressing] = \
-              absolute_chain_phonemes.parse(self.phoneme_chains['unweighted'][stressing])
-            sys.stdout.write('Phoneme chains {} normalized.\n'.format(stressing))
+                normalize.phoneme_chains(self.phoneme_chains['unweighted'][stressing])
+            sys.stdout.write('Phoneme chains {} normalized'.format(stressing))
 
             self.tables.phonemes(
                 self.word_lengths['weighted'][stressing],
@@ -88,17 +111,20 @@ class DatabaseInitializer(object):
                                         .setdefault(syllable_use, limit)
 
         sys.stdout.write('Most probable words table populated.\n\n')
+
         save(updated_limits, 'default_limits')
         sys.stdout.write('Default limits per option combination updated.\n\n')
     # pylint: enable=too-many-locals,too-many-nested-blocks
 
     def finish(self):
         self.tables.finish()
-        sys.stdout.write('Database successfully initialized.\n\n')
+        sys.stdout.write('Database successfully initialized!\n\n')
 
 DATABASE_INITIALIZER = DatabaseInitializer()
 DATABASE_INITIALIZER.initialize_words()
 DATABASE_INITIALIZER.initialize_syllable_chains()
+DATABASE_INITIALIZER.initialize_stress_pattern_distributions()
 DATABASE_INITIALIZER.initialize_phoneme_chains()
+DATABASE_INITIALIZER.initialize_word_length_distributions()
 DATABASE_INITIALIZER.initialize_scores()
 DATABASE_INITIALIZER.finish()
