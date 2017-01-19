@@ -3,8 +3,7 @@ import sys
 from data.parse.primary import frequency_list
 from data.parse.primary.pronouncing_dictionary import PronouncingDictionary
 from data.parse.secondary import normalize
-from data.parse.secondary.most_probable_words_phonemes import MostProbableWordsPhonemes
-from data.parse.secondary.most_probable_words_syllables import MostProbableWordsSyllables
+from data.parse.secondary.most_probable_words import MostProbableWords
 from data.database import Database
 from data.tables import Tables
 from data.secondary_data_io import save
@@ -90,19 +89,19 @@ class DatabaseInitializer(object):
                                             (method_mean, method_addition)
                                         )
                                     ]
-                                    syllable_use = option_value_boolean_to_string(
-                                        'syllable_use', ignore_syllables)
                                     options = positioning, stressing, weighting, \
-                                        scoring_method, length_consideration
+                                        scoring_method, length_consideration, ignore_syllables
 
-                                    getter = MostProbableWordsPhonemes \
-                                        if ignore_syllables else MostProbableWordsSyllables
                                     source = self.word_lengths if ignore_syllables else \
                                         self.syllable_chains
-                                    word_scores = getter(source, options)
+
+                                    word_scores = MostProbableWords(source, options)
 
                                     scores, limit = word_scores.get()
-                                    self.tables.scores(scores, options + tuple([ignore_syllables]))
+                                    self.tables.scores(scores, options)
+
+                                    syllable_use = option_value_boolean_to_string(
+                                        'syllable_use', ignore_syllables)
                                     updated_limits\
                                         .setdefault(length_consideration, {})\
                                         .setdefault(positioning, {})\
