@@ -26,8 +26,7 @@ class PronouncingDictionary(object):
         self.pronouncing_dictionary.seek(0)
         for line in self.pronouncing_dictionary:
             parsed_line = self._parse_word(line)
-            self._increment_word_length_distributions(parsed_line)
-            self._increment_phoneme_chains(parsed_line)
+            self._increment_word_length_distributions_and_phoneme_chains(parsed_line)
             self._increment_stress_pattern_distributions_and_syllable_chains(parsed_line)
             count += 1
             if count % 10000 == 0:
@@ -53,10 +52,17 @@ class PronouncingDictionary(object):
 
         return phonemes, frequency
 
-    def _increment_phoneme_chains(self, parsed_line):
+    def _increment_word_length_distributions_and_phoneme_chains(self, parsed_line):
         phonemes, frequency = parsed_line
+        word_length = len(phonemes['stressed'])
+
         for weighting in OPTION_VALUES['weighting']:
             increment = 1 if weighting == 'unweighted' else frequency
+
+            sparse(self.word_length_distributions.setdefault(weighting, []), word_length, 0)
+
+            self.word_length_distributions[weighting][0] += increment
+            self.word_length_distributions[weighting][word_length] += increment
 
             for stressing in OPTION_VALUES['stressing']:
                 self.phoneme_chains.setdefault(weighting, {}).setdefault(stressing, [])
@@ -82,18 +88,6 @@ class PronouncingDictionary(object):
                                 setdefault(phoneme, {}).setdefault(next_phoneme, 0)
                             self.phoneme_chains[weighting][stressing][length][position]\
                                 [phoneme][next_phoneme] += increment
-
-    def _increment_word_length_distributions(self, parsed_line):
-        phonemes, frequency = parsed_line
-        word_length = len(phonemes['stressed'])
-
-        for weighting in OPTION_VALUES['weighting']:
-            increment = 1 if weighting == 'unweighted' else frequency
-
-            sparse(self.word_length_distributions.setdefault(weighting, []), word_length, 0)
-
-            self.word_length_distributions[weighting][0] += increment
-            self.word_length_distributions[weighting][word_length] += increment
 
     # pylint: disable=too-many-locals,line-too-long,invalid-name
     def _increment_stress_pattern_distributions_and_syllable_chains(self, parsed_line):
