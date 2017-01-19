@@ -41,19 +41,19 @@ class MostProbableWords(object):
             if self.ignore_syllables:
                 if self.ignore_length:
                     self.target_length = 0
-                    self._get_next_phoneme(['START_WORD'], 1.0)
+                    self._get_next_unit(['START_WORD'], 1.0)
                 else:
                     for target_length in range(1, len(self.chains)):
                         self.target_length = target_length
                         if len(self.chains[self.target_length]) != 0:
-                            self._get_next_phoneme(['START_WORD'], 1.0)
+                            self._get_next_unit(['START_WORD'], 1.0)
 
             else:
                 if not self.unstressed:
                     for stress_pattern in self.stressing_patterns:
                         self.target_length = len(stress_pattern)
                         self.stress_pattern = ['start_word'] + list(stress_pattern) + ['end_word']
-                        self._get_next_syllable([tuple(['START_WORD'])], 1.0)
+                        self._get_next_unit([tuple(['START_WORD'])], 1.0)
                 else:
                     for target_length in range(1, max([len(x) for x in self.stressing_patterns])):
                         # dont happen to be words of this syllable length,
@@ -61,7 +61,7 @@ class MostProbableWords(object):
                         if len(self.chains[self.weighting][target_length]) > 0:
                             self.target_length = target_length
                             self.stress_pattern = ['ignore_stress'] * target_length + ['end_word']
-                            self._get_next_syllable([tuple(['START_WORD'])], 1.0)
+                            self._get_next_unit([tuple(['START_WORD'])], 1.0)
 
             # print 'total words searched: ', self.count
             # print 'total words qualified: ', len(self.most_probable_words)
@@ -73,88 +73,71 @@ class MostProbableWords(object):
         self.most_probable_words.sort(key=lambda x: -x[1])
         return self.most_probable_words[:POOL_MAX], self.limit
 
-    def _get_next_phoneme(self, word, score):
+    def _get_next_unit(self, word, score):
         self.count += 1
         if self.count > POOL_MAX * 10:
             return
 
         current_length = len(word)
-
-        if current_length <= MAX_WORD_LENGTH:
-            current_phoneme = word[-1]
-
-            word_position = 0 if self.ignore_position else current_length
-            next_phonemes = self.chains[self.target_length][word_position]
-
-            for next_phoneme, probability in next_phonemes[current_phoneme]:
-                score = get_score(score, self.scoring_method, probability, current_length)
-                if score < self.limit:
-                    pass
-                elif next_phoneme == 'END_WORD':
-                    stringified_word = array_to_string(word[1:len(word)])
-                    self.most_probable_words.append(
-                        (stringified_word, score, self.target_length)
-                    )
-                else:
-                    grown_word = word[:]
-                    grown_word.append(next_phoneme)
-                    self._get_next_phoneme(grown_word, score)
-
-    def _get_next_syllable(self, word, score):
-        self.count += 1
-        if self.count > POOL_MAX * 10:
+        if current_length > MAX_WORD_LENGTH:
             return
 
-        current_length = len(word)
+        current_unit = word[-1]
+        position = 0 if self.ignore_position else current_length
 
-        if current_length <= MAX_WORD_LENGTH:
-            current_syllable = word[-1]
-
-            length_bucket = 0 if self.ignore_length else self.target_length
-            position_bucket = 0 if self.ignore_position else current_length
+        if self.ignore_syllables:
+            next_units = self.chains[self.target_length][position][current_unit]
+        else:
+            length = 0 if self.ignore_length else self.target_length
             current_stress = self.stress_pattern[current_length - 1]
             next_stress = self.stress_pattern[current_length]
 
             if self.unstressed and next_stress == 'end_word':
-                chosen_bucket = self.chains[self.weighting]\
-                    [length_bucket]\
-                    [position_bucket]\
+                next_units = self.chains[self.weighting]\
+                    [length]\
+                    [position]\
                     [current_stress]\
                     ['ignore_stress']\
-                    [current_syllable]
-            elif current_syllable not in self.chains[self.weighting]\
-                [length_bucket]\
-                [position_bucket]\
+                    [current_unit].iteritems()
+            elif current_unit not in self.chains[self.weighting]\
+                [length]\
+                [position]\
                 [current_stress]\
                 [next_stress].keys():
-                chosen_bucket = None
+                next_units = None
                 # this is because the syllable chosen, while it of course exists
                 # in the first stress level, may not happen to exist for the transition
                 # from that stress level to the next one in the given stressing pattern
             else:
-                chosen_bucket = self.chains[self.weighting]\
-                    [length_bucket]\
-                    [position_bucket]\
+                next_units = self.chains[self.weighting]\
+                    [length]\
+                    [position]\
                     [current_stress]\
                     [next_stress]\
-                    [current_syllable]
+                    [current_unit].iteritems()
 
-            if chosen_bucket is not None:
-                for next_syllable, probability in chosen_bucket.iteritems():
-                    score = get_score(score, self.scoring_method, probability, current_length)
-                    if score < self.limit:
-                        pass
-                    elif next_stress == 'end_word' or next_syllable[-1] == 'END_WORD':
-                        afraid_word = word[1:]
-                        # this is always just start word. i tried switching things up
-                        # so that we kick off "get" with an empty array but it
-                        # got off and scary... try again in a separate commit
-                        syllable = clean_end_word_pseudovowel(next_syllable)
-                        if syllable:
-                            afraid_word.append(syllable)
-                        self.most_probable_words.append(
-                            (afraid_word, score, current_length))
-                    else:
-                        grown_word = word[:]
-                        grown_word.append(next_syllable)
-                        self._get_next_syllable(grown_word, score)
+        if next_units is None:
+            return
+
+        for next_unit, probability in next_units:
+            score = get_score(score, self.scoring_method, probability, current_length)
+            if score < self.limit:
+                pass
+            elif self.ignore_syllables and next_unit == 'END_WORD':
+                stringified_word = array_to_string(word[1:len(word)])
+                self.most_probable_words.append(
+                    (stringified_word, score, self.target_length))
+            elif not self.ignore_syllables and (next_stress == 'end_word' or next_unit[-1] == 'END_WORD'):
+                afraid_word = word[1:]
+                # this is always just start word. i tried switching things up
+                # so that we kick off "get" with an empty array but it
+                # got off and scary... try again in a separate commit
+                syllable = clean_end_word_pseudovowel(next_unit)
+                if syllable:
+                    afraid_word.append(syllable)
+                self.most_probable_words.append(
+                    (afraid_word, score, current_length))
+            else:
+                grown_word = word[:]
+                grown_word.append(next_unit)
+                self._get_next_unit(grown_word, score)
