@@ -39,29 +39,23 @@ class MostProbableWords(object):
             self.count = 0
 
             if self.ignore_syllables:
-                if self.ignore_length:
-                    self.target_length = 0
-                    self._get_next_unit(['START_WORD'], 1.0)
-                else:
-                    for target_length in range(1, len(self.chains)):
-                        self.target_length = target_length
-                        if len(self.chains[self.target_length]) != 0:
-                            self._get_next_unit(['START_WORD'], 1.0)
+                for target_length in range(0, len(self.chains)):
+                    self.target_length = target_length
+
+                    if len(self.chains[self.target_length]) > 0:
+                        self._get_next_unit(['START_WORD'], 1.0)
 
             else:
-                if not self.unstressed:
-                    for stress_pattern in self.stressing_patterns:
-                        self.target_length = len(stress_pattern)
-                        self.stress_pattern = ['start_word'] + list(stress_pattern) + ['end_word']
+                for stress_pattern in self.stressing_patterns:
+                    self.target_length = len(stress_pattern)
+
+                    self.stress_pattern = ['start_word'] + list(stress_pattern)
+                    if self.unstressed:
+                        self.stress_pattern = ['ignore_stress' for _ in self.stress_pattern]
+                    self.stress_pattern += ['end_word']
+
+                    if len(self.chains[self.weighting][self.target_length]) > 0:
                         self._get_next_unit([tuple(['START_WORD'])], 1.0)
-                else:
-                    for target_length in range(1, max([len(x) for x in self.stressing_patterns])):
-                        # dont happen to be words of this syllable length,
-                        # so even the 0 "ignore length" bucket was not populated
-                        if len(self.chains[self.weighting][target_length]) > 0:
-                            self.target_length = target_length
-                            self.stress_pattern = ['ignore_stress'] * target_length + ['end_word']
-                            self._get_next_unit([tuple(['START_WORD'])], 1.0)
 
             # print 'total words searched: ', self.count
             # print 'total words qualified: ', len(self.most_probable_words)
