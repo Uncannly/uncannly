@@ -76,40 +76,7 @@ class MostProbableWords(object):
         if current_length > MAX_WORD_LENGTH:
             return
 
-        current_unit = word[-1]
-        position = 0 if self.ignore_position else current_length
-
-        if self.ignore_syllables:
-            next_units = self.chains[self.target_length][position][current_unit]
-        else:
-            length = 0 if self.ignore_length else self.target_length
-            current_stress = self.stress_pattern[current_length - 1]
-            next_stress = self.stress_pattern[current_length]
-
-            if self.unstressed and next_stress == 'end_word':
-                next_units = self.chains[self.weighting]\
-                    [length]\
-                    [position]\
-                    [current_stress]\
-                    ['ignore_stress']\
-                    [current_unit].iteritems()
-            elif current_unit not in self.chains[self.weighting]\
-                [length]\
-                [position]\
-                [current_stress]\
-                [next_stress].keys():
-                next_units = None
-                # this is because the syllable chosen, while it of course exists
-                # in the first stress level, may not happen to exist for the transition
-                # from that stress level to the next one in the given stressing pattern
-            else:
-                next_units = self.chains[self.weighting]\
-                    [length]\
-                    [position]\
-                    [current_stress]\
-                    [next_stress]\
-                    [current_unit].iteritems()
-
+        next_units, must_end = self._get_next_units(word, current_length)
         if next_units is None:
             return
 
@@ -118,10 +85,10 @@ class MostProbableWords(object):
             if score < self.limit:
                 pass
             elif self.ignore_syllables and next_unit == 'END_WORD':
-                stringified_word = array_to_string(word[1:len(word)])
+                stringified_word = array_to_string(word[1:])
                 self.most_probable_words.append(
                     (stringified_word, score, self.target_length))
-            elif not self.ignore_syllables and (next_stress == 'end_word' or next_unit[-1] == 'END_WORD'):
+            elif not self.ignore_syllables and (must_end or next_unit[-1] == 'END_WORD'):
                 afraid_word = word[1:]
                 # this is always just start word. i tried switching things up
                 # so that we kick off "get" with an empty array but it
@@ -135,3 +102,38 @@ class MostProbableWords(object):
                 grown_word = word[:]
                 grown_word.append(next_unit)
                 self._get_next_unit(grown_word, score)
+
+    def _get_next_units(self, word, current_length):
+        current_unit = word[-1]
+        position = 0 if self.ignore_position else current_length
+
+        if self.ignore_syllables:
+            return self.chains[self.target_length][position][current_unit], False
+
+        length = 0 if self.ignore_length else self.target_length
+        current_stress = self.stress_pattern[current_length - 1]
+        next_stress = self.stress_pattern[current_length]
+
+        if self.unstressed and next_stress == 'end_word':
+            return self.chains[self.weighting]\
+                [length]\
+                [position]\
+                [current_stress]\
+                ['ignore_stress']\
+                [current_unit].iteritems(), True
+        elif current_unit not in self.chains[self.weighting]\
+            [length]\
+            [position]\
+            [current_stress]\
+            [next_stress].keys():
+            return None, False
+            # this is because the syllable chosen, while it of course exists
+            # in the first stress level, may not happen to exist for the transition
+            # from that stress level to the next one in the given stressing pattern
+        else:
+            return self.chains[self.weighting]\
+                [length]\
+                [position]\
+                [current_stress]\
+                [next_stress]\
+                [current_unit].iteritems(), next_stress == 'end_word'
