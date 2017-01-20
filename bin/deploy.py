@@ -13,7 +13,7 @@ def deploy():
         return stdout.write('Some tests failed.\n')
 
     stdout.write("*************Updating Production Database*************\n")
-    updated_production_database = system('python data/initialize_database.py --production')
+    updated_production_database = system('python bin/initialize_database.py --production')
     if updated_production_database != 0:
         return stdout.write('Production database update failed.\n')
 

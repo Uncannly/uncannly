@@ -230,7 +230,7 @@ $ chiry@munscalune:~/workspace: cd uncannly
 $ chiry@munscalune:~/workspace/uncannly: source venv/bin/activate
 $ chiry@munscalune:~/workspace/uncannly: pip install -r requirements.txt
 ...
-$ chiry@munscalune:~/workspace/uncannly: python data/initialize_database.py
+$ chiry@munscalune:~/workspace/uncannly: python bin/initialize_database.py
 Database successfully initialized.
 $ chiry@munscalune:~/workspace/uncannly: python app/app.py
 
