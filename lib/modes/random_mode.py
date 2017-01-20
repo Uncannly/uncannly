@@ -7,6 +7,7 @@ from lib.score import get_score
 from lib.cumulative_distribution import choose_next
 from lib.options import option_value_boolean_to_string, MAX_WORD_LENGTH, MAX_FAILS
 from lib.ipa import clean_end_word_pseudovowel
+from lib.conversion import prepare_stress_pattern
 
 # pylint: disable=too-few-public-methods
 class RandomMode(object):
@@ -67,7 +68,7 @@ class RandomMode(object):
                         self.word.append(self.unit)
 
             else:
-                for current_position in range(0, self.length - 1):
+                for current_position in range(0, self.target_length + 1):
                     self._next_unit(current_position)
 
                     if self.unit is None or self.word is None:
@@ -109,14 +110,16 @@ class RandomMode(object):
         self._reset()
 
     def _next_unit(self, current_position):
+
         if self.ignore_syllables:
             position = 0 if self.ignore_position else current_position
-            if position >= self.length or len(self.chains[self.length]) == 0:
-                self.length = 0
-            if len(self.chains[self.length][position]) == 0:
+
+            if position >= self.target_length or len(self.chains[self.target_length]) == 0:
+                self.target_length = 0
+            if len(self.chains[self.target_length][position]) == 0:
                 position = 0
 
-            next_units = self.chains[self.length][position]
+            next_units = self.chains[self.target_length][position]
 
             if self.must_end and 'END_WORD' in [x[0] for x in next_units[self.unit]]:
                 self.unit = 'END_WORD'
@@ -124,18 +127,14 @@ class RandomMode(object):
                 choose_next(next_units[self.unit], self._test, current_position)
 
         else:
-            length = 0 if self.ignore_length else self.length - 2
             position = 0 if self.ignore_position else current_position + 1
+            length = 0 if self.ignore_length else self.target_length
             stress = self.stress_pattern[current_position]
             next_stress = self.stress_pattern[current_position + 1]
             chosen_bucket = self.chains[length][position][stress][next_stress]
             next_units = chosen_bucket.get(self.unit)
 
             if next_units is None:
-                # this is because the syllable chosen, while it of course
-                # exists in the first stress level, may not happen to exist
-                # for the transition from that stress level to the next one
-                # in the given stressing pattern
                 self.word = None
             else:
                 choose_next(next_units.iteritems(), self._test, current_position + 1)
@@ -146,14 +145,12 @@ class RandomMode(object):
 
     def _reset(self):
         if self.ignore_syllables:
-            self.length = 0 if self.ignore_length else self._random_frame()
+            self.target_length = 0 if self.ignore_length else self._random_frame()
         else:
-            self.stress_pattern = self._random_frame()
-            self.stress_pattern = ['start_word'] + list(self.stress_pattern) + ['end_word']
-            if self.unstressed:
-                self.stress_pattern = ['ignore_stress' for _ in self.stress_pattern]
-            self.length = len(self.stress_pattern)
-
+            stress_pattern = self._random_frame()
+            self.target_length = len(stress_pattern)
+            self.stress_pattern = prepare_stress_pattern(stress_pattern, self.unstressed)
+            
         self.word = []
         self.unit = 'START_WORD' if self.ignore_syllables else tuple(['START_WORD'])
         self.score = 1.0

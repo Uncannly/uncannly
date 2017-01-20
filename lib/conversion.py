@@ -36,3 +36,9 @@ def serialize(data):
 def deserialize(data, ignore_syllables):
     deserializer = string_to_array if ignore_syllables else literal_eval
     return deserializer(data)
+
+def prepare_stress_pattern(stress_pattern, unstressed):
+    stress_pattern = ['start_word'] + list(stress_pattern) + ['end_word']
+    if unstressed:
+        stress_pattern = ['ignore_stress'] * len(stress_pattern)
+    return stress_pattern

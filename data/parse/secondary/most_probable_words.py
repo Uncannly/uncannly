@@ -3,6 +3,7 @@ from lib.score import get_score, update_limits
 from lib.options import POOL_MAX, MAX_WORD_LENGTH, option_value_string_to_boolean, \
     option_value_boolean_to_string
 from lib.ipa import clean_end_word_pseudovowel
+from lib.conversion import prepare_stress_pattern
 
 class MostProbableWords(object):
     def __init__(self, chains, options):
@@ -47,10 +48,7 @@ class MostProbableWords(object):
             else:
                 for stress_pattern in self.stressing_patterns:
                     self.target_length = len(stress_pattern)
-
-                    self.stress_pattern = ['start_word'] + list(stress_pattern) + ['end_word']
-                    if self.unstressed:
-                        self.stress_pattern = ['ignore_stress' for _ in self.stress_pattern]
+                    self.stress_pattern = prepare_stress_pattern(stress_pattern, self.unstressed)
 
                     if len(self.chains[self.target_length]) > 0:
                         self._get_next_unit([], 1.0)
