@@ -43,7 +43,7 @@ class MostProbableWords(object):
                     self.target_length = target_length
 
                     if len(self.chains[self.target_length]) > 0:
-                        self._get_next_unit(['START_WORD'], 1.0)
+                        self._get_next_unit([], 1.0)
 
             else:
                 for stress_pattern in self.stressing_patterns:
@@ -55,7 +55,7 @@ class MostProbableWords(object):
                     self.stress_pattern += ['end_word']
 
                     if len(self.chains[self.weighting][self.target_length]) > 0:
-                        self._get_next_unit([tuple(['START_WORD'])], 1.0)
+                        self._get_next_unit([], 1.0)
 
             # print 'total words searched: ', self.count
             # print 'total words qualified: ', len(self.most_probable_words)
@@ -72,7 +72,7 @@ class MostProbableWords(object):
         if self.count > POOL_MAX * 10:
             return
 
-        current_length = len(word)
+        current_length = len(word) + 1
         if current_length > MAX_WORD_LENGTH:
             return
 
@@ -104,7 +104,8 @@ class MostProbableWords(object):
                 self._get_next_unit(grown_word, score)
 
     def _get_next_units(self, word, current_length):
-        current_unit = word[-1]
+        current_unit = self._get_current_unit(word, current_length)
+
         position = 0 if self.ignore_position else current_length
 
         if self.ignore_syllables:
@@ -137,3 +138,8 @@ class MostProbableWords(object):
                 [current_stress]\
                 [next_stress]\
                 [current_unit].iteritems(), next_stress == 'end_word'
+
+    def _get_current_unit(self, word, current_length):
+        if current_length > 1:
+            return word[-1]
+        return 'START_WORD' if self.ignore_syllables else tuple(['START_WORD'])
