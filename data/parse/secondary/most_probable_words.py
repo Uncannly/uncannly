@@ -39,7 +39,7 @@ class MostProbableWords(object):
             self.count = 0
 
             if self.ignore_syllables:
-                for target_length in range(0, len(self.chains[self.stressing])):
+                for target_length in range(1, len(self.chains[self.stressing])):
                     self.target_length = target_length
 
                     if len(self.chains[self.stressing][self.target_length]) > 0:
@@ -93,7 +93,7 @@ class MostProbableWords(object):
                 if syllable:
                     grown_word.append(syllable)
                 self.most_probable_words.append(
-                    (grown_word, score, current_position))
+                    (grown_word, score, self.target_length))
             else:
                 grown_word = word[:]
                 grown_word.append(next_unit)
@@ -103,11 +103,11 @@ class MostProbableWords(object):
         current_unit = self._get_current_unit(word, current_position)
 
         position = 0 if self.ignore_position else current_position
+        length = 0 if self.ignore_length else self.target_length
 
         if self.ignore_syllables:
-            return self.chains[self.stressing][self.target_length][position][current_unit], False
+            return self.chains[self.stressing][length][position][current_unit], False
 
-        length = 0 if self.ignore_length else self.target_length
         current_stress = self.stress_pattern[current_position - 1]
         next_stress = self.stress_pattern[current_position]
 
