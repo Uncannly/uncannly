@@ -53,8 +53,8 @@ def _load_phonemes(weighting, unstressed):
 
 def _load_syllables(weighting, unstressed):
     stressing = ' = ' if unstressed else ' != '
-    sql = "select word_length, word_position, stressing, next_stressing, syllable, \
-        next_syllables_{} from syllables where stressing{}'ignore_stress';"\
+    sql = "select word_length, word_position, stress, next_stress, syllable, \
+        next_syllables_{} from syllables where stress{}'ignore_stress';"\
         .format(weighting, stressing)
     results = Database.fetch(sql)
 

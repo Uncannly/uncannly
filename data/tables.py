@@ -20,7 +20,7 @@ class Tables(object):
               next_phonemes_unweighted varchar)",
             "drop table if exists syllables",
             "create table syllables (word_length int, word_position int, \
-              stressing varchar, next_stressing varchar, syllable varchar, \
+              stress varchar, next_stress varchar, syllable varchar, \
               next_syllables_weighted varchar, next_syllables_unweighted varchar)",
             "drop table if exists scores",
             "create table scores (word varchar, score real, length int, \
@@ -44,27 +44,29 @@ class Tables(object):
     def syllables(self, syllables):
         sql_array = []
         syllables_unweighted = syllables['unweighted']
-        syllables = syllables['weighted']
-        for word_length in range(0, len(syllables)):
-            for word_position in range(0, len(syllables[word_length])): # do i need a + 1 here?
-                for previous_stressing, next_stressings in \
-                    syllables[word_length][word_position].iteritems():
-                    for next_stressing, previous_syllables in next_stressings.iteritems():
-                        for previous_syllable, next_syllables in previous_syllables.iteritems():
+        syllables_weighted = syllables['weighted']
+        for word_length in range(0, len(syllables_weighted)):
+            for word_position in range(0, len(syllables_weighted[word_length])):
+                for stress, next_stresses in \
+                    syllables_weighted[word_length][word_position].iteritems():
+                    for next_stress, syllables in next_stresses.iteritems():
+                        for syllable, next_syllables in syllables.iteritems():
                             next_syllables_unweighted = syllables_unweighted[word_length]\
-                                [word_position][previous_stressing][next_stressing]\
-                                [previous_syllable]
+                                [word_position][stress][next_stress][syllable]
+
                             next_syllables_unweighted = \
                                 {str(k).replace("'", '"'): v for k, v \
                                 in next_syllables_unweighted.iteritems()}
-                            next_syllables = {str(k).replace("'", '"'): v for k, v \
+                            next_syllables = \
+                                {str(k).replace("'", '"'): v for k, v \
                                 in next_syllables.iteritems()}
+
                             sql_array.append("('{}', '{}', '{}', '{}', '{}', '{}', '{}')"\
                                 .format(word_length,
                                         word_position,
-                                        previous_stressing,
-                                        next_stressing,
-                                        str(previous_syllable).replace("'", "''"),
+                                        stress,
+                                        next_stress,
+                                        str(syllable).replace("'", "''"),
                                         serialize(next_syllables),
                                         serialize(next_syllables_unweighted)))
             if word_length == 0:
@@ -73,7 +75,7 @@ class Tables(object):
                 sys.stdout.write(('Syllable chain table all positions for length '
                                   '{} updated.\n').format(word_length))
         sql_string = (
-            "insert into syllables (word_length, word_position, stressing, next_stressing, "
+            "insert into syllables (word_length, word_position, stress, next_stress, "
             "syllable, next_syllables_weighted, next_syllables_unweighted) values "
         )
         sql_string += ", ".join(sql_array)

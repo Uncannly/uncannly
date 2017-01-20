@@ -29,7 +29,7 @@ class MostProbableWords(object):
         self.target_length = None
 
         if not self.ignore_syllables:
-            self.stressing_patterns = \
+            self.stress_patterns = \
                 [x[0] for x in load('stress_pattern_distributions')[weighting]]
 
     def get(self):
@@ -46,7 +46,7 @@ class MostProbableWords(object):
                         self._get_next_unit([], 1.0)
 
             else:
-                for stress_pattern in self.stressing_patterns:
+                for stress_pattern in self.stress_patterns:
                     self.target_length = len(stress_pattern)
                     self.stress_pattern = prepare_stress_pattern(stress_pattern, self.unstressed)
 
