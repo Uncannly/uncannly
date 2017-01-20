@@ -7,7 +7,7 @@ from lib.ipa import clean_end_word_pseudovowel
 
 class MostProbableWords(object):
     def __init__(self, chains, options):
-        positioning, self.stressing, self.weighting, self.scoring_method, \
+        positioning, self.stressing, weighting, self.scoring_method, \
             length_consideration, self.ignore_syllables = options
         self.ignore_position = option_value_string_to_boolean(positioning)
         self.ignore_length = option_value_string_to_boolean(length_consideration)
@@ -17,20 +17,20 @@ class MostProbableWords(object):
         default_limits = load('default_limits')
         self.limit = 1.0 if not default_limits else default_limits\
             .get(length_consideration, {}).get(positioning, {}).get(self.stressing, {})\
-            .get(self.weighting, {}).get(self.scoring_method).get(syllable_use, 1.0)
+            .get(weighting, {}).get(self.scoring_method).get(syllable_use, 1.0)
         self.upper_limit = None
         self.lower_limit = None
 
         self.most_probable_words = []
         self.count = 0
 
-        self.chains = chains[self.weighting][self.stressing] if self.ignore_syllables else chains
+        self.chains = chains[weighting]
 
         self.target_length = None
 
         if not self.ignore_syllables:
             self.stressing_patterns = \
-                [x[0] for x in load('stress_pattern_distributions')[self.weighting]]
+                [x[0] for x in load('stress_pattern_distributions')[weighting]]
 
     def get(self):
         good_count = False
@@ -39,10 +39,10 @@ class MostProbableWords(object):
             self.count = 0
 
             if self.ignore_syllables:
-                for target_length in range(0, len(self.chains)):
+                for target_length in range(0, len(self.chains[self.stressing])):
                     self.target_length = target_length
 
-                    if len(self.chains[self.target_length]) > 0:
+                    if len(self.chains[self.stressing][self.target_length]) > 0:
                         self._get_next_unit([], 1.0)
 
             else:
@@ -54,7 +54,7 @@ class MostProbableWords(object):
                         self.stress_pattern = ['ignore_stress' for _ in self.stress_pattern]
                     self.stress_pattern += ['end_word']
 
-                    if len(self.chains[self.weighting][self.target_length]) > 0:
+                    if len(self.chains[self.target_length]) > 0:
                         self._get_next_unit([], 1.0)
 
             # print 'total words searched: ', self.count
@@ -105,20 +105,20 @@ class MostProbableWords(object):
         position = 0 if self.ignore_position else current_length
 
         if self.ignore_syllables:
-            return self.chains[self.target_length][position][current_unit], False
+            return self.chains[self.stressing][self.target_length][position][current_unit], False
 
         length = 0 if self.ignore_length else self.target_length
         current_stress = self.stress_pattern[current_length - 1]
         next_stress = self.stress_pattern[current_length]
 
         if self.unstressed and next_stress == 'end_word':
-            return self.chains[self.weighting]\
+            return self.chains\
                 [length]\
                 [position]\
                 [current_stress]\
                 ['ignore_stress']\
                 [current_unit].iteritems(), True
-        elif current_unit not in self.chains[self.weighting]\
+        elif current_unit not in self.chains\
             [length]\
             [position]\
             [current_stress]\
@@ -128,7 +128,7 @@ class MostProbableWords(object):
             # in the first stress level, may not happen to exist for the transition
             # from that stress level to the next one in the given stressing pattern
         else:
-            return self.chains[self.weighting]\
+            return self.chains\
                 [length]\
                 [position]\
                 [current_stress]\
