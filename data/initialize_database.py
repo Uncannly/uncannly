@@ -65,7 +65,7 @@ class DatabaseInitializer(object):
                 normalize.phoneme_chains(self.phoneme_chains['weighted'][stressing])
             self.word_lengths['unweighted'][stressing] = \
                 normalize.phoneme_chains(self.phoneme_chains['unweighted'][stressing])
-            sys.stdout.write('Phoneme chains {} normalized'.format(stressing))
+            sys.stdout.write('Phoneme chains {} normalized.\n'.format(stressing))
 
             self.tables.phonemes(
                 self.word_lengths['weighted'][stressing],
