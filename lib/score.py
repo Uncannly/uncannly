@@ -22,19 +22,13 @@ def get_score(score, scoring_method, probability, word_length):
 
 def update_limits(count, limit, lower_limit, upper_limit):
     good_count = False
+    old_limit = limit
     if count < POOL_MAX:
         upper_limit = limit
         if lower_limit:
             limit -= (limit - lower_limit) / 2
         else:
             limit /= 2
-
-        if limit == 0:
-            stdout.write(
-                'With these parameters, it is not possible '
-                'to find enough words to meet the pool max.\n'
-            )
-            good_count = True
     elif count > POOL_MAX * 10:
         lower_limit = limit
         if upper_limit:
@@ -43,5 +37,17 @@ def update_limits(count, limit, lower_limit, upper_limit):
             limit *= 2
     else:
         good_count = True
+
+    if limit == 0:
+        stdout.write(
+            'With these parameters, it is not possible '
+            'to find enough words to meet the pool max.\n'
+        )
+        good_count = True
+    elif limit != old_limit:
+        stdout.write(
+            'The limit for this option set has needed to change. '
+            'Is this expected? If not, reconsider your commit...\n'
+        )
 
     return good_count, limit, lower_limit, upper_limit
