@@ -6,7 +6,6 @@ from lib.select_and_present import select_for_web, select_and_maybe_present_for_
 from lib.score import get_score
 from lib.cumulative_distribution import choose_next
 from lib.options import option_value_boolean_to_string, MAX_WORD_LENGTH, MAX_FAILS
-from lib.conversion import array_to_string
 from lib.ipa import clean_end_word_pseudovowel
 
 # pylint: disable=too-few-public-methods
@@ -96,8 +95,6 @@ class RandomMode(object):
         self._reset()
 
     def _maybe_succeed(self):
-        if self.interface == 'cli' and self.ignore_syllables:
-            self.word = array_to_string(self.word)
         selected_word = self.selector(self.word,
                                       self.score,
                                       self.unstressed,

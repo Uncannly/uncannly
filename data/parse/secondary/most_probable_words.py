@@ -1,5 +1,4 @@
 from data.secondary_data_io import load
-from lib.conversion import array_to_string
 from lib.score import get_score, update_limits
 from lib.options import POOL_MAX, MAX_WORD_LENGTH, option_value_string_to_boolean, \
     option_value_boolean_to_string
@@ -86,7 +85,7 @@ class MostProbableWords(object):
                 pass
             elif self.ignore_syllables and next_unit == 'END_WORD':
                 self.most_probable_words.append(
-                    (array_to_string(word), score, self.target_length))
+                    (word, score, self.target_length))
             elif self.ignore_syllables is False and (must_end or next_unit[-1] == 'END_WORD'):
                 grown_word = word[:]
                 syllable = clean_end_word_pseudovowel(next_unit)

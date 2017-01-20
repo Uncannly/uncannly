@@ -3,7 +3,8 @@ import json
 
 from lib.options import option_value_string_to_boolean, option_value_boolean_to_string, \
     SCORING_METHODS
-from lib.conversion import snake_to_space
+from lib.conversion import snake_to_space, array_to_string, serialize
+
 
 class Tables(object):
     def __init__(self, database):
@@ -64,8 +65,8 @@ class Tables(object):
                                         previous_stressing,
                                         next_stressing,
                                         str(previous_syllable).replace("'", "''"),
-                                        json.dumps(next_syllables).replace('"', "''"),
-                                        json.dumps(next_syllables_unweighted).replace('"', "''")))
+                                        serialize(next_syllables),
+                                        serialize(next_syllables_unweighted)))
             if word_length == 0:
                 sys.stdout.write('Syllable chain table all positions for ignore length updated.\n')
             else:
@@ -122,9 +123,10 @@ class Tables(object):
         else:
             sql_array = []
             for word, score, length in most_probable_words:
-                # meaning that if it is syllables mode, make nice as per above
-                if not boolean_options[-1]:
-                    word = str(word).replace("'", "''")
+                if ignore_syllables:
+                    word = array_to_string(word, ignore_syllables)
+                else:
+                    word = serialize(word)
                 sql_array.append(
                     "('{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}')".\
                     format(word, score, length, *boolean_options)

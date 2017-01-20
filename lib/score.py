@@ -32,7 +32,7 @@ def update_limits(count, limit, lower_limit, upper_limit):
         if limit == 0:
             sys.stdout.write(
                 'With these parameters, it is not possible '
-                'to find enough words to meet the pool max.'
+                'to find enough words to meet the pool max.\n'
             )
             good_count = True
     elif count > POOL_MAX * 10:

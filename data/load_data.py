@@ -1,10 +1,9 @@
-import json
-import ast
+from json import loads
 
 from data.database import Database
 from data.secondary_data_io import load
 from lib.options import SCORING_METHODS
-from lib.conversion import sparse
+from lib.conversion import sparse, deserialize
 
 def load_words():
     return Database.fetch("select * from words;")
@@ -26,9 +25,8 @@ def load_scores(scoring_method,
         )
 
     results = Database.fetch(sql)
-    if not ignore_syllables:
-        results = [(ast.literal_eval(word), score) for (word, score) in results]
-    return results
+
+    return [(deserialize(word, ignore_syllables), score) for (word, score) in results]
 # plyint: enable=too-many-arguments
 
 def load_chains(weighting, unstressed, ignore_syllables):
@@ -49,7 +47,7 @@ def _load_phonemes(weighting, unstressed):
         sparse(output, word_length, [])
         sparse(output[word_length], word_position, {})
 
-        output[word_length][word_position][phoneme] = json.loads(next_phonemes)
+        output[word_length][word_position][phoneme] = loads(next_phonemes)
 
     return output
 
@@ -62,9 +60,9 @@ def _load_syllables(weighting, unstressed):
 
     output = []
     for length, position, stressing, next_stressing, syllable, next_syllables in results:
-        syllable = ast.literal_eval(syllable)
-        next_syllables = ast.literal_eval(next_syllables)
-        next_syllables = {ast.literal_eval(k): v for k, v in next_syllables.iteritems()}
+        syllable = deserialize(syllable, False)
+        next_syllables = deserialize(next_syllables, False)
+        next_syllables = {deserialize(k, False): v for k, v in next_syllables.iteritems()}
 
         sparse(output, length, [])
         sparse(output[length], position, {})

@@ -41,10 +41,7 @@ class TopMode(object):
 
         words = []
         for word, score in most_probable_words:
-            if self.ignore_syllables:
-                length = len(string_to_array(word))
-            else:
-                length = len(word)
+            length = len(word)
 
             if score < self.score_threshold:
                 break
@@ -105,8 +102,6 @@ def api_select_top(words, selection, unstressed, exclude_real, ignore_syllables)
             break
         else:
             word, score = words[i]
-            if ignore_syllables:
-                word = string_to_array(word)
             result = select_for_web(word, score, unstressed, exclude_real, ignore_syllables)
 
             i += 1
@@ -127,8 +122,6 @@ def api_select_random(words, selection, unstressed, exclude_real, ignore_syllabl
         i = int(random.random() * len(words))
 
         word, score = words[i]
-        if ignore_syllables:
-            word = string_to_array(word)
         result = select_for_web(word, score, unstressed, exclude_real, ignore_syllables)
 
         if result:
