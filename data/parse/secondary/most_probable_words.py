@@ -85,19 +85,15 @@ class MostProbableWords(object):
             if score < self.limit:
                 pass
             elif self.ignore_syllables and next_unit == 'END_WORD':
-                stringified_word = array_to_string(word[1:])
                 self.most_probable_words.append(
-                    (stringified_word, score, self.target_length))
-            elif not self.ignore_syllables and (must_end or next_unit[-1] == 'END_WORD'):
-                afraid_word = word[1:]
-                # this is always just start word. i tried switching things up
-                # so that we kick off "get" with an empty array but it
-                # got off and scary... try again in a separate commit
+                    (array_to_string(word), score, self.target_length))
+            elif self.ignore_syllables is False and (must_end or next_unit[-1] == 'END_WORD'):
+                grown_word = word[:]
                 syllable = clean_end_word_pseudovowel(next_unit)
                 if syllable:
-                    afraid_word.append(syllable)
+                    grown_word.append(syllable)
                 self.most_probable_words.append(
-                    (afraid_word, score, current_length))
+                    (grown_word, score, current_length))
             else:
                 grown_word = word[:]
                 grown_word.append(next_unit)
