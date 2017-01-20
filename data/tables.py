@@ -35,7 +35,7 @@ class Tables(object):
         sql_array = []
         for word, pronunciation, frequency in words:
             sql_array.append("('{}', '{}', '{}')".format(
-                word.replace("'", "''"), pronunciation, frequency
+                serialize(word, ignore_syllables=False), pronunciation, frequency
             ))
         sql_string = "insert into words (word, pronunciation, frequency) values "
         sql_string += ", ".join(sql_array)
@@ -66,7 +66,7 @@ class Tables(object):
                                         word_position,
                                         stress,
                                         next_stress,
-                                        str(syllable).replace("'", "''"),
+                                        serialize(syllable, ignore_syllables=False),
                                         serialize(next_syllables, ignore_syllables=False),
                                         serialize(next_syllables_unweighted, ignore_syllables=False)))
             if word_length == 0:

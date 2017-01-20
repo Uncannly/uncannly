@@ -60,9 +60,10 @@ def _load_syllables(weighting, unstressed):
 
     output = []
     for length, position, stressing, next_stressing, syllable, next_syllables in results:
-        syllable = deserialize(syllable, False)
-        next_syllables = deserialize(next_syllables, False)
-        next_syllables = {deserialize(k, False): v for k, v in next_syllables.iteritems()}
+        syllable = tuple(deserialize(syllable, ignore_syllables=False))
+        next_syllables = deserialize(next_syllables, ignore_syllables=False)
+        next_syllables = {deserialize(k, ignore_syllables=False): v \
+            for k, v in next_syllables.iteritems()}
 
         sparse(output, length, [])
         sparse(output[length], position, {})
