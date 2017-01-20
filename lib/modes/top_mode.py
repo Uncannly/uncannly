@@ -2,7 +2,6 @@ import sys
 import random
 
 from lib.select_and_present import select_for_web, select_and_maybe_present_for_terminal
-from lib.conversion import string_to_array
 from lib.options import TOO_FEW_MESSAGE, NO_WORDS_MESSAGE, POOL_DEFAULT
 from data.load_data import load_scores
 

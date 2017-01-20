@@ -3,7 +3,7 @@ from json import dumps
 
 from lib.options import option_value_string_to_boolean, option_value_boolean_to_string, \
     SCORING_METHODS
-from lib.conversion import snake_to_space, array_to_string, serialize
+from lib.conversion import snake_to_space, serialize
 
 
 class Tables(object):

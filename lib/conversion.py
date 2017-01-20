@@ -18,12 +18,12 @@ def snake_to_space(string):
 def to_sig_figs(num, figs):
     return round(num, -int(floor(log10(num))) + (figs - 1))
 
-def array_to_string(word, ignore_syllables):
+def data_to_formatted_string(word, ignore_syllables):
     if ignore_syllables:
         return ' '.join(word)
     return ' '.join([' '.join(syllable) for syllable in word])
 
-def string_to_array(word):
+def _string_to_array(word):
     return word.split(' ')
 
 def sparse(nonsparse, desired_index, initial_value):
@@ -36,7 +36,7 @@ def serialize(data, ignore_syllables):
     return dumps(data).replace("'", "''")
 
 def deserialize(data, ignore_syllables):
-    deserializer = string_to_array if ignore_syllables else literal_eval
+    deserializer = _string_to_array if ignore_syllables else literal_eval
     return deserializer(data)
 
 def prepare_stress_pattern(stress_pattern, unstressed):

@@ -1,7 +1,7 @@
 import sys
 
 from lib.ipa import ipa, destress, stress_level, stress_symbol
-from lib.conversion import array_to_string, to_sig_figs
+from lib.conversion import data_to_formatted_string, to_sig_figs
 from data.load_data import load_words
 
 WORDS = load_words()
@@ -16,7 +16,7 @@ def select_for_web(word, score, unstressed, exclude_real, ignore_syllables, _=No
 # pylint: disable=too-many-arguments,invalid-name
 def select_and_maybe_present_for_terminal(word, score, unstressed, exclude_real,\
     ignore_syllables, suppress_immediate_presentation):
-    word = array_to_string(word, ignore_syllables)
+    word = data_to_formatted_string(word, ignore_syllables)
     existing_word = _already_in_dictionary(word, unstressed)
     word_and_score = _format_or_reject(word, score, exclude_real, existing_word)
     if word_and_score is None:
@@ -33,7 +33,7 @@ def terminal_delayed_presentation(words):
         _write_to_terminal(word, score)
 
 def _web_phonemes(word):
-    return ipa(word), array_to_string(word, True)
+    return ipa(word), data_to_formatted_string(word, ignore_syllables=True)
 
 def _web_syllables(word):
     word_output = ''
@@ -46,7 +46,8 @@ def _web_syllables(word):
         for phoneme in syllable:
             word_output += ipa([phoneme])
             for_checking_word.append(phoneme)
-    return word_output, array_to_string(for_checking_word, True)
+    # yes, it is weird that we claim to ignore syllables though we're in syllables
+    return word_output, data_to_formatted_string(for_checking_word, ignore_syllables=True)
 
 def _write_to_terminal(word, score):
     sys.stdout.write(word + ' [' + str(to_sig_figs(score, 6)) + ']\n')
