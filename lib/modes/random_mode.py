@@ -5,7 +5,7 @@ from lib.score import get_score
 from lib.cumulative_distribution import choose_next
 from lib.options import option_value_boolean_to_string, MAX_WORD_LENGTH, MAX_FAILS
 from lib.ipa import clean_end_word_pseudovowel
-from lib.conversion import prepare_stress_pattern
+from lib.conversion import prepare_pattern
 
 # pylint: disable=too-few-public-methods
 class RandomMode(object):
@@ -143,28 +143,28 @@ class RandomMode(object):
 
     def _reset(self):
         if self.ignore_syllables:
-            self.target_length = 0 if self.ignore_length else self._random_frame()
+            self.target_length = 0 if self.ignore_length else self._random_pattern()
         else:
-            stress_pattern = self._random_frame()
+            stress_pattern = self._random_pattern()
             self.target_length = len(stress_pattern)
-            self.stress_pattern = prepare_stress_pattern(stress_pattern, self.unstressed)
+            self.stress_pattern = prepare_pattern(stress_pattern, self.unstressed, self.ignore_syllables)
             
         self.word = []
         self.unit = 'START_WORD' if self.ignore_syllables else tuple(['START_WORD'])
         self.score = 1.0
         self.must_end = False
 
-    def _random_frame(self):
-        frame = None
-        while frame is None:
+    def _random_pattern(self):
+        pattern = None
+        while pattern is None:
             distributions = enumerate(self.distributions[1:]) \
                 if self.ignore_syllables else self.distributions
-            frame = choose_next(distributions)
-            length = frame if self.ignore_syllables else len(frame)
+            pattern = choose_next(distributions)
+            length = pattern if self.ignore_syllables else len(pattern)
             if (self.min_length is not None and length < self.min_length) or \
                 (self.max_length is not None and length > self.max_length):
-                frame = None
-        return frame
+                pattern = None
+        return pattern
 
     def _fail(self):
         message = (

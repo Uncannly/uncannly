@@ -3,11 +3,11 @@ from lib.score import get_score, update_limits
 from lib.options import POOL_MAX, MAX_WORD_LENGTH, option_value_string_to_boolean, \
     option_value_boolean_to_string
 from lib.ipa import clean_end_word_pseudovowel
-from lib.conversion import prepare_stress_pattern
+from lib.conversion import prepare_pattern
 
 class MostProbableWords(object):
     def __init__(self, chains, options):
-        positioning, self.stressing, weighting, self.scoring_method, \
+        positioning, self.stressing, self.weighting, self.scoring_method, \
             length_consideration, self.ignore_syllables = options
         self.ignore_position = option_value_string_to_boolean(positioning)
         self.ignore_length = option_value_string_to_boolean(length_consideration)
@@ -17,20 +17,18 @@ class MostProbableWords(object):
         default_limits = load('default_limits')
         self.limit = 1.0 if not default_limits else default_limits\
             .get(length_consideration, {}).get(positioning, {}).get(self.stressing, {})\
-            .get(weighting, {}).get(self.scoring_method).get(syllable_use, 1.0)
+            .get(self.weighting, {}).get(self.scoring_method).get(syllable_use, 1.0)
         self.upper_limit = None
         self.lower_limit = None
 
         self.most_probable_words = []
         self.count = 0
 
-        self.chains = chains[weighting]
+        self.chains = chains[self.weighting]
 
         self.target_length = None
-
-        if not self.ignore_syllables:
-            self.stress_patterns = \
-                [x[0] for x in load('stress_pattern_distributions')[weighting]]
+        self.patterns = self._neutral_patterns() if self.ignore_syllables \
+            else self._stress_patterns()
 
     def get(self):
         good_count = False
@@ -38,20 +36,11 @@ class MostProbableWords(object):
             self.most_probable_words = []
             self.count = 0
 
-            if self.ignore_syllables:
-                for target_length in range(1, len(self.chains[self.stressing])):
-                    self.target_length = target_length
-
-                    if len(self.chains[self.stressing][self.target_length]) > 0:
-                        self._get_next_unit([], 1.0)
-
-            else:
-                for stress_pattern in self.stress_patterns:
-                    self.target_length = len(stress_pattern)
-                    self.stress_pattern = prepare_stress_pattern(stress_pattern, self.unstressed)
-
-                    if len(self.chains[self.target_length]) > 0:
-                        self._get_next_unit([], 1.0)
+            for pattern in self.patterns:
+                self.target_length = len(pattern)
+                if self._pattern_is_not_empty():
+                    self.pattern = prepare_pattern(pattern, self.unstressed, self.ignore_syllables)
+                    self._get_next_unit(word=[], score=1.0)
 
             # print 'total words searched: ', self.count
             # print 'total words qualified: ', len(self.most_probable_words)
@@ -62,6 +51,20 @@ class MostProbableWords(object):
 
         self.most_probable_words.sort(key=lambda x: -x[1])
         return self.most_probable_words[:POOL_MAX], self.limit
+
+    def _neutral_patterns(self):
+        return [[None] * _ for _ in range(1, len(self.chains[self.stressing]))]
+
+    def _stress_patterns(self):
+        return [_[0] for _ in load('stress_pattern_distributions')[self.weighting]]
+
+    def _pattern_is_not_empty(self):
+        return len(self._pattern_pather()) > 0
+
+    def _pattern_pather(self):
+        if self.ignore_syllables:
+            return self.chains[self.stressing][self.target_length]
+        return self.chains[self.target_length]
 
     def _get_next_unit(self, word, score):
         self.count += 1
@@ -91,8 +94,8 @@ class MostProbableWords(object):
         if self.ignore_syllables:
             return self.chains[self.stressing][length][position][current_unit]
 
-        current_stress = self.stress_pattern[current_position - 1]
-        next_stress = self.stress_pattern[current_position]
+        current_stress = self.pattern[current_position - 1]
+        next_stress = self.pattern[current_position]
 
         if current_unit not in self.chains[length][position][current_stress][next_stress].keys():
             return None

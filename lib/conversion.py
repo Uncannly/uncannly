@@ -57,7 +57,10 @@ def deep_deserialize(data):
 def deserialize_and_hashablize(data):
     return tuple(literal_eval(data))
 
-def prepare_stress_pattern(stress_pattern, unstressed):
+def prepare_pattern(stress_pattern, unstressed, ignore_syllables):
+    if ignore_syllables:
+        return None
+
     stress_pattern = ['start_word'] + list(stress_pattern) + ['end_word']
     if unstressed:
         stress_pattern = ['ignore_stress'] * len(stress_pattern)
