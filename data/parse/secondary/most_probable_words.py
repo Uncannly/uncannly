@@ -48,10 +48,9 @@ class MostProbableWords(object):
                 for stress_pattern in self.stressing_patterns:
                     self.target_length = len(stress_pattern)
 
-                    self.stress_pattern = ['start_word'] + list(stress_pattern)
+                    self.stress_pattern = ['start_word'] + list(stress_pattern) + ['end_word']
                     if self.unstressed:
                         self.stress_pattern = ['ignore_stress' for _ in self.stress_pattern]
-                    self.stress_pattern += ['end_word']
 
                     if len(self.chains[self.target_length]) > 0:
                         self._get_next_unit([], 1.0)
@@ -75,7 +74,10 @@ class MostProbableWords(object):
         if current_position > MAX_WORD_LENGTH:
             return
 
-        next_units, must_end = self._get_next_units(word, current_position)
+        if current_position > self.target_length + 1:
+            return
+
+        next_units = self._get_next_units(word, current_position)
         if next_units is None:
             return
 
@@ -86,7 +88,7 @@ class MostProbableWords(object):
             elif self.ignore_syllables and next_unit == 'END_WORD':
                 self.most_probable_words.append(
                     (word, score, self.target_length))
-            elif self.ignore_syllables is False and (must_end or next_unit[-1] == 'END_WORD'):
+            elif not self.ignore_syllables and next_unit[-1] == 'END_WORD':
                 grown_word = word[:]
                 syllable = clean_end_word_pseudovowel(next_unit)
                 if syllable:
@@ -105,34 +107,15 @@ class MostProbableWords(object):
         length = 0 if self.ignore_length else self.target_length
 
         if self.ignore_syllables:
-            return self.chains[self.stressing][length][position][current_unit], False
+            return self.chains[self.stressing][length][position][current_unit]
 
         current_stress = self.stress_pattern[current_position - 1]
         next_stress = self.stress_pattern[current_position]
 
-        if self.unstressed and next_stress == 'end_word':
-            return self.chains\
-                [length]\
-                [position]\
-                [current_stress]\
-                ['ignore_stress']\
-                [current_unit].iteritems(), True
-        elif current_unit not in self.chains\
-            [length]\
-            [position]\
-            [current_stress]\
-            [next_stress].keys():
-            return None, False
-            # this is because the syllable chosen, while it of course exists
-            # in the first stress level, may not happen to exist for the transition
-            # from that stress level to the next one in the given stressing pattern
-        else:
-            return self.chains\
-                [length]\
-                [position]\
-                [current_stress]\
-                [next_stress]\
-                [current_unit].iteritems(), next_stress == 'end_word'
+        if current_unit not in self.chains[length][position][current_stress][next_stress].keys():
+            return None
+
+        return self.chains[length][position][current_stress][next_stress][current_unit].iteritems()
 
     def _get_current_unit(self, word, current_position):
         if current_position > 1:
