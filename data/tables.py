@@ -3,7 +3,7 @@ from json import dumps
 
 from lib.options import option_value_string_to_boolean, option_value_boolean_to_string, \
     SCORING_METHODS
-from lib.conversion import snake_to_space, serialize
+from lib.conversion import snake_to_space, serialize, deep_serialize
 
 
 class Tables(object):
@@ -54,21 +54,14 @@ class Tables(object):
                             next_syllables_unweighted = syllables_unweighted[word_length]\
                                 [word_position][stress][next_stress][syllable]
 
-                            next_syllables_unweighted = \
-                                {str(k).replace("'", '"'): v for k, v \
-                                in next_syllables_unweighted.iteritems()}
-                            next_syllables = \
-                                {str(k).replace("'", '"'): v for k, v \
-                                in next_syllables.iteritems()}
-
                             sql_array.append("('{}', '{}', '{}', '{}', '{}', '{}', '{}')"\
                                 .format(word_length,
                                         word_position,
                                         stress,
                                         next_stress,
                                         serialize(syllable, ignore_syllables=False),
-                                        serialize(next_syllables, ignore_syllables=False),
-                                        serialize(next_syllables_unweighted, ignore_syllables=False)))
+                                        deep_serialize(next_syllables),
+                                        deep_serialize(next_syllables_unweighted)))
             if word_length == 0:
                 sys.stdout.write('Syllable chain table all positions for ignore length updated.\n')
             else:

@@ -3,7 +3,7 @@ from json import loads
 from data.database import Database
 from data.secondary_data_io import load
 from lib.options import SCORING_METHODS
-from lib.conversion import sparse, deserialize
+from lib.conversion import sparse, deserialize, deep_deserialize, deserialize_and_hashablize
 
 def load_words():
     return Database.fetch("select * from words;")
@@ -60,10 +60,8 @@ def _load_syllables(weighting, unstressed):
 
     output = []
     for length, position, stressing, next_stressing, syllable, next_syllables in results:
-        syllable = tuple(deserialize(syllable, ignore_syllables=False))
-        next_syllables = deserialize(next_syllables, ignore_syllables=False)
-        next_syllables = {deserialize(k, ignore_syllables=False): v \
-            for k, v in next_syllables.iteritems()}
+        syllable = deserialize_and_hashablize(syllable)
+        next_syllables = deep_deserialize(next_syllables)
 
         sparse(output, length, [])
         sparse(output[length], position, {})
