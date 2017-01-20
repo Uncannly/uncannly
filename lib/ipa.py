@@ -42,14 +42,17 @@ def stress_level(syllable):
 def stress_symbol(level):
     return 'ˈ' if level == 'primary' else 'ˌ'
 
-def clean_end_word_pseudovowel(syllable):
-    if syllable[-1] == 'END_WORD':
-        if len(syllable) > 1:
-            return syllable[:-1]
+def clean_end_word_pseudovowel(unit, ignore_syllables):
+    if ignore_syllables:
+        return None if unit == 'END_WORD' else unit
+
+    if unit[-1] == 'END_WORD':
+        if len(unit) > 1:
+            return unit[:-1]
         else:
             return None
     else:
-        return syllable
+        return unit
 
 IPA = {
     'vowels': {

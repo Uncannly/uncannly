@@ -74,7 +74,7 @@ class RandomMode(object):
                     if self.unit is None or self.word is None:
                         break
                     else:
-                        unit = clean_end_word_pseudovowel(self.unit)
+                        unit = clean_end_word_pseudovowel(self.unit, self.ignore_syllables)
                         if unit:
                             self.word.append(unit)
 

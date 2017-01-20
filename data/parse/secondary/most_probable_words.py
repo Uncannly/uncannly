@@ -69,10 +69,7 @@ class MostProbableWords(object):
             return
 
         current_position = len(word) + 1
-        if current_position > MAX_WORD_LENGTH:
-            return
-
-        if current_position > self.target_length + 1:
+        if current_position > MAX_WORD_LENGTH or current_position > self.target_length + 1:
             return
 
         next_units = self._get_next_units(word, current_position)
@@ -81,22 +78,9 @@ class MostProbableWords(object):
 
         for next_unit, probability in next_units:
             score = get_score(score, self.scoring_method, probability, current_position)
-            if score < self.limit:
-                pass
-            elif self.ignore_syllables and next_unit == 'END_WORD':
-                self.most_probable_words.append(
-                    (word, score, self.target_length))
-            elif not self.ignore_syllables and next_unit[-1] == 'END_WORD':
-                grown_word = word[:]
-                syllable = clean_end_word_pseudovowel(next_unit)
-                if syllable:
-                    grown_word.append(syllable)
-                self.most_probable_words.append(
-                    (grown_word, score, self.target_length))
-            else:
-                grown_word = word[:]
-                grown_word.append(next_unit)
-                self._get_next_unit(grown_word, score)
+            if score > self.limit:
+                next_step = self._save_word if self._finished(next_unit) else self._get_next_unit
+                next_step(self._grow_word(word, next_unit), score)
 
     def _get_next_units(self, word, current_position):
         current_unit = self._get_current_unit(word, current_position)
@@ -119,3 +103,18 @@ class MostProbableWords(object):
         if current_position > 1:
             return word[-1]
         return 'START_WORD' if self.ignore_syllables else tuple(['START_WORD'])
+
+    def _grow_word(self, word, next_unit):
+        grown_word = word[:]
+
+        next_unit = clean_end_word_pseudovowel(next_unit, self.ignore_syllables)
+        if next_unit:
+            grown_word.append(next_unit)
+
+        return grown_word
+
+    def _finished(self, next_unit):
+        return next_unit == 'END_WORD' or next_unit[-1] == 'END_WORD'
+
+    def _save_word(self, word, score):
+        self.most_probable_words.append((word, score, self.target_length))
