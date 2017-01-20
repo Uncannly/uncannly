@@ -30,7 +30,9 @@ def sparse(nonsparse, desired_index, initial_value):
     while desired_index + 1 > len(nonsparse):
         nonsparse.append(copy(initial_value))
 
-def serialize(data):
+def serialize(data, ignore_syllables):
+    if ignore_syllables:
+        return ' '.join(data)
     return dumps(data).replace("'", "''")
 
 def deserialize(data, ignore_syllables):

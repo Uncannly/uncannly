@@ -1,5 +1,5 @@
 import sys
-import json
+from json import dumps
 
 from lib.options import option_value_string_to_boolean, option_value_boolean_to_string, \
     SCORING_METHODS
@@ -67,8 +67,8 @@ class Tables(object):
                                         stress,
                                         next_stress,
                                         str(syllable).replace("'", "''"),
-                                        serialize(next_syllables),
-                                        serialize(next_syllables_unweighted)))
+                                        serialize(next_syllables, ignore_syllables=False),
+                                        serialize(next_syllables_unweighted, ignore_syllables=False)))
             if word_length == 0:
                 sys.stdout.write('Syllable chain table all positions for ignore length updated.\n')
             else:
@@ -98,8 +98,8 @@ class Tables(object):
                                     word_position,
                                     phoneme,
                                     unstressed,
-                                    json.dumps(next_phonemes_weighted),
-                                    json.dumps(next_phonemes_unweighted)))
+                                    dumps(next_phonemes_weighted),
+                                    dumps(next_phonemes_unweighted)))
             if word_length == 0:
                 sys.stdout.write(('Phoneme chain table all positions for ignore length '
                                   '{} updated.\n').format(stressing))
@@ -125,13 +125,9 @@ class Tables(object):
         else:
             sql_array = []
             for word, score, length in most_probable_words:
-                if ignore_syllables:
-                    word = array_to_string(word, ignore_syllables)
-                else:
-                    word = serialize(word)
                 sql_array.append(
                     "('{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}')".\
-                    format(word, score, length, *boolean_options)
+                    format(serialize(word, ignore_syllables), score, length, *boolean_options)
                 )
             sql_string = (
                 "insert into scores (word, score, length, ignore_position, "
