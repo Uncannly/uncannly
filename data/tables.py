@@ -1,4 +1,4 @@
-import sys
+from sys import stdout
 from json import dumps
 
 from lib.options import option_value_string_to_boolean, option_value_boolean_to_string, \
@@ -63,9 +63,9 @@ class Tables(object):
                                         deep_serialize(next_syllables),
                                         deep_serialize(next_syllables_unweighted)))
             if word_length == 0:
-                sys.stdout.write('Syllable chain table all positions for ignore length updated.\n')
+                stdout.write('Syllable chain table all positions for ignore length updated.\n')
             else:
-                sys.stdout.write(('Syllable chain table all positions for length '
+                stdout.write(('Syllable chain table all positions for length '
                                   '{} updated.\n').format(word_length))
         sql_string = (
             "insert into syllables (word_length, word_position, stress, next_stress, "
@@ -94,10 +94,10 @@ class Tables(object):
                                     dumps(next_phonemes_weighted),
                                     dumps(next_phonemes_unweighted)))
             if word_length == 0:
-                sys.stdout.write(('Phoneme chain table all positions for ignore length '
+                stdout.write(('Phoneme chain table all positions for ignore length '
                                   '{} updated.\n').format(stressing))
             else:
-                sys.stdout.write(('Phoneme chain table all positions for length '
+                stdout.write(('Phoneme chain table all positions for length '
                                   '{} {} updated.\n').format(word_length, stressing))
         sql_string = (
             "insert into phonemes (word_length, word_position, phoneme, "
@@ -131,7 +131,7 @@ class Tables(object):
             self.database.execute(sql_string)
 
             syllable_use = option_value_boolean_to_string('syllable_use', ignore_syllables)
-            sys.stdout.write('Most probable words {} {} {} {} {} {} done.\n'.format(
+            stdout.write('Most probable words {} {} {} {} {} {} done.\n'.format(
                 snake_to_space(stressing),
                 snake_to_space(weighting),
                 snake_to_space(length_consideration),

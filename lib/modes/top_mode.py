@@ -1,7 +1,7 @@
-import sys
-import random
+from random import random, choice
 
-from lib.select_and_present import select_for_web, select_and_maybe_present_for_terminal
+from lib.select_and_present import select_for_web, select_and_maybe_present_for_terminal, \
+    terminal_failure
 from lib.options import TOO_FEW_MESSAGE, NO_WORDS_MESSAGE, POOL_DEFAULT
 from data.load_data import load_scores
 
@@ -67,7 +67,7 @@ def cli_select_top(words, selection, unstressed, exclude_real, ignore_syllables)
             presented = None
             while not presented:
                 if i == len(words):
-                    return sys.stdout.write(TOO_FEW_MESSAGE)
+                    return terminal_failure(TOO_FEW_MESSAGE)
 
                 word, score = words[i]
                 presented = select_and_maybe_present_for_terminal(
@@ -76,19 +76,19 @@ def cli_select_top(words, selection, unstressed, exclude_real, ignore_syllables)
 
                 i += 1
     else:
-        sys.stdout.write(NO_WORDS_MESSAGE)
+        return terminal_failure(NO_WORDS_MESSAGE)
 
 def cli_select_random(words, selection, unstressed, exclude_real, ignore_syllables):
     if len(words) > 0:
         for _ in xrange(selection):
             presented = None
             while not presented:
-                word, score = random.choice(words)
+                word, score = choice(words)
                 presented = select_and_maybe_present_for_terminal(
                     word, score, unstressed, exclude_real, ignore_syllables,
                     suppress_immediate_presentation=False)
     else:
-        sys.stdout.write(NO_WORDS_MESSAGE)
+        return terminal_failure(NO_WORDS_MESSAGE)
 
 def api_select_top(words, selection, unstressed, exclude_real, ignore_syllables):
     output = []
@@ -118,7 +118,7 @@ def api_select_random(words, selection, unstressed, exclude_real, ignore_syllabl
     output = []
 
     while len(output) < selection:
-        i = int(random.random() * len(words))
+        i = int(random() * len(words))
 
         word, score = words[i]
         result = select_for_web(word, score, unstressed, exclude_real, ignore_syllables)

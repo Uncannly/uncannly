@@ -1,4 +1,4 @@
-import sys
+from sys import stdout
 
 from lib.options import POOL_MAX
 
@@ -30,7 +30,7 @@ def update_limits(count, limit, lower_limit, upper_limit):
             limit /= 2
 
         if limit == 0:
-            sys.stdout.write(
+            stdout.write(
                 'With these parameters, it is not possible '
                 'to find enough words to meet the pool max.\n'
             )

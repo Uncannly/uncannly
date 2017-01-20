@@ -1,4 +1,4 @@
-import sys
+from sys import stdout
 
 from lib.ipa import ipa, destress, stress_level, stress_symbol
 from lib.conversion import data_to_formatted_string, to_sig_figs
@@ -31,6 +31,11 @@ def select_and_maybe_present_for_terminal(word, score, unstressed, exclude_real,
 def terminal_delayed_presentation(words):
     for word, score in words:
         _write_to_terminal(word, score)
+    return True
+
+def terminal_failure(message):
+    stdout.write(message + '\n')
+    return True
 
 def _web_phonemes(word):
     return ipa(word), data_to_formatted_string(word, ignore_syllables=True)
@@ -50,7 +55,7 @@ def _web_syllables(word):
     return word_output, data_to_formatted_string(for_checking_word, ignore_syllables=True)
 
 def _write_to_terminal(word, score):
-    sys.stdout.write(word + ' [' + str(to_sig_figs(score, 6)) + ']\n')
+    stdout.write(word + ' [' + str(to_sig_figs(score, 6)) + ']\n')
 
 def _format_or_reject(word, score, exclude_real, existing_word):
     score = to_sig_figs(score, 6)

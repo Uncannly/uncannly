@@ -1,4 +1,4 @@
-import sys
+from sys import stdout
 
 from data.parse.primary.open_helper import open_primary_data_file
 from lib.ipa import destress, parse_syllables, stress_level
@@ -29,7 +29,7 @@ class PronouncingDictionary(object):
             self._increment_stress_pattern_distributions_and_syllable_chains(parsed_line)
             count += 1
             if count % 10000 == 0:
-                sys.stdout.write('{} words out of {} parsed.\n'.format(count, total))
+                stdout.write('{} words out of {} parsed.\n'.format(count, total))
         self.pronouncing_dictionary.close()
 
         return self.words, self.phoneme_chains, self.word_length_distributions, \

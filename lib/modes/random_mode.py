@@ -1,8 +1,6 @@
-import sys
-
 from data.load_data import load_chains, load_distributions
 from lib.select_and_present import select_for_web, select_and_maybe_present_for_terminal,\
-    terminal_delayed_presentation
+    terminal_delayed_presentation, terminal_failure
 from lib.score import get_score
 from lib.cumulative_distribution import choose_next
 from lib.options import option_value_boolean_to_string, MAX_WORD_LENGTH, MAX_FAILS
@@ -174,8 +172,7 @@ class RandomMode(object):
             'threshold. Please try lowering it.'
         ).format(MAX_FAILS)
         if self.interface == "cli":
-            sys.stdout.write(message + '\n')
-            return True
+            return terminal_failure(message)
         return [tuple([message, None])]
 
     def _succeed(self):
@@ -183,6 +180,5 @@ class RandomMode(object):
             self.words.sort(key=lambda x: -x[1])
             self.words = self.words[:self.selection]
             if self.interface == 'cli':
-                terminal_delayed_presentation(self.words)
-                return True
+                return terminal_delayed_presentation(self.words)
         return self.words
