@@ -59,7 +59,7 @@ const getSpeech = function(target, word) {
     $(target).removeClass("fa fa-volume-up speak-word").addClass("fa fa-spinner fa-spin");
 
     const request = new XMLHttpRequest();
-    request.open('GET', `https://uncannly-tts.cfapps.io/pts?word=${word}`, true);
+    request.open('GET', `https://uncannly-tts.douglasblumeyer.com/pts?word=${word}`, true);
     request.responseType = 'arraybuffer';
     request.onload = onLoadSpeech.bind(request, word, target);
     request.send();

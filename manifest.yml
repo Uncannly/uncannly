@@ -1,0 +1,6 @@
+---
+applications:
+- name: uncannly
+  memory: 256M
+  routes:
+  - route: uncannly.douglasblumeyer.com

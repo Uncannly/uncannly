@@ -13,13 +13,13 @@ Both of these modes are available in three interfaces:
 
 ### web
 
-http://uncannly.cfapps.io
+http://uncannly.douglasblumeyer.com
 
 ### API
 
-https://uncannly.cfapps.io/random
+https://uncannly.douglasblumeyer.com/random
 
-https://uncannly.cfapps.io/top
+https://uncannly.douglasblumeyer.com/top
 
 ### CLI
 
@@ -175,7 +175,7 @@ CLI shortcut: `-xy`
 
 ## Examples
 
-https://uncannly.cfapps.io/random
+https://uncannly.douglasblumeyer.com/random
 
 ```
 $ chiry@munscalune:~/workspace/uncannly: python bin/random_mode.py
@@ -186,7 +186,7 @@ AE1 S IY1 D IH0 SH IH0 T R D
 ...
 ```
 
-https://uncannly.cfapps.io/random?pool=5&selection=3&scoring-method=mean-geometric&score-threshold=0.0000000000001&unweighted&unstressed&exclude-real
+https://uncannly.douglasblumeyer.com/random?pool=5&selection=3&scoring-method=mean-geometric&score-threshold=0.0000000000001&unweighted&unstressed&exclude-real
 
 ```
 $ chiry@munscalune:~/workspace/uncannly: python bin/random_mode.py -p 5 -s 3 -mg -st 0.0000000000001 -xw -xs -xr -xp -xl
@@ -195,7 +195,7 @@ S T AY P ER
 K AA R EY D AY T S AH L AH S
 ```
 
-https://uncannly.cfapps.io/top
+https://uncannly.douglasblumeyer.com/top
 
 ```
 $ chiry@munscalune:~/workspace/uncannly: python bin/top_mode.py
@@ -206,7 +206,7 @@ W AA1 R
 ...
 ```
 
-https://uncannly.cfapps.io/top?pool=500&selection=3&scoring-method=integral-sum&score-threshold=0.01&unweighted&unstressed&exclude-real
+https://uncannly.douglasblumeyer.com/top?pool=500&selection=3&scoring-method=integral-sum&score-threshold=0.01&unweighted&unstressed&exclude-real
 ```
 $ chiry@munscalune:~/workspace/uncannly: python bin/top_mode.py -p 500 -s 3 -is -st 0.1 -xw -xs -xr -xp -xl
 K AA N T
