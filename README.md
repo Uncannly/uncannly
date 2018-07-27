@@ -286,3 +286,16 @@ Now you can visit a local version of the app at `localhost:5000`.
 ### 10. Develop
 
 You may want to mark `/venv`, `/data/primary_data`, and `data/secondary_data` as excluded in your IDE to retain sane search results.
+
+### 11. Linting & Testing
+
+Neither currently passing, but they're supposed to be `pylint uncannly > pylint.log` and `nosetests` respectively.
+
+### 12. Deploy
+
+You'll need to create the file `production_database_credentials.txt` in the root with the full URL for your production database (the one including the hostname, database name, username, and password).
+
+```
+python -m bin.initialize_database --production
+cf push
+``` 
