@@ -2,7 +2,7 @@
 
 Get the most phonetically probable yet missing words of the English language.
 
-Visit  for a demonstration. 
+Visit [http://uncannly.douglasblumeyer.com](http://uncannly.douglasblumeyer.com) for a demonstration.
 
 We can choose from two **modes** of finding these words:
 
@@ -218,21 +218,71 @@ B ER Z AH N
 
 ## Development
 
-Uncannly requires `python`, `pip`, and `venv`.
+### 1. Install python
 
-Also, get `postgres`, create a database called `uncannly`, and set your local database credentials to `postgres:5554d58`.
+Use an installer to get 2.7.12 on your system.
+Add `C:\Python27` to your path in System Environment Variables.
 
-Please fork and clone this repo.
+### 2. Install pip
+
+Download get-pip and run it with your newfound python.
+Add `C:\Python27\Scripts` to your path in System Environment Variables.
+
+### 3. Install virtualenv and pylint globally
 
 ```
-$ chiry@munscalune:~/workspace: export PYTHONPATH=$PYTHONPATH:/path/to/workspace/uncannly
+$ chiry@munscalune:~/workspace: pip install virtualenv pylint
+```
+
+### 4. Fork and clone repo
+
+```
+$ chiry@munscalune:~/workspace: git clone your-fork.git
 $ chiry@munscalune:~/workspace: cd uncannly
+```
+
+### 5. Configure python path
+
+Both permanently and for this session.
+
+```
+$ chiry@munscalune:~/workspace: echo 'export PYTHONPATH=$PYTHONPATH:~/workspace/uncannly' >> ~/.bash_profile
+$ chiry@munscalune:~/workspace: . ~/.bash_profile
+```
+
+### 6. Install project dependencies
+
+```
+$ chiry@munscalune:~/workspace/uncannly: virtualenv venv
 $ chiry@munscalune:~/workspace/uncannly: source venv/bin/activate
 $ chiry@munscalune:~/workspace/uncannly: pip install -r requirements.txt
-...
-$ chiry@munscalune:~/workspace/uncannly: python bin/initialize_database.py
-Database successfully initialized.
-$ chiry@munscalune:~/workspace/uncannly: python app/app.py
+```
+
+Note that on Windows this may be `venv/Scripts/activate` instead.
+
+### 7. Install postgres
+
+Set your local database credentials to `postgres:duperuser`.
+Create a database called `uncannly`.
+Start on the default 5432 port.
+
+### 8. Set up database
 
 ```
+$ chiry@munscalune:~/workspace/uncannly: python bin/initialize_database.py
+Database successfully initialized.
+```
+
+### 9. Start up app
+
+```
+$ chiry@munscalune:~/workspace/uncannly: python app/app.py
+```
+
+On Windows `python -m app.app` may work instead. Something to do with the way modules find each other differently.
+
 Now you can visit a local version of the app at `localhost:5000`.
+
+### 10. Develop
+
+You may want to mark `/venv`, `/data/primary_data`, and `data/secondary_data` as excluded in your IDE to retain sane search results.

@@ -7,3 +7,4 @@ cfenv
 pyscss
 nose
 nose_focus
+mock

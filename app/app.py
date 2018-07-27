@@ -6,7 +6,7 @@ from flask import Flask, request, render_template
 # pylint: disable=import-error
 from flask_assets import Environment, Bundle
 # pylint: enable=import-error
-from gevent.wsgi import WSGIServer
+from gevent.pywsgi import WSGIServer
 
 from lib.mode import get_by_mode
 from lib.readme import README

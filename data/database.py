@@ -36,7 +36,7 @@ def connect():
     elif os.environ.get('VCAP_SERVICES') is not None:
         credentials = AppEnv().get_service(label='elephantsql').credentials['uri']
     else:
-        credentials = 'postgres://postgres:5554d58@localhost:5432/uncannly'
+        credentials = 'postgres://postgres:duperuser@localhost:5432/uncannly'
 
     parsed_credentials = urlparse.urlparse(credentials)
     return psycopg2.connect(
