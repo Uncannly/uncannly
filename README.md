@@ -299,3 +299,67 @@ You'll need to create the file `production_database_credentials.txt` in the root
 python -m bin.initialize_database --production
 cf push
 ``` 
+
+## Development w/r/t GCP
+
+For it to work on GCP I had to follow these instructions:
+https://cloud.google.com/appengine/docs/flexible/python/using-cloud-sql-postgres#setting_up_your_local_environment
+
+First I created the project for Uncannly on GCP.
+
+Then I enabled the "Cloud SQL Admin API" for the project.
+
+Then I downloaded, installed, and initialized the `gcloud` CLI (AKA the "Cloud SDK").
+
+Locally, I created a `gcloud` configuration:
+
+```
+gcloud config configurations create uncannly
+gcloud config set project uncannly
+gcloud config set account kingwoodchuckii@gmail.com
+```
+
+Then I created a "Cloud SQL for PostgreSQL instance" following these instructions:
+https://cloud.google.com/sql/docs/postgres/create-instance
+
+```
+gcloud sql users set-password [USER] no-host --instance [INSTANCE_NAME] --password [PASSWORD]
+gcloud sql databases create [DATABASE_NAME] --instance [INSTANCE_NAME]
+gcloud sql instances describe [INSTANCE_NAME]
+```
+In the output from the last command you can get the `connectionName` which is thenceforth `[CONNECTION_NAME]`, which you need for later steps.
+
+In order to seed the database, you'll need to use the proxy Google provides:
+
+```
+gcloud auth application-default login
+curl -o cloud_sql_proxy https://dl.google.com/cloudsql/cloud_sql_proxy.darwin.amd64
+chmod +x cloud_sql_proxy
+./cloud_sql_proxy -instances=[CONNECTION_NAME]=tcp:5432
+```
+
+Regarding the Postgres connection string in `database.py`:
+For now, I am not going to bother myself with getting the connection string/URL correct / automating environment detection etc. w/r/t GCP.
+For now, if you need to seed the database from local, manually replace these lines temporarily:
+
+```
+    return psycopg2.connect(
+        database = [DATABASE_NAME],
+        user = [USER],
+        password = [PASSWORD],
+        host = "localhost"
+    )
+```
+
+then run the normal `python bin/initialize_database.py` script.
+
+And if you need to deploy to GCP, manually replace these lines temporarily:
+```
+    return psycopg2.connect(
+        database = [DATABASE_NAME],
+        user = [USER],
+        password = [PASSWORD],
+        host = "/cloudsql/[CONNECTION_NAME]"
+    )
+```
+then (assuming you've activated the configuration for `uncannly`) just run `gcloud app deploy`.
