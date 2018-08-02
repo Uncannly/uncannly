@@ -19,6 +19,7 @@ skip_files:
 - test/
 - venv/
 - pylint.log
+- cloud_sql_proxy
 
 beta_settings:
   cloud_sql_instances: uncannly:us-west2:uncannly-postgresql-instance

@@ -323,6 +323,7 @@ Then I created a "Cloud SQL for PostgreSQL instance" following these instruction
 https://cloud.google.com/sql/docs/postgres/create-instance
 
 ```
+gcloud sql instances create [INSTANCE_NAME] --database-version=POSTGRES_9_6 --cpu=1 --memory=3840MiB
 gcloud sql users set-password [USER] no-host --instance [INSTANCE_NAME] --password [PASSWORD]
 gcloud sql databases create [DATABASE_NAME] --instance [INSTANCE_NAME]
 gcloud sql instances describe [INSTANCE_NAME]
