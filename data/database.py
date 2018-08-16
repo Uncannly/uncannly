@@ -2,8 +2,11 @@ import os
 import sys
 import urlparse
 
-import psycopg2
-from cfenv import AppEnv
+import MySQLdb
+
+CLOUDSQL_CONNECTION_NAME = os.environ.get('CLOUDSQL_CONNECTION_NAME')
+CLOUDSQL_USER = os.environ.get('CLOUDSQL_USER')
+CLOUDSQL_PASSWORD = os.environ.get('CLOUDSQL_PASSWORD')
 
 class Database(object):
     def __init__(self):
@@ -30,18 +33,21 @@ class Database(object):
         return results
 
 def connect():
-    if len(sys.argv) > 1 and (sys.argv[1] == "--production" or sys.argv[1] == "-p"):
-        with open('production_database_credentials.txt', 'r') as credentials_file:
-            credentials = credentials_file.read().replace('\n', '')
-    elif os.environ.get('VCAP_SERVICES') is not None:
-        credentials = AppEnv().get_service(label='elephantsql').credentials['uri']
+    if os.getenv('SERVER_SOFTWARE', '').startswith('Google App Engine/'):
+        cloudsql_unix_socket = os.path.join( '/cloudsql', CLOUDSQL_CONNECTION_NAME)
+        db = MySQLdb.connect(
+            unix_socket=cloudsql_unix_socket,
+            user=CLOUDSQL_USER,
+            passwd=CLOUDSQL_PASSWORD,
+            db='uncannly-production-database'
+        )
     else:
-        credentials = 'postgres://postgres:duperuser@localhost:5432/uncannly'
+        db = MySQLdb.connect(
+            host='127.0.0.1',
+            port=3306,
+            user=CLOUDSQL_USER,
+            passwd=CLOUDSQL_PASSWORD,
+            db='uncannly-production-database'
+        )
 
-    parsed_credentials = urlparse.urlparse(credentials)
-    return psycopg2.connect(
-        database=parsed_credentials.path[1:],
-        user=parsed_credentials.username,
-        password=parsed_credentials.password,
-        host=parsed_credentials.hostname
-    )
+    return db

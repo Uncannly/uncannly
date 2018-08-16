@@ -2,6 +2,7 @@ from json import loads
 
 from data.database import Database
 from data.secondary_data_io import load
+from data.mysql import boolean_to_tinyint
 from lib.options import SCORING_METHODS
 from lib.conversion import sparse, deserialize, deep_deserialize, deserialize_and_hashablize
 
@@ -20,8 +21,8 @@ def load_scores(scoring_method,
     sql = "select word, score from scores where length{}0 and \
         ignore_position = {} and unstressed = {} and unweighted = {} \
         and method_mean = {} and method_addition = {} and ignore_syllables = {};".format(
-            length, ignore_position, unstressed, unweighted,
-            method_mean, method_addition, ignore_syllables
+            length, boolean_to_tinyint(ignore_position), boolean_to_tinyint(unstressed), boolean_to_tinyint(unweighted),
+            boolean_to_tinyint(method_mean), boolean_to_tinyint(method_addition), boolean_to_tinyint(ignore_syllables)
         )
 
     results = Database.fetch(sql)

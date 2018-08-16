@@ -34,6 +34,9 @@ def _array_to_string(data):
 def _tuple_to_string(data):
     return dumps(data).replace("'", "''")
 
+def _mysql_serialize(data):
+    return dumps(data)
+
 def sparse(nonsparse, desired_index, initial_value):
     while desired_index + 1 > len(nonsparse):
         nonsparse.append(copy(initial_value))
@@ -44,7 +47,7 @@ def serialize(data, ignore_syllables):
 
 def deep_serialize(data):
     data = {serialize(k, ignore_syllables=False): v for k, v in data.iteritems()}
-    return serialize(data, ignore_syllables=False)
+    return _mysql_serialize(data)
 
 def deserialize(data, ignore_syllables):
     deserializer = _string_to_array if ignore_syllables else literal_eval

@@ -1,7 +1,7 @@
 *.pyc
 venv
+env
 production_database_credentials.txt
 pylint.log
-app/static/.webassets-cache
-app/static/app.css
+static/styles.css
 .idea

@@ -228,10 +228,10 @@ Add `C:\Python27` to your path in System Environment Variables.
 Download get-pip and run it with your newfound python.
 Add `C:\Python27\Scripts` to your path in System Environment Variables.
 
-### 3. Install virtualenv and pylint globally
+### 3. Install libsass and pylint globally
 
 ```
-$ chiry@munscalune:~/workspace: pip install virtualenv pylint
+$ chiry@munscalune:~/workspace: pip install libsass pylint
 ```
 
 ### 4. Fork and clone repo
@@ -250,59 +250,9 @@ $ chiry@munscalune:~/workspace: echo 'export PYTHONPATH=$PYTHONPATH:~/workspace/
 $ chiry@munscalune:~/workspace: . ~/.bash_profile
 ```
 
-### 6. Install project dependencies
+### 6. Set up Google Cloud SDK
 
-```
-$ chiry@munscalune:~/workspace/uncannly: virtualenv venv
-$ chiry@munscalune:~/workspace/uncannly: source venv/bin/activate
-$ chiry@munscalune:~/workspace/uncannly: pip install -r requirements.txt
-```
-
-Note that on Windows this may be `venv/Scripts/activate` instead.
-
-### 7. Install postgres
-
-Set your local database credentials to `postgres:duperuser`.
-Create a database called `uncannly`.
-Start on the default 5432 port.
-
-### 8. Set up database
-
-```
-$ chiry@munscalune:~/workspace/uncannly: python bin/initialize_database.py
-Database successfully initialized.
-```
-
-### 9. Start up app
-
-```
-$ chiry@munscalune:~/workspace/uncannly: python app/app.py
-```
-
-On Windows `python -m app.app` may work instead. Something to do with the way modules find each other differently.
-
-Now you can visit a local version of the app at `localhost:5000`.
-
-### 10. Develop
-
-You may want to mark `/venv`, `/data/primary_data`, and `data/secondary_data` as excluded in your IDE to retain sane search results.
-
-### 11. Linting & Testing
-
-Neither currently passing, but they're supposed to be `pylint uncannly > pylint.log` and `nosetests` respectively.
-
-### 12. Deploy
-
-You'll need to create the file `production_database_credentials.txt` in the root with the full URL for your production database (the one including the hostname, database name, username, and password).
-
-```
-python -m bin.initialize_database --production
-cf push
-``` 
-
-## Development w/r/t GCP
-
-For it to work on GCP I had to follow these instructions:
+Basically following these instructions:
 https://cloud.google.com/appengine/docs/flexible/python/using-cloud-sql-postgres#setting_up_your_local_environment
 
 First I created the project for Uncannly on GCP.
@@ -319,8 +269,47 @@ gcloud config set project uncannly
 gcloud config set account kingwoodchuckii@gmail.com
 ```
 
-Then I created a "Cloud SQL for PostgreSQL instance" following these instructions:
-https://cloud.google.com/sql/docs/postgres/create-instance
+### 7. Install project dependencies
+
+```
+$ chiry@munscalune:~/workspace/uncannly: pip install -t env -r requirements.txt
+```
+
+### 8. Install mysql 5.7
+
+Set your local database credentials. Bonus points if you just use the same ones as in production.
+Create a database called `uncannly-production-database` (yeah, yeah, yeah...)
+Start on the default 3306 port.
+
+### 9. Set up database
+
+You'll need to set the env vars `CLOUDSQL_USER` and `CLOUDSQL_PASSWORD` to the credentials from the previous step. 
+
+```
+$ chiry@munscalune:~/workspace/uncannly: python -m bin.initialize_database
+Database successfully initialized.
+```
+
+### 10. Start up app
+
+```
+$ chiry@munscalune:~/workspace/uncannly: dev_appserver.py app.yaml
+```
+
+Now you can visit a local version of the app at `localhost:8080`. Although this doesn't actually work yet lol.
+
+### 11. Develop
+
+You may want to mark `/env`, `/data/primary_data`, and `data/secondary_data` as excluded in your IDE to retain sane search results.
+
+### 12. Linting & Testing
+
+Neither currently passing, but they're supposed to be `pylint uncannly > pylint.log` and `nosetests` respectively.
+
+### 13. Set up the production database
+
+Create a Cloud SQL 2nd generation MySQL database, basically following these instructions:
+https://cloud.google.com/appengine/docs/standard/python/cloud-sql/using-cloud-sql-mysql
 
 ```
 gcloud sql instances create [INSTANCE_NAME] --database-version=POSTGRES_9_6 --cpu=1 --memory=3840MiB
@@ -328,39 +317,47 @@ gcloud sql users set-password [USER] no-host --instance [INSTANCE_NAME] --passwo
 gcloud sql databases create [DATABASE_NAME] --instance [INSTANCE_NAME]
 gcloud sql instances describe [INSTANCE_NAME]
 ```
+
 In the output from the last command you can get the `connectionName` which is thenceforth `[CONNECTION_NAME]`, which you need for later steps.
 
-In order to seed the database, you'll need to use the proxy Google provides:
+### 14. Seed the production database
+
+You'll need to get Google App Engine's Cloud SQL proxy and start it up on port 3307 (to not conflict with local MySQL).
+And change the port in `database.py` to 3307 too.
 
 ```
 gcloud auth application-default login
-curl -o cloud_sql_proxy https://dl.google.com/cloudsql/cloud_sql_proxy.darwin.amd64
-chmod +x cloud_sql_proxy
-./cloud_sql_proxy -instances=[CONNECTION_NAME]=tcp:5432
+~/Downloads/cloud_sql_proxy.exe -instances=[CONNECTION_NAME]=tcp:3307
 ```
 
-Regarding the Postgres connection string in `database.py`:
-For now, I am not going to bother myself with getting the connection string/URL correct / automating environment detection etc. w/r/t GCP.
-For now, if you need to seed the database from local, manually replace these lines temporarily:
+Then in another window, run this again:
 
 ```
-    return psycopg2.connect(
-        database = [DATABASE_NAME],
-        user = [USER],
-        password = [PASSWORD],
-        host = "localhost"
-    )
+python -m bin.initialize_database
 ```
 
-then run the normal `python bin/initialize_database.py` script.
+### 15. Compile assets
 
-And if you need to deploy to GCP, manually replace these lines temporarily:
 ```
-    return psycopg2.connect(
-        database = [DATABASE_NAME],
-        user = [USER],
-        password = [PASSWORD],
-        host = "/cloudsql/[CONNECTION_NAME]"
-    )
+python -m bin.compile_assets
 ```
-then (assuming you've activated the configuration for `uncannly`) just run `gcloud app deploy`.
+
+This simply converts the one SASS file to CSS.
+
+### 16. Deploy 
+
+Whenever you deploy you need to add this snippet to the `app.yaml`.
+I don't want to check this stuff in obviously, and GAE doesn't have a good system for templating as far as I can tell.
+
+```
+env_variables:
+  CLOUDSQL_CONNECTION_NAME: [CONNECTION_NAME]
+  CLOUDSQL_USER: [USER]
+  CLOUDSQL_PASSWORD: [PASSWORD]
+```
+
+Then just run:
+
+```
+gcloud app deploy -q
+``` 

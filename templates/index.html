@@ -1,9 +1,5 @@
 {% from 'modes.html' import modes as modes %}
 
-{% assets "scss_all" %}
-<link rel=stylesheet type=text/css href="{{ ASSET_URL }}">
-{% endassets %}
-
 <!doctype html>
 <html lang="en">
     <head>
@@ -11,6 +7,7 @@
         <title>Uncann.ly</title>
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans">  
         <script src="https://use.fontawesome.com/620c216b67.js"></script>
+        <link rel=stylesheet type=text/css href="/static/styles.css">
         <script 
           data-main={{url_for('static', filename='app.js')}} 
           src={{url_for('static', filename='vendor/require.js')}}>

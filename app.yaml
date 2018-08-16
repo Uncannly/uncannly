@@ -1,10 +1,18 @@
-runtime: python
-env: flex
+runtime: python27
+api_version: 1
 threadsafe: true
-entrypoint: python -m app.app
 
-runtime_config:
-  python_version: 2
+handlers:
+- url: /static
+  static_dir: static
+- url: /.*
+  script: main.app
+
+libraries:
+- name: MySQLdb
+  version: "latest"
+- name: ssl
+  version: latest
 
 skip_files:
 - .git/
@@ -14,5 +22,7 @@ skip_files:
 - pylint.log
 - cloud_sql_proxy
 
-beta_settings:
-  cloud_sql_instances: uncannly:us-west2:uncannly-postgresql-instance
+env_variables:
+  CLOUDSQL_CONNECTION_NAME: [CONNECTION_NAME]
+  CLOUDSQL_USER: [USER]
+  CLOUDSQL_PASSWORD: [PASSWORD]

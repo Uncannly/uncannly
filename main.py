@@ -1,12 +1,9 @@
 import json
 import os
 
-from flask_cors import CORS
 from flask import Flask, request, render_template
 # pylint: disable=import-error
 from flask_assets import Environment, Bundle
-# pylint: enable=import-error
-from gevent.pywsgi import WSGIServer
 
 from lib.mode import get_by_mode
 from lib.readme import README
@@ -16,14 +13,12 @@ from lib.options import POOL_DEFAULT, POOL_MAX, TOO_FEW_MESSAGE, \
 
 # pylint: disable=invalid-name
 app = Flask(__name__)
-CORS(app)
 
 assets = Environment(app)
 assets.url = app.static_url_path
 assets.directory = app.static_folder
 assets.manifest = None
 assets.cache = False
-assets.append_path(os.path.join('app', 'styles'))
 scss = Bundle('styles.scss', filters='pyscss', output='app.css')
 assets.register('scss_all', scss)
 
@@ -61,10 +56,3 @@ def random_route():
 @app.route('/top')
 def top_route():
     return route('top', request)
-
-if __name__ == "__main__":
-    if os.getenv("PORT") is None:
-        app.debug = True
-    http_server = WSGIServer(('0.0.0.0', int(os.getenv("PORT", 5000))), app)
-    http_server.serve_forever()
-# pylint: enable=invalid-name
