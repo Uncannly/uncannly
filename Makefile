@@ -1,5 +1,5 @@
 start:
-	dev_appserver.py app.yaml
+	~/AppData/Local/Google/"Cloud SDK"/google-cloud-sdk/bin/dev_appserver.py app.yaml
 
 deploy:
 	./bin/deploy.sh

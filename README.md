@@ -228,10 +228,10 @@ Add `C:\Python27` to your path in System Environment Variables.
 Download get-pip and run it with your newfound python.
 Add `C:\Python27\Scripts` to your path in System Environment Variables.
 
-### 3. Install libsass and pylint globally
+### 3. Install libsass, virtualenv, and pylint globally
 
 ```
-$ chiry@munscalune:~/workspace: pip install libsass pylint
+$ chiry@munscalune:~/workspace: pip install libsass virtualenv pylint
 ```
 
 ### 4. Fork and clone repo
@@ -272,8 +272,13 @@ gcloud config set account kingwoodchuckii@gmail.com
 ### 7. Install project dependencies
 
 ```
+$ chiry@munscalune:~/workspace/uncannly: virtualenv venv
+$ chiry@munscalune:~/workspace/uncannly: source venv/Scripts/activate
 $ chiry@munscalune:~/workspace/uncannly: pip install -t env -r requirements.txt
 ```
+
+Note: the `dev_appserver` does not function unless you use the virtual environment.
+I don't totally understand why we need both `venv` and `env`. Google wanted it to be `lib` but Uncannly already took that.
 
 ### 8. Install mysql 5.7
 
@@ -286,17 +291,18 @@ Start on the default 3306 port.
 You'll need to set the env vars `CLOUDSQL_USER` and `CLOUDSQL_PASSWORD` to the credentials from the previous step. 
 
 ```
-$ chiry@munscalune:~/workspace/uncannly: python -m bin.initialize_database
+$ chiry@munscalune:~/workspace/uncannly: make seed
 Database successfully initialized.
 ```
 
 ### 10. Start up app
 
 ```
-$ chiry@munscalune:~/workspace/uncannly: dev_appserver.py app.yaml
+$ chiry@munscalune:~/workspace/uncannly: make start
 ```
 
-Now you can visit a local version of the app at `localhost:8080`. Although this doesn't actually work yet lol.
+Now you can visit a local version of the app at `localhost:8080`.
+The `make start` command assumes you're on Windows though at this time. `make` didn't like spaces in "Cloud SDK" path.
 
 ### 11. Develop
 
@@ -312,10 +318,10 @@ Create a Cloud SQL 2nd generation MySQL database, basically following these inst
 https://cloud.google.com/appengine/docs/standard/python/cloud-sql/using-cloud-sql-mysql
 
 ```
-gcloud sql instances create [INSTANCE_NAME] --database-version=POSTGRES_9_6 --cpu=1 --memory=3840MiB
-gcloud sql users set-password [USER] no-host --instance [INSTANCE_NAME] --password [PASSWORD]
-gcloud sql databases create [DATABASE_NAME] --instance [INSTANCE_NAME]
-gcloud sql instances describe [INSTANCE_NAME]
+$ chiry@munscalune:~/workspace/uncannly: gcloud sql instances create [INSTANCE_NAME] --database-version=POSTGRES_9_6 --cpu=1 --memory=3840MiB
+$ chiry@munscalune:~/workspace/uncannly: gcloud sql users set-password [USER] no-host --instance [INSTANCE_NAME] --password [PASSWORD]
+$ chiry@munscalune:~/workspace/uncannly: gcloud sql databases create [DATABASE_NAME] --instance [INSTANCE_NAME]
+$ chiry@munscalune:~/workspace/uncannly: gcloud sql instances describe [INSTANCE_NAME]
 ```
 
 In the output from the last command you can get the `connectionName` which is thenceforth `[CONNECTION_NAME]`, which you need for later steps.
@@ -326,20 +332,20 @@ You'll need to get Google App Engine's Cloud SQL proxy and start it up on port 3
 And change the port in `database.py` to 3307 too.
 
 ```
-gcloud auth application-default login
-~/Downloads/cloud_sql_proxy.exe -instances=[CONNECTION_NAME]=tcp:3307
+$ chiry@munscalune:~/workspace/uncannly: gcloud auth application-default login
+$ chiry@munscalune:~/workspace/uncannly: ~/Downloads/cloud_sql_proxy.exe -instances=[CONNECTION_NAME]=tcp:3307
 ```
 
 Then in another window, run this again:
 
 ```
-python -m bin.initialize_database
+$ chiry@munscalune:~/workspace/uncannly: make seed
 ```
 
 ### 15. Compile assets
 
 ```
-python -m bin.compile_assets
+$ chiry@munscalune:~/workspace/uncannly: make build
 ```
 
 This simply converts the one SASS file to CSS.
@@ -359,5 +365,5 @@ env_variables:
 Then just run:
 
 ```
-gcloud app deploy -q
+$ chiry@munscalune:~/workspace/uncannly: make deploy
 ``` 
